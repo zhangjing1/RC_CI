@@ -52,7 +52,7 @@ def get_bugs_and_format_bugs(bugs_list):
 	return formatted_bugs
 
 def generate_page_content(formmatted_bugs_list):
-	table_column = ['ID', 'Summary', 'Component', 'Status', 'Severity', 'Priority', 'Flags', 'QAOwner', 'Result']
+	table_column = ['ID', 'Summary', 'Component', 'Status', 'Severity', 'Priority', 'Flags(qe_auto_coverage)', 'QAOwner', 'Result']
 	head_row = ""
 	for column_name in table_column:
 		head_row += "<th colspan='1'>" + column_name +"</th>"
@@ -89,11 +89,13 @@ def generate_confluence_page_for_bugs(user, password, bugs):
 
 
 if __name__== "__main__":
+	print sys.argv
 	if len(sys.argv) < 4:
-		print len(sys.argv)
+		#print len(sys.argv)
 		print "===Error===, username, password, bugs parameters are needed!"
 	else:
 		username = sys.argv[1]
 		password = sys.argv[2]
         bugs_list = sys.argv[3:]
+        #print username, password, bugs_list
         generate_confluence_page_for_bugs(username, password, bugs_list)
