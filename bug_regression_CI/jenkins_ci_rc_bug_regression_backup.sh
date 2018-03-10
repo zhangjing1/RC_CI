@@ -12,16 +12,17 @@ echo "The bugzilla account is ${bugzilla_username}, the confluence account is ${
 sudo pip install confluence-py
 sudo pip install bugzilla
 sudo pip install requests
+
 tmp_dir="/tmp/$(date +'%s')"
 mkdir -p ${tmp_dir}
 cd ${tmp_dir}
-echo "===============Download the CI files under $(pwd)"
+echo "===============Download the CI files under $(pwd)=========="
 wget http://github.com/testcara/RC_CI/archive/master.zip
 unzip master.zip
-cd ${tmp_dir}/RC_CI
-if [[  -e "${tmp_dir}/RC_CI/bug_regression_CI" ]]; then
+cd ${tmp_dir}/RC_CI-master
+if [[  -e "${tmp_dir}/RC_CI-master/bug_regression_CI" ]]; then
 	echo "=======The target file has been found==============="
-	cd ${tmp_dir}/RC_CI/bug_regression_CI
+	cd ${tmp_dir}/RC_CI-master/bug_regression_CI
 	echo "=======Generating the confluence page content for bugs============"
 	sudo python generate_confluence_page_for_bugs.py ${bugzilla_username} ${password} ${bugs}
 	if [[ -e 'content.txt' ]]; then
@@ -42,3 +43,6 @@ else
 	echo ${result}
 	exit 1
 fi
+echo "========Removing the useless files==========="
+rm -rf ${tmp_dir}
+echo "====================Done=============="
