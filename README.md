@@ -1,2 +1,6 @@
 # RC_CI
-It is used for ET rc  build testing CI related scripts, like generating bug regression page and talking with other jenkins job and so on.
+ET rc  build testing CI related scripts will be here. The script here would do jobs like:
+1. generating bug regression page
+2. talking with jenkins job and so on.
+3. deploy the testing servers
+4. generating the testing report
