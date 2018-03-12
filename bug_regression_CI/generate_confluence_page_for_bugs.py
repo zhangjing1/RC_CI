@@ -52,7 +52,7 @@ def get_bugs_and_format_bugs(bugs_list):
 	return formatted_bugs
 
 def generate_page_content(formmatted_bugs_list):
-	table_column = ['ID', 'Summary', 'Component', 'Status', 'Severity', 'Priority', 'Flags(qe_auto_coverage)', 'QAOwner', 'Result']
+	table_column = ['ID', 'Summary', 'Component', 'Status', 'Severity', 'Priority', 'qe_auto_coverage', 'QAOwner', 'Result']
 	head_row = ""
 	for column_name in table_column:
 		head_row += "<th colspan='1'>" + column_name +"</th>"
