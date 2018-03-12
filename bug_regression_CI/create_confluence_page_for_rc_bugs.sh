@@ -47,7 +47,7 @@ if [[  -e "${tmp_dir}/RC_CI-master/bug_regression_CI" ]]; then
 	fi
 fi
 echo "==========Adding page to confluence==========="
-result=$(sudo confluence-cli --wikiurl="https://docs.engineering.redhat.com" -u ${confluence_username} -p ${password}  addpage -n "Bugs Regression Testing - ${et_build_name}" -P "${parent_page}" -s ${space} -f 'content.txt')
+result=$(result=$(sudo confluence-cli --wikiurl="https://docs.engineering.redhat.com" -u ${confluence_username} -p ${password}  addpage -n "Bugs Regression Testing - ${et_build_name}" -P ${parent_page} -s "${space}" -f 'content.txt'))
 if [[ ${result} =~ "https" ]]; then
 	echo "=========================Done: confluence page generated===================="
 	echo "====URL:${result}"
