@@ -27,12 +27,10 @@ else
 	sudo yum install wget -y
 fi
 
-
 tmp_dir="/tmp/$(date +'%s')"
 mkdir -p ${tmp_dir}
 cd ${tmp_dir}
 echo "===============Download the CI files under $(pwd)=========="
-if [[ ]]
 wget http://github.com/testcara/RC_CI/archive/master.zip
 unzip master.zip
 cd ${tmp_dir}/RC_CI-master
