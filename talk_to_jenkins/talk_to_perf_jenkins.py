@@ -2,9 +2,12 @@
 '''
 The script is used to talk to perf jenkins, then run the test and show the report.
 I guess the parameters and functions are intelligible. So no more introduction for it.
-Note:
-If you would like to run the script locally, make sure python package 'python-jenkins' has
+
+Prerequisite:
+1. If you would like to run the script locally, make sure python package 'python-jenkins' has
 been installed. Otherwise, you can try the command 'pip install python-jenkins'
+2. Set the 'ET_Perf_User' and 'ET_Perf_User_Password' which should be your perf jenkins account.
+
 Usage:
 to run smoke testing: python script_name.py  smoke
 to run full testing:  python script_name.py  full_testing
