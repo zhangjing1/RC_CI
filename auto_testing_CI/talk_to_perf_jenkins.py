@@ -58,15 +58,16 @@ class TalktoPerfCI():
 		self.lastest_build_number = self.server.get_job_info(self.build_name)['lastBuild']['number']
 
 	def summary_the_result(self):
-		print "=====================Testing Report=================="
+		print "=====================Testing Report: Begin=================="
 		print "Testing Type: " + "Performance Baseline Testing"
 		print self.perf_testing_result
 		print "Testing Result: " + self.perf_testing_result
 		if self.perf_testing_result == "FAILED":
-			print "Testing Console Log Url" + self.perf_testing_console_url
+			print "Testing Report Url" + self.perf_testing_console_url
 			quit()
 		if self.perf_testing_result == "PASSED":
-			print "Testing Comparison Report Url: " + self.perf_testing_comparison_url
+			print "Testing Report Url: " + self.perf_testing_comparison_url
+		print "=====================Testing Report: End================"
 
 	def check_console_log(self):
 		print "=====Checking the console log to make sure the testing is running well===="
