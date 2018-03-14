@@ -50,13 +50,14 @@ class TalktoPerfCI():
 		self.last_completed_build_number = self.server.get_job_info(self.build_name)['lastCompletedBuild']['number']
 
 	def run_build(self):
-		#self.server.build_job(self.build_name,  {'ET_SERVER': ET_Perf_Server, 'Stub_Server': ET_Stub_Server, 'ET_DB': ET_DB_Server})
-		self.server.build_job(self.build_name,  {'ET_SERVER': "errata-stage-perf.host.stage.eng.bos.redhat.com", 'Stub_Server': "10.8.248.96/RPC2", 'ET_DB': "errata-stage-perf-db.host.stage.eng.bos.redhat.com"})
+		print "===Start to run the perf testing==="
+		self.server.build_job(self.build_name,  {'ET_SERVER': ET_Perf_Server, 'Stub_Server': ET_Stub_Server, 'ET_DB': ET_DB_Server})
 
 	def get_lastest_build_number(self):
 		self.lastest_build_number = self.server.get_job_info(self.build_name)['lastBuild']['number']
 
 	def check_console_log(self):
+		print "=====Checking the console log to make sure the testing is running well===="
 		error_item = re.findall(r'Err:    [\d+\.]+', self.console_log_content)
 		for error in error_item:
 			if error.split()[1] > 20 :
@@ -65,25 +66,27 @@ class TalktoPerfCI():
 				quit()
 			else:
 				continue
+		print "=====Congrats, the perf testing has been done======"
 
 	def check_job_finished_or_not(self):
 		for i in range(int(self.check_loop_time)):
 			time.sleep(int(self.expected_run_time) * 60)
 			if not self.server.get_build_info(self.build_name, self.lastest_build_number)['result']:
-				print  "The job is still running"
+				print  "=====The job is still running====="
 				continue
 			else:
-				print "The job has been finished"
+				print "=====The job has been finished======"
 				break
 		if not self.server.get_build_info(self.build_name, self.lastest_build_number)['result']:
 			self.server.stop_build(self.build_name, self.lastest_build_number)
-			print "The job run costs too long time! I guess something is wrong. please check", Perf_Console_Log_Url
+			print "=====The job run costs too long time! I guess something is wrong. please check:", Perf_Console_Log_Url
 			quit()
 
 	def run_one_test(self):
 		self.get_last_completed_build_number()
 		self.run_build()
 		self.get_lastest_build_number()
+		self.get_console_log_url()
 		self.check_job_finished_or_not()
 		self.get_latest_build_console_log_content()
 		self.check_console_log()
@@ -93,11 +96,11 @@ class TalktoPerfCI():
 		Perf_Comparesion_Report_Url = Perf_Jenkins + "/view/ET/job/" + self.build_name + "/" + str(self.lastest_build_number) \
                       + "/performance-report/comparisonReport/" + str(self.last_completed_build_number) +"/monoReport#!/report/_/Perf-build_" \
                       + str(self.lastest_build_number) + "_vs_" + str(self.last_completed_build_number) +"/perfcharts-simple-perfcmp"
-        print "Congrats, The comparesion report is:", Perf_Comparesion_Report_Url
+        print "=====Congrats, The comparesion report is:", Perf_Comparesion_Report_Url
 
 if __name__== "__main__":
-	print len(sys.argv)
-	print sys.argv
+	#print len(sys.argv)
+	#print sys.argv
 	username = os.environ.get('ET_Perf_User')
 	password = os.environ.get('ET_Perf_User_Password')
 	if len(sys.argv) == 2 and sys.argv[1] == "smoke":
