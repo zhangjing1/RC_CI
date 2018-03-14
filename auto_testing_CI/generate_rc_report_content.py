@@ -1,5 +1,6 @@
 #/bin/env python
 import os
+import sys
 import talk_to_rc_jenkins
 class GenerateRCReportContent():
 	#first talk to RC CI and then generate the testing report content
