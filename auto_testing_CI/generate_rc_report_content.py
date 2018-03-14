@@ -38,7 +38,8 @@ class GenerateRCReportContent():
 
 	def generate_rc_reprot_content(self):
 		print "===Begin to genreate test report content===="
-		self.genreate_test_report_row_html()
+		self.generate_test_report_html()
+		print self.test_table_html
 		self.write_page_file()
 		print "===End to genreate test report content===="
 

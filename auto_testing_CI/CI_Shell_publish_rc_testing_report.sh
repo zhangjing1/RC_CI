@@ -28,7 +28,7 @@ if [[  -e "${tmp_dir}/RC_CI-master/auto_testing_CI" ]]; then
 	echo "=======The target file has been found==============="
 	cd ${tmp_dir}/RC_CI-master/auto_testing_CI
 	echo "=======Generating the confluence page content for rc testing============"
-	sudo python generate_rc_report_content.py ${username} ${password} ${test_jenkins_build_name}
+	sudo python generate_rc_report_content.py ${user} ${password} ${test_jenkins_build_name}
 	if [[ -e 'content.txt' ]]; then
 		echo "==============Done========================="
 	else
@@ -37,7 +37,7 @@ if [[  -e "${tmp_dir}/RC_CI-master/auto_testing_CI" ]]; then
 	fi
 fi
 echo "==========Adding page to confluence==========="
-result=$(sudo confluence-cli --wikiurl="https://docs.engineering.redhat.com" -u ${user} -p ${password}  addpage -n "ET RC ${et_build_name} Testing Report" -P ${parent_page} -s "${space}" -f 'content.txt')
+result=$(sudo confluence-cli --wikiurl="https://docs.engineering.redhat.com" -u ${user} -p ${password}  addpage -n "ET RC ${et_rc_version} Testing Report" -P ${parent_page} -s "${space}" -f 'content.txt')
 if [[ ${result} =~ "https" ]]; then
 	echo "=========================Done: confluence page generated===================="
 	echo "====URL:${result}"
@@ -49,6 +49,6 @@ else
 fi
 
 echo "========Removing the useless files==========="
-rm -rf ${tmp_dir}
+#rm -rf ${tmp_dir}
 echo "====================Done=============="
 
