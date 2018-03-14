@@ -24,6 +24,8 @@ class GenerateRCReportContent():
 		test_table_row_content_body = ""
 		for item in self.test_report:
 			test_table_row_content_body += "<td>" + item + "</td>"
+		#left one empty td for "comment"
+		test_table_row_content_body += "<td>" + "" + "</td>"
 		self.test_report_row_html = "<tr>" + test_table_row_content_body + "</tr>"
 
 	def generate_test_report_html(self):
