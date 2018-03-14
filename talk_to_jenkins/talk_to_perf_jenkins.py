@@ -24,10 +24,9 @@ ET_Perf_Server = os.environ.get("ET_Perf_Server") or "errata-stage-perf.host.sta
 ET_Stub_Server = os.environ.get("ET_Perf_Stub_Server") or "10.8.248.96/RPC2"
 ET_DB_Server = os.environ.get("ET_Perf_DB_Server") or "errata-stage-perf-db.host.stage.eng.bos.redhat.com"
 Perf_Jenkins = os.environ.get('ET_Perf_URL') or "https://perfci.eng.pek2.redhat.com"
-Perf_Comparesion_Report_Url = ""
-Perf_Console_Log_Url = ""
+
 class TalktoPerfCI():
-	global ET_Perf_Server, ET_Stub_Server, ET_DB_Server, Perf_Jenkins, Perf_Console_Log_Url, Perf_Comparesion_Report_Url
+	global ET_Perf_Server, ET_Stub_Server, ET_DB_Server, Perf_Jenkins
 	def __init__(self, username, password, build_name, expected_run_time, check_loop_time):
 		self.username = username
 		self.password = password
@@ -37,14 +36,16 @@ class TalktoPerfCI():
 		self.check_loop_time = check_loop_time
 		self.lastest_build_number = 0
 		self.last_completed_build_number = 0
-		self.console_log_url = ""
 		self.console_log_content = ""
+		self.perf_testing_result = ""
+		self.perf_testing_comparison_url = ""
+		self.perf_testing_console_url = ""
 
 	def get_latest_build_console_log_content(self):
 		self.console_log_content = self.server.get_build_console_output(self.build_name, self.lastest_build_number)
 
 	def get_console_log_url(self):
-		Perf_Console_Log_Url = Perf_Jenkins + "/view/ET/job/" + self.build_name + "/" + str(self.lastest_build_number) + "/console"
+		self.perf_testing_console_url = Perf_Jenkins + "/view/ET/job/" + self.build_name + "/" + str(self.lastest_build_number) + "/console"
 
 	def get_last_completed_build_number(self):
 		self.last_completed_build_number = self.server.get_job_info(self.build_name)['lastCompletedBuild']['number']
@@ -56,17 +57,28 @@ class TalktoPerfCI():
 	def get_lastest_build_number(self):
 		self.lastest_build_number = self.server.get_job_info(self.build_name)['lastBuild']['number']
 
+	def summary_the_result(self):
+		print "=====================Testing Report=================="
+		print "Testing Type: " + "Performance Baseline Testing"
+		print self.perf_testing_result
+		print "Testing Result: " + self.perf_testing_result
+		if self.perf_testing_result == "FAILED":
+			print "Testing Console Log Url" + self.perf_testing_console_url
+			quit()
+		if self.perf_testing_result == "PASSED":
+			print "Testing Comparison Report Url: " + self.perf_testing_comparison_url
+
 	def check_console_log(self):
 		print "=====Checking the console log to make sure the testing is running well===="
 		error_item = re.findall(r'Err:    [\d+\.]+', self.console_log_content)
 		for error in error_item:
 			if error.split()[1] > 20 :
-				print "There is something wrong with run, FAILED"
-				print "Please check the console log:", Perf_Console_Log_Url
-				quit()
+				self.perf_testing_result = "FAILED"
+				print "====There is something wrong shown in the console log, please check manually===="
+				break
 			else:
 				continue
-		print "=====Congrats, the perf testing has been done======"
+		print "=====The perf testing has been done======"
 
 	def check_job_finished_or_not(self):
 		for i in range(int(self.check_loop_time)):
@@ -78,9 +90,14 @@ class TalktoPerfCI():
 				print "=====The job has been finished======"
 				break
 		if not self.server.get_build_info(self.build_name, self.lastest_build_number)['result']:
+			print "The testing is running too long, we would stop the job manually"
 			self.server.stop_build(self.build_name, self.lastest_build_number)
-			print "=====The job run costs too long time! I guess something is wrong. please check:", Perf_Console_Log_Url
-			quit()
+			self.perf_testing_result = "FAILED"
+
+	def get_comparision_report_url(self):
+		self.perf_testing_comparison_url = Perf_Jenkins + "/view/ET/job/" + self.build_name + "/" + str(self.lastest_build_number) \
+                      + "/performance-report/comparisonReport/" + str(self.last_completed_build_number) +"/monoReport#!/report/_/Perf-build_" \
+                      + str(self.lastest_build_number) + "_vs_" + str(self.last_completed_build_number) +"/perfcharts-simple-perfcmp"
 
 	def run_one_test(self):
 		self.get_last_completed_build_number()
@@ -91,12 +108,7 @@ class TalktoPerfCI():
 		self.get_latest_build_console_log_content()
 		self.check_console_log()
 		self.get_comparision_report_url()
-
-	def get_comparision_report_url(self):
-		Perf_Comparesion_Report_Url = Perf_Jenkins + "/view/ET/job/" + self.build_name + "/" + str(self.lastest_build_number) \
-                      + "/performance-report/comparisonReport/" + str(self.last_completed_build_number) +"/monoReport#!/report/_/Perf-build_" \
-                      + str(self.lastest_build_number) + "_vs_" + str(self.last_completed_build_number) +"/perfcharts-simple-perfcmp"
-        print "=====Congrats, The comparesion report is:", Perf_Comparesion_Report_Url
+		self.summary_the_result()
 
 if __name__== "__main__":
 	#print len(sys.argv)
