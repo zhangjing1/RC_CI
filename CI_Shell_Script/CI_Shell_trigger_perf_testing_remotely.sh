@@ -11,7 +11,7 @@ cd ${tmp_dir}
 echo "===============Download the CI files under $(pwd)=========="
 wget http://github.com/testcara/RC_CI/archive/master.zip
 unzip master.zip
-cd ${tmp_dir}/RC_CI-master/talk_to_jenkins
+cd ${tmp_dir}/RC_CI-master/auto_testing_CI
 # Run the script
 echo "==============Start the testing==============="
 sudo python  talk_to_perf_jenkins.py ${test_type}
