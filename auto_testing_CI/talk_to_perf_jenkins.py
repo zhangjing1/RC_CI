@@ -60,10 +60,9 @@ class TalktoPerfCI():
 	def summary_the_result(self):
 		print "=====================Testing Report: Begin=================="
 		print "Testing Type: " + "Performance Baseline Testing"
-		print self.perf_testing_result
 		print "Testing Result: " + self.perf_testing_result
 		if self.perf_testing_result == "FAILED":
-			print "Testing Report Url" + self.perf_testing_console_url
+			print "Testing Report Url: " + self.perf_testing_console_url
 			quit()
 		if self.perf_testing_result == "PASSED":
 			print "Testing Report Url: " + self.perf_testing_comparison_url
