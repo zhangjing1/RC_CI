@@ -79,6 +79,7 @@ class TalktoPerfCI():
 				break
 			else:
 				continue
+		self.perf_testing_result = "PASSED"
 		print "=====The perf testing has been done======"
 
 	def check_job_finished_or_not(self):
