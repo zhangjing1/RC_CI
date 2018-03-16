@@ -24,7 +24,7 @@ class TalkToRCCI():
 	def get_test_report_from_console_log(self):
 		test_type = re.findall(r'Testing Type: [\w+ \.]+', self.console_log_content)[0].replace("Testing Type: ", "")
 		test_result = re.findall(r'Testing Result: [\w+ \.]+', self.console_log_content)[0].replace("Testing Result: ", "")
-		test_result_url = re.findall(r'Testing Report URL: [\w+d+ :/\.]+', self.console_log_content)[0].replace("Testing Report URL: ", "")
+		test_result_url = re.findall(r'Testing Report URL: [^\n]+', self.console_log_content)[0].replace("Testing Report URL: ", "")
 		self.test_report = [test_type, test_result, test_result_url]
 
 	def get_test_report_for_build(self):
