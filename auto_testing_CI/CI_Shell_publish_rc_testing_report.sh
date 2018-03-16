@@ -8,6 +8,7 @@ et_rc_version="3.16.2.1 git1234"
 
 sudo pip install --upgrade pip
 sudo pip install confluence-py
+sudo pip install python-jenkins
 
 if [[ $(wget --version | head -1) =~ "GNU Wget" ]]
 then
