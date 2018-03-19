@@ -42,7 +42,7 @@ class TalkToRobotFrameworkCI():
 		print "=====================Testing Report: End================"
 
 	def check_console_log(self):
-		print self.console_log_content
+		#print self.console_log_content
 		print re.search("AUTOMATION DONE", self.console_log_content)
 		if not re.search('AUTOMATION DONE', self.console_log_content):
 			print "====There is someting wrong. please check the log manually"
@@ -54,7 +54,7 @@ class TalkToRobotFrameworkCI():
 			self.tcms_run_id = re.findall(r'New Run ID: [\d+\.]+', self.console_log_content)[0].split(':')[1]
 			self.tcms_run_url = "https://tcms.engineering.redhat.com/run/" + str(self.tcms_run_id)
 			failed_cases_number = re.findall(r'[\d+]+ failed', self.console_log_content)[-1].split()[0]
-			print failed_cases_number
+			#print failed_cases_number
 			if failed_cases_number != '0':
 				self.robotframework_testing_result = "FAILED(" + failed_cases_number + " cases failed)"
 				self.robotframework_testing_result_url = self.tcms_run_url
