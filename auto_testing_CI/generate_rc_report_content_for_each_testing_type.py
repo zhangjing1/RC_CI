@@ -15,13 +15,13 @@ class GenerateRCReportContent():
 		self.test_report_row_html = ""
 		self.test_type = ""
 		self.perf_env = '''
-		<tr>ET Server: errata-stage-perf.host.stage.eng.bos.redhat.com</tr>
-		<tr>ET DB: errata-stage-perf-db.host.stage.eng.bos.redhat.com</tr>
+		<p>ET Server: errata-stage-perf.host.stage.eng.bos.redhat.com</p>
+		<p>ET DB: errata-stage-perf-db.host.stage.eng.bos.redhat.com</p>
 		'''
 		self.robotframework_uat_env = 'ET Server: errata-web-01.host.qe.eng.pek2.redhat.com'
 		self.e2e_env = '''
-		<tr>ET Server: et-e2e.usersys.redhat.com</tr>
-		<tr>Pub Server: pub-e2e.usersys.redhat.com</tr>
+		<p>ET Server: et-e2e.usersys.redhat.com</p>
+		<p>Pub Server: pub-e2e.usersys.redhat.com</p>
 		'''
 		self.bug_regression_env = 'ET Server: errata-web-03.host.qe.eng.pek2.redhat.com'
 		self.ts2_uat_env = 'ET server: et-system-test-qe-02.usersys.redhat.com'
