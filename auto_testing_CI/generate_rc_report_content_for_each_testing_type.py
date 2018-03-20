@@ -4,11 +4,13 @@ import sys
 import talk_to_rc_jenkins
 class GenerateRCReportContent():
 	#first talk to RC CI and then generate the testing report content
-	def __init__(self, username, password, build_name):
+	def __init__(self, username, password, build_name, expected_rc_version):
 		self.build_name = build_name
 		self.ci_jenkins = talk_to_rc_jenkins.TalkToRCCI(username, password, build_name)
 		self.ci_jenkins.get_test_report_for_build()
 		self.test_report =self.ci_jenkins.test_report
+		self.current_rc_version = self.ci_jenkins.current_rc_version
+		self.expected_rc_version = expected_rc_version
 		self.test_table_html = ""
 		self.head_row_html = ""
 		self.test_enviroment_html = ""
@@ -65,15 +67,22 @@ class GenerateRCReportContent():
 		self.write_page_file()
 		print "===End to genreate test report content===="
 
+	def generate_rc_report_for_current_rc_version(self):
+		if self.expected_rc_version == self.current_rc_version:
+			self.generate_rc_report_content()
+		else:
+			exit 0
+
 if __name__== "__main__":
 	#print len(sys.argv)
 	#print sys.argv
-	if len(sys.argv) ==4 :
+	if len(sys.argv) ==5 :
 		username = sys.argv[1]
 		password = sys.argv[2]
 		build_name = sys.argv[3]
-		generate_reprot = GenerateRCReportContent(username, password, build_name)
-		generate_reprot.generate_rc_report_content()
+		et_rc_version = sys.argv[4]
+		generate_reprot = GenerateRCReportContent(username, password, build_name, et_rc_version)
+		generate_reprot.generate_rc_report_for_current_rc_version()
 
 
 	

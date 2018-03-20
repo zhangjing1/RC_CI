@@ -6,7 +6,7 @@ import sys
 
 RobotFramework_Jenkins = os.environ.get("RobotFrameWork_Jenkins_URL") or "https://jenkins.engineering.redhat.com"
 class TalkToRobotFrameworkCI():
-	def __init__(self, username, password, build_name, expected_run_time, check_loop_time):
+	def __init__(self, username, password, build_name, expected_run_time, check_loop_time, et_rc_version):
 		self.username = username
 		self.password = password
 		self.server = jenkins.Jenkins(RobotFramework_Jenkins, username=self.username, password=self.password)
@@ -20,6 +20,7 @@ class TalkToRobotFrameworkCI():
 		self.tcms_run_id = 0
 		self.robotframework_testing_result = ""
 		self.robotframework_testing_result_url = ""
+		self.et_rc_version = et_rc_version
 
 	def get_latest_build_console_log_content(self):
 		self.console_log_content = self.server.get_build_console_output(self.build_name, self.lastest_build_number)
@@ -36,6 +37,7 @@ class TalkToRobotFrameworkCI():
 
 	def summary_the_result(self):
 		print "=====================Testing Report: Begin=================="
+		print "ET RC Version:" + self.et_rc_version
 		print "Testing Type: " + "RobotFramework UAT Testing"
 		print "Testing Result: " + self.robotframework_testing_result
 		print "Testing Report URL: " + self.robotframework_testing_result_url.replace(' ', '')
@@ -88,10 +90,11 @@ class TalkToRobotFrameworkCI():
 		self.summary_the_result()
 
 if __name__== "__main__":
-	if len(sys.argv) == 5:
+	if len(sys.argv) == 6:
 		username = sys.argv[1]
 		password = sys.argv[2]
 		jenkins_build_name = sys.argv[3]
 		jenkins_build_expect_time = sys.argv[4]
-		talk_to_robotframework_jenkinks = TalkToRobotFrameworkCI(username, password, jenkins_build_name, jenkins_build_expect_time, 2)
+		et_rc_version = sys.argv[5]
+		talk_to_robotframework_jenkinks = TalkToRobotFrameworkCI(username, password, jenkins_build_name, jenkins_build_expect_time, 2, et_rc_version)
 		talk_to_robotframework_jenkinks.run_one_test()
