@@ -17,7 +17,7 @@ class GenerateAllReports():
 		if len(self.report_files_list) == 1:
 			print "==== Here just one report, copy it as the general report ===="
 			copyfile(self.report_files_list[0], str(self.general_reports_name))
-		    print self.report_files_list[0]
+			print self.report_files_list[0]
 		elif len(self.report_files_list) > 1:
 			print "==== There are some reports, generate the general report for all testing reports"
 			for file in self.report_files_list:
