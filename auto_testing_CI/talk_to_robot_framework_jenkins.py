@@ -37,7 +37,7 @@ class TalkToRobotFrameworkCI():
 
 	def summary_the_result(self):
 		print "=====================Testing Report: Begin=================="
-		print "ET RC Version:" + self.et_rc_version
+		print "ET RC Version: " + self.et_rc_version
 		print "Testing Type: " + "RobotFramework UAT Testing"
 		print "Testing Result: " + self.robotframework_testing_result
 		print "Testing Report URL: " + self.robotframework_testing_result_url.replace(' ', '')

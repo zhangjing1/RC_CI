@@ -60,7 +60,7 @@ class TalktoPerfCI():
 
 	def summary_the_result(self):
 		print "=====================Testing Report: Begin=================="
-		print "ET RC Version:" + self.et_rc_version
+		print "ET RC Version: " + self.et_rc_version
 		print "Testing Type: " + "Performance Baseline Testing"
 		print "Testing Result: " + self.perf_testing_result
 		if self.perf_testing_result == "FAILED":
