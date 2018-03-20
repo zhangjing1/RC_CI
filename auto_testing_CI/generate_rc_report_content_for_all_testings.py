@@ -31,15 +31,11 @@ class GenerateAllReports():
 				print self.general_reports_content
 				self.general_reports_content += remove_table_end
 				print self.general_reports_content
-		else:
-			print len(self.report_files_list)
-
-		self.general_reports_content = "<table><tbody>" + self.head_column + self.general_reports_content + "</tbody></table>"
-		print self.general_reports_content
-
-		generate_reports = open(str(self.general_reports_name), 'w')
-		generate_reports.write(self.general_reports_content)
-		generate_reports.close()
+			self.general_reports_content = "<table><tbody>" + self.head_column + self.general_reports_content + "</tbody></table>"
+			print self.general_reports_content
+			generate_reports = open(str(self.general_reports_name), 'w')
+			generate_reports.write(self.general_reports_content)
+			generate_reports.close()
 
 
 
