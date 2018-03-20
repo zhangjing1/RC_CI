@@ -71,7 +71,9 @@ class GenerateRCReportContent():
 		if self.expected_rc_version == self.current_rc_version:
 			self.generate_rc_report_content()
 		else:
-			exit 0
+			print "Expect RC Version: " + self.expected_rc_version
+			print "The lastest testing RC Version: " + self.current_rc_version
+			print  "==========The latest job is not for the current rc build testing, will not generate report====="
 
 if __name__== "__main__":
 	#print len(sys.argv)
