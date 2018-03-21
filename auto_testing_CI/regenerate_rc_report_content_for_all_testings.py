@@ -8,7 +8,7 @@ class RegenerateRCReport():
 		self.password = password
 		self.et_rc_version = et_rc_version
 		self.each_rc_report = ""
-		self.build_name_list = ['Trigger_Perf_Testing_Remotely', 'Trigger_RobotFrameWork_UAT_Remotely']
+		self.build_name_list = ['Trigger_Perf_Testing_Remotely', 'Trigger_RobotFrameWork_UAT_Remotely', 'Format_E2E_Testing_Report']
 		self.all_rc_report = generate_rc_report_content_for_all_testings.GenerateAllReports()
 
 	def regenerate_report_for_each_test_type(self):
