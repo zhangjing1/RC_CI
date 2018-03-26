@@ -52,7 +52,7 @@ class TalkToRCCIForTS2():
 
 	def check_console_log(self):
 		# get the status of all multijobs
-		jobs_status_list = re.findall(r'status : [\w+]*', rc.console_log_content)
+		jobs_status_list = re.findall(r'status : [\w+]*', self.console_log_content)
 		if len(jobs_status_list) < 5 :
 			print "========The Env Preparation meets some problem=========="
 			self.TS2_testing_report_url = self.TS2_testing_console_log_url
