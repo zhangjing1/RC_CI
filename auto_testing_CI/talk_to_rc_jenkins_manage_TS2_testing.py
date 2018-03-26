@@ -19,6 +19,9 @@ class TalkToRCCIForTS2():
 		self.console_log_content = ""
 		self.expect_run_time = expect_run_time
 
+	def get_ts2_testing_result(self):
+		self.TS2_testing_status = self.server.get_build_info(self.build_name, self.lastest_build_number)['result']
+
 	def get_ts2_console_log_url(self):
 		self.TS2_testing_console_log_url = RC_Jenkins + "/job/" + self.build_name + "/" + str(self.lastest_build_number) + "/console"
 
@@ -38,13 +41,15 @@ class TalkToRCCIForTS2():
 	def check_job_finished_or_not(self):
 		for i in range(2):
 			time.sleep(int(self.expect_run_time) * 60)
-			if not self.server.get_build_info(self.build_name, self.lastest_build_number)['result']:
+			self.get_ts2_testing_result()
+			if not self.TS2_testing_status:
 				print  "=====The job is still running====="
 				continue
 			else:
 				print "=====The job has been finished======"
 				break
-		if not self.server.get_build_info(self.build_name, self.lastest_build_number)['result']:
+		self.get_ts2_testing_result()
+		if not self.TS2_testing_status:
 			print "The testing is running too long, we would stop the job manually"
 			self.server.stop_build(self.build_name, self.lastest_build_number)
 			self.TS2_testing_status = "FAILED"
@@ -56,8 +61,13 @@ class TalkToRCCIForTS2():
 		if len(jobs_status_list) < 5 :
 			print "========The Env Preparation meets some problem=========="
 			self.TS2_testing_report_url = self.TS2_testing_console_log_url
-		elif jobs_status_list[4].find('FAILURE') :
+		elif jobs_status_list[4].find('FAILURE'):
+			print "========The Env Preparation has been finished==========="
 			print "========The Cucumber TS2.0 UAT Testing FAILED==========="
+		elif jobs_status_list[4].find('SUCCESS'):
+			print "========The Env Preparation has been finished==========="
+			print "========The Cucumber TS2.0 UAT Testing SUCCESSED========"
+
 
 	def summary_report(self):
 		print "=====================Testing Report: Begin=================="
