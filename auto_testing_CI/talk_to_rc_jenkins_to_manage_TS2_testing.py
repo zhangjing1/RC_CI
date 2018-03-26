@@ -15,12 +15,12 @@ class TalkToRCCIForTS2():
 		self.et_rc_version = et_rc_version
 		self.lastest_build_number = 0
 		self.TS2_testing_report_url = ""
-		self.TS2_testing_status = ""
+		self.TS2_testing_result = ""
 		self.console_log_content = ""
 		self.expect_run_time = expect_run_time
 
 	def get_ts2_testing_result(self):
-		self.TS2_testing_status = self.server.get_build_info(self.build_name, self.lastest_build_number)['result']
+		self.TS2_testing_result = self.server.get_build_info(self.build_name, self.lastest_build_number)['result']
 
 	def get_ts2_console_log_url(self):
 		self.TS2_testing_console_log_url = RC_Jenkins + "/job/" + self.build_name + "/" + str(self.lastest_build_number) + "/console"
@@ -42,17 +42,17 @@ class TalkToRCCIForTS2():
 		for i in range(2):
 			time.sleep(int(self.expect_run_time) * 60)
 			self.get_ts2_testing_result()
-			if not self.TS2_testing_status:
+			if not self.TS2_testing_result:
 				print  "=====The job is still running====="
 				continue
 			else:
 				print "=====The job has been finished======"
 				break
 		self.get_ts2_testing_result()
-		if not self.TS2_testing_status:
+		if not self.TS2_testing_result:
 			print "The testing is running too long, we would stop the job manually"
 			self.server.stop_build(self.build_name, self.lastest_build_number)
-			self.TS2_testing_status = "FAILED"
+			self.TS2_testing_result = "FAILED"
 
 
 	def check_console_log(self):
@@ -71,9 +71,9 @@ class TalkToRCCIForTS2():
 
 	def summary_report(self):
 		print "=====================Testing Report: Begin=================="
-		print "ET RC Version: " + self.et_rc_version
+		print "ET RC Version: " + str(self.et_rc_version)
 		print "Testing Type: " + "TS2.0 UAT Testing"
-		print "Testing Result: " + self.TS2_testing_status
+		print "Testing Result: " + self.TS2_testing_result
 		print "Testing Report URL: " + self.TS2_testing_report_url
 		print "=====================Testing Report: End================"
 
