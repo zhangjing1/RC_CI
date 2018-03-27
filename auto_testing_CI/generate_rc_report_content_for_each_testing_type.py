@@ -10,7 +10,7 @@ class GenerateRCReportContent():
 		self.ci_jenkins.get_test_report_for_build()
 		self.test_report =self.ci_jenkins.test_report
 		self.current_rc_version = self.ci_jenkins.current_rc_version
-		self.expected_rc_version = expected_rc_version
+		self.expected_rc_version = "ET RC Version: " + expected_rc_version
 		self.test_table_html = ""
 		self.head_row_html = ""
 		self.test_enviroment_html = ""
@@ -85,6 +85,3 @@ if __name__== "__main__":
 		et_rc_version = sys.argv[4]
 		generate_reprot = GenerateRCReportContent(username, password, build_name, et_rc_version)
 		generate_reprot.generate_rc_report_for_current_rc_version()
-
-
-	

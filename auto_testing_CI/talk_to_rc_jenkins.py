@@ -24,7 +24,7 @@ class TalkToRCCI():
 
 	def get_test_report_from_console_log(self):
 		current_rc_version_list = re.findall(r'ET RC Version: [\w+ \.]+', self.console_log_content)
-		if len(current_rc_version) > 0:
+		if len(current_rc_version_list) > 0:
 			self.current_rc_version = current_rc_version_list[0]
 			test_type = re.findall(r'Testing Type: [\w+ \.]+', self.console_log_content)[0].replace("Testing Type: ", "")
 			test_result = re.findall(r'Testing Result: [\w+ \.]+', self.console_log_content)[0].replace("Testing Result: ", "")
