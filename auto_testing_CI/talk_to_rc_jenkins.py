@@ -23,11 +23,15 @@ class TalkToRCCI():
 		self.console_log_content = self.server.get_build_console_output(self.build_name, self.last_completed_build_number)
 
 	def get_test_report_from_console_log(self):
-		self.current_rc_version = re.findall(r'ET RC Version: [\w+ \.]+', self.console_log_content)[0].replace("ET RC Version: ", "")
-		test_type = re.findall(r'Testing Type: [\w+ \.]+', self.console_log_content)[0].replace("Testing Type: ", "")
-		test_result = re.findall(r'Testing Result: [\w+ \.]+', self.console_log_content)[0].replace("Testing Result: ", "")
-		test_result_url = re.findall(r'Testing Report URL: [^\n]+', self.console_log_content)[0].replace("Testing Report URL: ", "")
-		self.test_report = [test_type, test_result, test_result_url]
+		current_rc_version_list = re.findall(r'ET RC Version: [\w+ \.]+', self.console_log_content)
+		if len(current_rc_version) > 0:
+			self.current_rc_version = current_rc_version_list[0]
+			test_type = re.findall(r'Testing Type: [\w+ \.]+', self.console_log_content)[0].replace("Testing Type: ", "")
+			test_result = re.findall(r'Testing Result: [\w+ \.]+', self.console_log_content)[0].replace("Testing Result: ", "")
+			test_result_url = re.findall(r'Testing Report URL: [^\n]+', self.console_log_content)[0].replace("Testing Report URL: ", "")
+			self.test_report = [test_type, test_result, test_result_url]
+		else:
+			self.test_report = ["", "", ""]
 
 	def get_test_report_for_build(self):
 		self.get_last_completed_build_number()
