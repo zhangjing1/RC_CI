@@ -33,7 +33,7 @@ class TalkToRCCIForE2E():
 
 	def run_build(self):
 		print "===Start to run the e2e.0 UAT testing==="
-		self.server.build_job(self.build_name,  {'RPM_BUILD_JOB_ID': self.et_rc_version})
+		self.server.build_job(self.build_name, {})
 
 	def get_lastest_build_number(self):
 		self.lastest_build_number = self.server.get_job_info(self.build_name)['lastBuild']['number']
