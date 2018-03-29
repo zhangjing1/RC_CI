@@ -70,10 +70,10 @@ class TalkToRCCIForTS2():
 
 
 	def summary_report(self):
-		if self.get_ts2_testing_result == "FAILURE":
-			self.get_ts2_testing_result = "FAILED"
+		if self.TS2_testing_result == "FAILURE":
+			self.TS2_testing_result = "FAILED"
 		else:
-			self.get_ts2_testing_result = "PASSED"
+			self.TS2_testing_result = "PASSED"
 
 		print "=====================Testing Report: Begin=================="
 		print "ET RC Version: " + str(self.et_rc_version)
