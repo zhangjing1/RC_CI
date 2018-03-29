@@ -61,20 +61,18 @@ class TalkToRCCIForTS2():
 		if len(jobs_status_list) < 5 :
 			print "========The Env Preparation meets some problem=========="
 			self.TS2_testing_report_url = self.TS2_testing_console_log_url
+			self.TS2_testing_result = "FAILED"
 		elif jobs_status_list[4].find('FAILURE'):
 			print "========The Env Preparation has been finished==========="
 			print "========The Cucumber TS2.0 UAT Testing FAILED==========="
+			self.TS2_testing_result = "FAILED"
 		elif jobs_status_list[4].find('SUCCESS'):
 			print "========The Env Preparation has been finished==========="
 			print "========The Cucumber TS2.0 UAT Testing SUCCESSED========"
+			self.TS2_testing_result = "PASSED"
 
 
 	def summary_report(self):
-		if self.TS2_testing_result == "FAILURE":
-			self.TS2_testing_result = "FAILED"
-		else:
-			self.TS2_testing_result = "PASSED"
-
 		print "=====================Testing Report: Begin=================="
 		print "ET RC Version: " + str(self.et_rc_version)
 		print "Testing Type: " + "TS2.0 UAT Testing"
