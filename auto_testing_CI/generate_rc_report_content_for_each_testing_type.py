@@ -32,7 +32,7 @@ class GenerateRCReportContent():
 		                    'Bug Regression Testing':self.bug_regression_env}
 
 	def generate_head_row_html(self):
-		table_column = ['Test Type', 'Test Result', 'Test Result Url', 'Test Enviroment','Comments']
+		table_column = ['Test Type', 'Test Result', 'Test Result Url', 'Test Enviroment']
 		head_row = ""
 		for column_name in table_column:
 			head_row += "<th colspan='1'>" + column_name +"</th>"
@@ -45,8 +45,6 @@ class GenerateRCReportContent():
 			test_table_row_content_body += "<td>" + item + "</td>"
         # add the env column
 		test_table_row_content_body += "<td>" + self.env_options[self.test_type] + "</td>"
-		#left one empty td for "comment"
-		test_table_row_content_body += "<td>" + "" + "</td>"
 		self.test_report_row_html = "<tr>" + test_table_row_content_body + "</tr>"
 
 	def generate_test_report_html(self):
