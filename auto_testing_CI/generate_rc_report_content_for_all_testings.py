@@ -6,7 +6,7 @@ class GenerateAllReports():
 		self.general_reports_name = "general_report_content.txt"
 		self.general_reports_content = ""
 		self.report_files_list = []
-		self.head_column = "<tr><th colspan='1'>Test Type</th><th colspan='1'>Test Result</th><th colspan='1'>Test Result Url</th><th colspan='1'>Test Enviroment</th><th colspan='1'>Comments</th></tr>"
+		self.head_column = "<tr><th colspan='1'>Test Type</th><th colspan='1'>Test Result</th><th colspan='1'>Test Result Url</th><th colspan='1'>Test Enviroment</th></tr>"
 	
 	def generate_all_reports(self):
 		self.report_files_list = glob.glob("/tmp/*/RC_CI-master/auto_testing_CI/*_content.txt")
