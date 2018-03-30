@@ -50,6 +50,8 @@ class TalktoPerfCI():
 
 	def get_last_completed_build_number(self):
 		self.last_completed_build_number = self.server.get_job_info(self.build_name)['lastCompletedBuild']['number']
+		#print "last completed build number:"
+		#print self.last_completed_build_number
 
 	def run_build(self):
 		print "===Start to run the perf testing==="
@@ -57,6 +59,8 @@ class TalktoPerfCI():
 
 	def get_lastest_build_number(self):
 		self.lastest_build_number = self.server.get_job_info(self.build_name)['lastBuild']['number']
+		#print "latest_build_numer:"
+		#print self.lastest_build_number
 
 	def summary_the_result(self):
 		print "=====================Testing Report: Begin=================="
@@ -99,19 +103,24 @@ class TalktoPerfCI():
 			self.perf_testing_result = "FAILED"
 
 	def get_comparision_report_url(self):
+		#print self.last_completed_build_number
+		#print self.lastest_build_number
 		self.perf_testing_comparison_url = Perf_Jenkins + "/view/ET/job/" + self.build_name + "/" + str(self.lastest_build_number) \
                       + "/performance-report/comparisonReport/" + str(self.last_completed_build_number) +"/monoReport#!/report/_/Perf-build_" \
                       + str(self.lastest_build_number) + "_vs_" + str(self.last_completed_build_number) +"/perfcharts-simple-perfcmp"
+		#print self.perf_testing_comparison_url
 
 	def run_one_test(self):
 		self.get_last_completed_build_number()
 		self.run_build()
+		# before get the build number, sleep some seconds to make sure the build is running
+		time.sleep(10)
 		self.get_lastest_build_number()
+		self.get_comparision_report_url()
 		self.get_console_log_url()
 		self.check_job_finished_or_not()
 		self.get_latest_build_console_log_content()
 		self.check_console_log()
-		self.get_comparision_report_url()
 		self.summary_the_result()
 
 if __name__== "__main__":
@@ -120,7 +129,7 @@ if __name__== "__main__":
 	username = os.environ.get('ET_Perf_User') or sys.argv[2]
 	password = os.environ.get('ET_Perf_User_Password') or sys.argv[3]
 	et_rc_version = sys.argv[-1]
-	print et_rc_version
+	#print et_rc_version
 	if sys.argv[1] == "smoke":
 		talk_to_jenkinks_smoke = TalktoPerfCI(username, password, "ET_Baseline_PDI_MIN", 5, 2, et_rc_version)
 		talk_to_jenkinks_smoke.run_one_test()
