@@ -16,6 +16,7 @@ class TalkToRCCIForTS2():
 		self.lastest_build_number = 0
 		self.TS2_testing_report_url = ""
 		self.TS2_testing_result = ""
+		self.TS2_testing_console_log_url = ""
 		self.console_log_content = ""
 		self.expect_run_time = expect_run_time
 
@@ -58,17 +59,17 @@ class TalkToRCCIForTS2():
 	def check_console_log(self):
 		# get the status of all multijobs
 		jobs_status_list = re.findall(r'status : [\w+]*', self.console_log_content)
-		if len(jobs_status_list) < 5 :
+		if len(jobs_status_list) < 5:
 			print "========The Env Preparation meets some problem=========="
 			self.TS2_testing_report_url = self.TS2_testing_console_log_url
 			self.TS2_testing_result = "FAILED"
-		elif jobs_status_list[4].find('FAILURE'):
+		elif jobs_status_list[4].find('FAILURE') > 0:
 			print "========The Env Preparation has been finished==========="
 			print "========The Cucumber TS2.0 UAT Testing FAILED==========="
 			self.TS2_testing_result = "FAILED"
-		elif jobs_status_list[4].find('SUCCESS'):
+		elif jobs_status_list[4].find('SUCCESS') > 0:
 			print "========The Env Preparation has been finished==========="
-			print "========The Cucumber TS2.0 UAT Testing SUCCESSED========"
+			print "========The Cucumber TS2.0 UAT Testing PASSED========"
 			self.TS2_testing_result = "PASSED"
 
 
