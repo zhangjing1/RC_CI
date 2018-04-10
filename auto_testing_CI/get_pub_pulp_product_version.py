@@ -43,7 +43,6 @@ class GetPubAndPulpVersion():
 	def get_builds_name_list(self):
 		# get pub info
 		self.get_pub_build_name()
-		self.get_pub_rcm_pa_tool_build_name()
 		# get pulp rpm info
 		self.get_pulp_build_name_for_pulprpm()
 		self.get_pulp_rpm_build_name()
