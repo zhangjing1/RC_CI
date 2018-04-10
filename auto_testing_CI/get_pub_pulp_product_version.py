@@ -21,28 +21,23 @@ class GetPubAndPulpVersion():
 		self.pub_build = self.e2e_version_content_list[3].split('</td>')[1].split("</p>")[0].split('>')[2].split('pub')[1].split("-1.el")[0]
 		self.build_name_list['pub'] = 'pub-hub' + self.pub_build
 
-	def get_pub_rcm_pa_tool_build_name(self):
-		self.pub_rcm_pa_tool_build = self.e2e_version_content_list[3].split('</td>')[1].split("</p>")[1].replace('<p>', "").split(".el")[0]
-		self.build_name_list['pub-rcm-pa-tool'] = self.pub_rcm_pa_tool_build
-
 	def get_pulp_build_name_for_pulprpm(self):
-		self.pulp_build_for_rpm = self.e2e_version_content_list[4].split("</td>")[1].split("</p>")[0].split(">")[2].split(':')[1].split(".el")[0]
+		self.pulp_build_for_rpm = self.e2e_version_content_list[4].split("</td>")[1].split("</p>")[0].split(">")[2].split(':')[1]
 		self.build_name_list['pulp_for_rpm'] = 'pulp-server-' + self.pulp_build_for_rpm.strip()
 
 	def get_pulp_rpm_build_name(self):
-		self.pulp_rpm_build = self.e2e_version_content_list[4].split("</td>")[1].split("</p>")[1].split('>')[1].split(':')[1].split(".el")[0]
+		self.pulp_rpm_build = self.e2e_version_content_list[4].split("</td>")[1].split("</p>")[1].split('>')[1].split(':')[1]
 		self.build_name_list['pulp-rpm-plugins'] = "pulp-rpm-plugins" + self.pulp_rpm_build
 
 	def get_pulp_cdn_distributor_plugins_build(self):
-		self.pulp_cdn_distributor_plugins_build = self.e2e_version_content_list[4].split("</td>")[1].split("</p>")[2].split('>')[1].split(":")[1].split(".el")[0]
-		self.build_name_list['pulp-cdn-distributor-plugins'] = "pulp-cdn-distributor-plugins-" + self.pulp_cdn_distributor_plugins_build
+		self.pulp_cdn_distributor_plugins_build = self.e2e_version_content_list[4].split("</td>")[1].split("</p>")[2].split('>')[1]
 
 	def get_pulp_build_name_for_pulpdocker(self):
-		self.pulp_for_docker = self.e2e_version_content_list[5].split('</td>')[1].split('</p>')[0].split('p>')[1].split(':')[1].split(".el")[0]
+		self.pulp_for_docker = self.e2e_version_content_list[5].split('</td>')[1].split('</p>')[0].split('p>')[1].split(':')[1]
 		self.build_name_list['pulp_for_docker'] = "pulp-server-" + self.pulp_for_docker.strip()
 
 	def get_pulp_docker_build_name(self):
-		self.pulp_docker_build = self.e2e_version_content_list[5].split('</td>')[1].split('</p>')[1].split('<p>')[1].split(":")[1].split(".el")[0]
+		self.pulp_docker_build = self.e2e_version_content_list[5].split('</td>')[1].split('</p>')[1].split('<p>')[1].split(":")[1]
 		self.build_name_list['pulp-docker-plugins'] = 'pulp-docker-plugins-' + self.pulp_docker_build.strip()
 
 	def get_builds_name_list(self):
