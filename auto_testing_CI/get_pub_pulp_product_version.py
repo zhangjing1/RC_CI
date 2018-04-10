@@ -18,7 +18,7 @@ class GetPubAndPulpVersion():
 		self.build_name_list = {}
 
 	def get_pub_build_name(self):
-		self.pub_build = self.e2e_version_content_list[3].split('</td>')[1].split("</p>")[0].split('>')[2].split('pub')[1].split(".el")[0]
+		self.pub_build = self.e2e_version_content_list[3].split('</td>')[1].split("</p>")[0].split('>')[2].split('pub')[1].split("-1.el")[0]
 		self.build_name_list['pub'] = 'pub-hub' + self.pub_build
 
 	def get_pub_rcm_pa_tool_build_name(self):
