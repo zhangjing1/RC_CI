@@ -134,10 +134,10 @@ if __name__== "__main__":
 		talk_to_jenkinks_smoke = TalktoPerfCI(username, password, "ET_Baseline_PDI_MIN", 5, 2, et_rc_version)
 		talk_to_jenkinks_smoke.run_one_test()
 	if sys.argv[1] == "full_perf":
-		talk_to_jenkinks_smoke = TalktoPerfCI(username, password, "ET_Baseline_PDI", 40, et_rc_version)
+		talk_to_jenkinks_smoke = TalktoPerfCI(username, password, "ET_Baseline_PDI", 40, 2, et_rc_version)
 		talk_to_jenkinks_smoke.run_one_test()
 	if sys.argv[1] == "all":
-		talk_to_jenkinks_smoke = TalktoPerfCI(username, password, "ET_Baseline_PDI_MIN", 5, et_rc_version)
+		talk_to_jenkinks_smoke = TalktoPerfCI(username, password, "ET_Baseline_PDI_MIN", 5, 2, et_rc_version)
 		talk_to_jenkinks_smoke.run_one_test()
-		talk_to_jenkinks_smoke = TalktoPerfCI(username, password, "ET_Baseline_PDI", 40, et_rc_version)
+		talk_to_jenkinks_smoke = TalktoPerfCI(username, password, "ET_Baseline_PDI", 40, 2, et_rc_version)
 		talk_to_jenkinks_smoke.run_one_test()
