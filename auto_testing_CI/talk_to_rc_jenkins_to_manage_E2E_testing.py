@@ -74,10 +74,16 @@ class TalkToRCCIForE2E():
 
 	def summary_report(self):
 		print "=====================Testing Report: Begin=================="
-		print "ET RC Version: " + str(self.et_rc_version)
-		print "Testing Type: " + "E2E Testing"
-		print "Testing Result: " + self.e2e_testing_result
-		print "Testing Report URL: " + self.e2e_testing_report_url
+		if self.et_rc_version == "EMPTY" :
+			print "Testing Type: " + "E2E Testing"
+			print "RC Type: CD RC"
+			print "Testing Result: " + self.e2e_testing_result
+			print "Testing Report URL: " + self.e2e_testing_report_url
+		else:
+			print "ET RC Version: " + str(self.et_rc_version)
+			print "Testing Type: " + "E2E Testing"
+			print "Testing Result: " + self.e2e_testing_result
+			print "Testing Report URL: " + self.e2e_testing_report_url
 		print "=====================Testing Report: End================"
 
 	def run_one_test(self):
@@ -95,8 +101,19 @@ if __name__== "__main__":
 	username = sys.argv[1]
 	password = sys.argv[2]
 	build_name = sys.argv[3]
-	et_rc_version = sys.argv[4]
-	expect_run_time = sys.argv[5]
+	et_rc_version = ""
+	expect_run_time = ""
+	if len(sys.argv) == 5:
+		print "== This is the testing for Pub RC build =="
+		print "== Would set the ET rc build id as EMPTY manually"
+		et_rc_version = "EMPTY"
+		expect_run_time = sys.argv[4]
+
+	if len(sys.argv) == 6:
+		print "== This is the testing for ET RC build =="
+		et_rc_version = sys.argv[4]
+		expect_run_time = sys.argv[5]
+
 	e2e_rc_jenkins = TalkToRCCIForE2E(username, password, build_name, et_rc_version, expect_run_time)
 	e2e_rc_jenkins.run_one_test()
 
