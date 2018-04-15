@@ -35,6 +35,8 @@ class TalkToRCCI():
 
 	def get_test_report_for_build(self):
 		self.get_last_completed_build_number()
+		# jenkins need some time to create one job
+		time.sleep(30)
 		self.get_latest_build_console_log_content()
 		self.get_test_report_from_console_log()
 

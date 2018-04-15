@@ -33,6 +33,7 @@ class TalkToRobotFrameworkCI():
 		self.server.build_job(self.build_name, {'PROJECT_NAME':"Errata"})
 
 	def get_lastest_build_number(self):
+
 		self.lastest_build_number = self.server.get_job_info(self.build_name)['lastBuild']['number']
 
 	def summary_the_result(self):
@@ -82,6 +83,8 @@ class TalkToRobotFrameworkCI():
 
 	def run_one_test(self):
 		self.run_build()
+		# jenkins need some time to create one job
+		time.sleep(30)
 		self.get_lastest_build_number()
 		self.get_console_log_url()
 		self.check_job_finished_or_not()

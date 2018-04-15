@@ -83,6 +83,8 @@ class TalkToRCCIForTS2():
 
 	def run_one_test(self):
 		self.run_build()
+		# jenkins need some time to create one job
+		time.sleep(30)
 		self.get_lastest_build_number()
 		self.get_ts2_console_log_url()
 		self.get_ts2_report_url()

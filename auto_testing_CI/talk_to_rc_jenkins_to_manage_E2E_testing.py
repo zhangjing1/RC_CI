@@ -88,6 +88,8 @@ class TalkToRCCIForE2E():
 
 	def run_one_test(self):
 		self.run_build()
+		# jenkins need some time to create one job
+		time.sleep(30)
 		self.get_lastest_build_number()
 		self.get_e2e_console_log_url()
 		self.get_e2e_report_url()

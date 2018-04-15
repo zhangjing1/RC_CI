@@ -114,7 +114,7 @@ class TalktoPerfCI():
 		self.get_last_completed_build_number()
 		self.run_build()
 		# before get the build number, sleep some seconds to make sure the build is running
-		time.sleep(10)
+		time.sleep(30)
 		self.get_lastest_build_number()
 		self.get_comparision_report_url()
 		self.get_console_log_url()
