@@ -40,9 +40,10 @@ def get_bug_and_format_bug(bug_id):
 		else:
 			next
 	bug_flag = qe_bug_flag if qe_flag else ""
-		
 
-	formatted_bug = [ bug.id, bug.summary, bug.component, bug.status, bug.severity, bug.priority, bug_flag, bug.qa_contact, bug_result ]
+	# deal with bug.summary: when the bug.summary contain '>' or '<', it will bring some troubles. then remove such data from the summary
+	summary = bug.summary.replace("<", '').replace(">", '')
+	formatted_bug = [ bug.id, summary, bug.component, bug.status, bug.severity, bug.priority, bug_flag, bug.qa_contact, bug_result ]
 	return formatted_bug
 
 def get_bugs_and_format_bugs(bugs_list):
