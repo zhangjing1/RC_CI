@@ -126,18 +126,20 @@ class TalktoPerfCI():
 if __name__== "__main__":
 	#print len(sys.argv)
 	#print sys.argv
-	username = os.environ.get('ET_Perf_User') or sys.argv[2]
-	password = os.environ.get('ET_Perf_User_Password') or sys.argv[3]
+	testing_type = sys.argv[1]
+	perf_expect_run_time = sys.argv[2]
+	username = os.environ.get('ET_Perf_User') or sys.argv[3]
+	password = os.environ.get('ET_Perf_User_Password') or sys.argv[4]
 	et_rc_version = sys.argv[-1]
 	#print et_rc_version
-	if sys.argv[1] == "smoke":
+	if testing_type == "smoke":
 		talk_to_jenkinks_smoke = TalktoPerfCI(username, password, "ET_Baseline_PDI_MIN", 5, 2, et_rc_version)
 		talk_to_jenkinks_smoke.run_one_test()
-	if sys.argv[1] == "full_perf":
-		talk_to_jenkinks_smoke = TalktoPerfCI(username, password, "ET_Baseline_PDI", 40, 2, et_rc_version)
+	if testing_type == "full_perf":
+		talk_to_jenkinks_smoke = TalktoPerfCI(username, password, "ET_Baseline_PDI", perf_expect_run_time, 2, et_rc_version)
 		talk_to_jenkinks_smoke.run_one_test()
-	if sys.argv[1] == "all":
+	if testing_type == "all":
 		talk_to_jenkinks_smoke = TalktoPerfCI(username, password, "ET_Baseline_PDI_MIN", 5, 2, et_rc_version)
 		talk_to_jenkinks_smoke.run_one_test()
-		talk_to_jenkinks_smoke = TalktoPerfCI(username, password, "ET_Baseline_PDI", 40, 2, et_rc_version)
+		talk_to_jenkinks_smoke = TalktoPerfCI(username, password, "ET_Baseline_PDI", 80, 2, et_rc_version)
 		talk_to_jenkinks_smoke.run_one_test()
