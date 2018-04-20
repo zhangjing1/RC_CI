@@ -1,5 +1,7 @@
 #!/bin/bash
 server_name=$( hostname )
+echo "== Begin to clean the pulp env ${server_name} =="
+echo "== first prepare the env =="
 for package in python-devel  python-virtualenv yum-utils
 do
 	if ! [[ $( rpm -qa | grep ${package} ) =~ "${package}" ]];then
@@ -19,8 +21,10 @@ if [[ -z content-delivery-qe ]]; then
 	rm -rf content-delivery-qe
 fi
 curl -L -O http://download.devel.redhat.com/rel-eng/RCMTOOLS/rcm-tools-rhel-7-server.repo
+echo "== second get the clean scripts =="
 git clone git://git.app.eng.bos.redhat.com/content-delivery-qe
 cd content-delivery-qe
+echo "== run the cases of clean data =="
 virtualenv --system-site-packages ~/testpython
 . ~/testpython/bin/activate
 pip install -r test-requirements.txt
