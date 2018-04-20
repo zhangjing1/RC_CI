@@ -1,8 +1,9 @@
 need_deploy=true
+et_build_version=$( echo ${et_build_name} | cut -d '-' -f 2| cut -d '.' -f 2 )
 compare_current_et_to_rc_et() {
 	et_testing_server_version=$(curl http://${ET_Testing_Server}/system_version.json | cut -d "-" -f 2- | cut -d '.' -f 2)
-	if [[ "${et_testing_server_version}"  -eq  "${et_rc_version}" ]]; then
-		echo "=== [INFO] The current testing is the rc version, would do nothing ======"
+	if [[ "${et_testing_server_version}"  -eq  "${et_build_version}" ]]; then
+		echo "=== [INFO] The current testing verson deployed is the new specific version, will do nothing ======"
 		echo "==== Done ===="
 		need_deploy=false
 	fi
