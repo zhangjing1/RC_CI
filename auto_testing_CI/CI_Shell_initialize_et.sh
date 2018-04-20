@@ -1,5 +1,14 @@
 need_deploy=true
-et_build_version=$( echo ${et_build_name} | cut -d '-' -f 2| cut -d '.' -f 2 )
+initial_et_build_version(){
+	if [[ ${et_build_name_or_id} =~ "-" ]]; then
+		echo "=== ET build name has been provided: ${et_build_name} =="
+		et_build_version=$( echo ${et_build_name_or_id} | cut -d '-' -f 2| cut -d '.' -f 2 )
+	else
+		echo "=== ET build id is provided =="
+		et_build_version=${et_build_name_or_id}
+	fi
+}
+
 compare_current_et_to_rc_et() {
 	et_testing_server_version=$(curl http://${ET_Testing_Server}/system_version.json | cut -d "-" -f 2- | cut -d '.' -f 2)
 	if [[ "${et_testing_server_version}"  -eq  "${et_build_version}" ]]; then
@@ -101,6 +110,8 @@ restart_service() {
 	ssh root@${ET_Testing_Server} '/etc/init.d/messaging_service restart'
 }
 
+et_build_version=""
+initial_et_build_version
 compare_current_et_to_rc_et
 
 if [[ ${need_deploy} == "true" ]]; then
