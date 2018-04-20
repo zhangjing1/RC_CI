@@ -17,7 +17,7 @@ if ! [[ $( rpm -qa | grep 'brewkoji') =~ "brewkoji" ]];then
 else
 	echo $( rpm -qa | grep 'brewkoji' )
 fi
-if [[ -z content-delivery-qe ]]; then
+if [[ -e content-delivery-qe ]]; then
 	rm -rf content-delivery-qe
 fi
 curl -L -O http://download.devel.redhat.com/rel-eng/RCMTOOLS/rcm-tools-rhel-7-server.repo
