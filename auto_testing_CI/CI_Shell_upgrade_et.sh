@@ -20,7 +20,7 @@ compare_current_et_to_rc_et() {
 
 get_ansible_commands(){
 	ansible_command_part_1="ansible-playbook -vv --user root --skip-tags 'et-application-config'"
-	ansible_command_part_2=" --limit ${ET_Testing_Server} -e errata_jenkins_build=${et_rc_version}"
+	ansible_command_part_2=" --limit ${ET_Testing_Server} -e errata_jenkins_build=${et_build_version}"
 	ansible_command_part_3=" playbooks/errata-tool/qe/deploy-errata-qe.yml"
 	ansible_command="${ansible_command_part_1} ${ansible_command_part_2} ${ansible_command_part_3}"
 }

@@ -55,5 +55,5 @@ else
   sudo confluence-cli --wikiurl="https://docs.engineering.redhat.com" -u ${confluence_username} -p ${password}  updatepage -n "Bugs Regression Testing - Errata Tool RC build  ${et_build_name_or_id}" -P ${parent_page} -s "${space}" -f "content.txt"
 fi
 echo "========Removing the useless files==========="
-sudo rm -rf ${tmp_dir}
+rm -rf ${tmp_dir}
 echo "====================Done=============="
