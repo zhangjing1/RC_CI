@@ -39,9 +39,9 @@ class TalkToCIToSendReport():
 
     def run_send_report(self):
     	self.get_last_completed_build_number()
-		self.run_build()
-		self.get_new_build_number()
-		self.send_mail_or_not()
+    	self.run_build()
+    	self.get_new_build_number()
+    	self.send_mail_or_not()
 
 
 if __name__== "__main__":

@@ -15,18 +15,6 @@ install_scripts_env() {
   fi
 }
 
-initial_et_build_version(){
-	if [[ ${et_build_name_or_id} =~ "-" ]]; then
-		echo "=== ET build name has been provided: ${et_build_name} =="
-		et_build_version=$( echo ${et_build_name_or_id} | cut -d '-' -f 2| cut -d '.' -f 2 )
-	else
-		echo "=== ET build id is provided =="
-		et_build_version=${et_build_name_or_id}
-	fi
-}
-
-et_build_version=""
-initial_et_build_version
 install_scripts_env
 tmp_dir="/tmp/$(date +'%s')"
 mkdir -p ${tmp_dir}
@@ -51,13 +39,13 @@ if [[ -e "${tmp_dir}/build_report.txt" ]]; then
   	echo "==The report has been got from confluence=="
   	echo "==Will begin to parser it=="
 fi
-tr -d '\n' <<${tmp_dir}/build_report.txt > ${tmp_dir}/build_report_final.txt
-general_result_and_brief_summary=$( sudo python parser_build_testing_report "${tmp_dir}/build_report_final.txt" )
+tr -d '\n' < ${tmp_dir}/build_report.txt > ${tmp_dir}/build_report_final.txt
+general_result_and_brief_summary=$( sudo python parser_build_testing_report.py "${tmp_dir}/build_report_final.txt" )
 echo "==Parsering it===="
-general_result = $( echo ${general_result_and_brief_summary} | cut -d "-" -f 1)
+general_result=$( echo ${general_result_and_brief_summary} | cut -d "-" -f 1 )
 echo "==Parser Done====="
 echo "==Will send the report out=="
-brief_summary = $( echo ${general_result_and_brief_summary} | cut -d "-" -f 2)
+brief_summary=$( echo ${general_result_and_brief_summary} | cut -d "-" -f 2 )
 echo "==sending the report=="
-send_mail_result=$( python talk_to_jenkins_to_send_report.py ${username} ${password} ${send_report_ci_name} ${et_build_name_or_id} ${status} ${brief_summary}
+send_mail_result=$( python talk_to_jenkins_to_send_report.py ${username} ${password} ${send_report_ci_name} ${et_build_name_or_id} ${status} ${brief_summary} )
 echo ${send_mail_result}
