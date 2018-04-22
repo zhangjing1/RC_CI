@@ -2,6 +2,7 @@
 import jenkins
 import time
 import sys
+import os
 
 RC_Jenkins = os.environ.get("RC_Jenkins_URL") or "https://errata-jenkins.rhev-ci-vms.eng.rdu2.redhat.com"
 class TalkToCIToSendReport():
@@ -35,13 +36,13 @@ class TalkToCIToSendReport():
 
 	def send_mail_successfully_or_not(self):
 		self.send_mail_or_not = self.server.get_build_info(self.build_name, self.lastCompletedBuild)['result']
-        print self.send_mail_or_not
+		print self.send_mail_or_not
 
-    def run_send_report(self):
-    	self.get_last_completed_build_number()
-    	self.run_build()
-    	self.get_new_build_number()
-    	self.send_mail_or_not()
+	def run_send_report(self):
+		self.get_last_completed_build_number()
+		self.run_build()
+		self.get_new_build_number()
+		self.send_mail_or_not()
 
 
 if __name__== "__main__":
