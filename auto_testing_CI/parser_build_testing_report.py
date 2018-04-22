@@ -37,7 +37,7 @@ class ParserBuildTestingReport():
 		if len(self.inprocess_testing) == 1:
 			self.brief_summary += "1 testing in process(" + self.inprocess_testing + "). "
 		elif len(self.inprocess_testing) >= 2:
-			self.brief_summary += str(len(self.inprocess_testing)) + " inprocess testings(" + ", ".join(self.inprocess_testing) +"). "
+			self.brief_summary += str(len(self.inprocess_testing)) + " in process testings(" + ", ".join(self.inprocess_testing) +"). "
 		if len(self.failed_testing) == 1:
 			self.brief_summary += "1 failed testing(" + self.failed_testing[0] + ")."
 		elif len(self.failed_testing) >=2:
