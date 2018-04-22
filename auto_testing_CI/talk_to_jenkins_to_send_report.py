@@ -16,12 +16,11 @@ class TalkToCIToSendReport():
 		self.brief_summary = brief_summary
 		self.previous_last_completed_build_number = 0
 		self.last_completed_build_number = 0
-		self.send_mail_or_not = ""
 
 
 	def run_build(self):
 		print "===Start to send report==="
-		self.server.build_job(self.build_name,  {'et_build_name_or_id': self.et_build_name_or_id, 'status': self.status, 'brief summary': self.brief_summary})
+		self.server.build_job(self.build_name,  {'et_build_name_or_id': self.et_build_name_or_id, 'status': self.status, 'brief_summary': self.brief_summary})
 
 	def get_last_completed_build_number(self):
 		self.last_completed_build_number = self.server.get_job_info(self.build_name)['lastCompletedBuild']['number']
@@ -35,14 +34,13 @@ class TalkToCIToSendReport():
 			print "=== The new job has been generated ==="
 
 	def send_mail_successfully_or_not(self):
-		self.send_mail_or_not = self.server.get_build_info(self.build_name, self.lastCompletedBuild)['result']
-		print self.send_mail_or_not
+		print self.server.get_build_info(self.build_name, self.last_completed_build_number)['result']
 
 	def run_send_report(self):
 		self.get_last_completed_build_number()
 		self.run_build()
 		self.get_new_build_number()
-		self.send_mail_or_not()
+		self.send_mail_successfully_or_not()
 
 
 if __name__== "__main__":
@@ -55,6 +53,6 @@ if __name__== "__main__":
 	status = sys.argv[5]
 	brief_summary = sys.argv[6]
 	talk_to_jenkins = TalkToCIToSendReport(username, password, build_name, et_build_name_or_id, status, brief_summary)
-	talk_to_jenkins
+	talk_to_jenkins.run_send_report()
 
 

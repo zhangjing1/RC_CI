@@ -33,19 +33,30 @@ if [[ "${result}" =~ "You're not allowed to view that page, or it does not exist
   exit 1
 else
   echo "=========The page exist============="
-  confluence-cli --wikiurl="https://docs.engineering.redhat.com" -u ${username} -p ${password}  getpagesummary -n "ET Testing Report for build ${et_build_name_or_id}"  -s ${space} > build_report.txt
+#echo confluence-cli --wikiurl="https://docs.engineering.redhat.com" -u ${username} -p ${password}  getpagecontent -n "ET Testing Report for build ${et_build_name_or_id}"  -s ${space} > ${tmp_dir}/build_report.txt
+  confluence-cli --wikiurl="https://docs.engineering.redhat.com" -u ${username} -p ${password}  getpagecontent -n "ET Testing Report for build ${et_build_name_or_id}"  -s ${space} > ${tmp_dir}/build_report.txt
 fi
+cat ${tmp_dir}/build_report.txt
 if [[ -e "${tmp_dir}/build_report.txt" ]]; then
   	echo "==The report has been got from confluence=="
   	echo "==Will begin to parser it=="
 fi
 tr -d '\n' < ${tmp_dir}/build_report.txt > ${tmp_dir}/build_report_final.txt
+cat ${tmp_dir}/build_report_final.txt
 general_result_and_brief_summary=$( sudo python parser_build_testing_report.py "${tmp_dir}/build_report_final.txt" )
+echo ${general_result_and_brief_summary}
 echo "==Parsering it===="
 general_result=$( echo ${general_result_and_brief_summary} | cut -d "-" -f 1 )
 echo "==Parser Done====="
 echo "==Will send the report out=="
 brief_summary=$( echo ${general_result_and_brief_summary} | cut -d "-" -f 2 )
+echo sudo python talk_to_jenkins_to_send_report.py ${username} ${password} ${send_report_ci_name} ${et_build_name_or_id} "\"${general_result}\"" "\"${brief_summary}\""
 echo "==sending the report=="
-send_mail_result=$( python talk_to_jenkins_to_send_report.py ${username} ${password} ${send_report_ci_name} ${et_build_name_or_id} ${status} ${brief_summary} )
-echo ${send_mail_result}
+send_mail_result=$( sudo python talk_to_jenkins_to_send_report.py ${username} ${password} ${send_report_ci_name} ${et_build_name_or_id} "\"${general_result}\"" "\"${brief_summary}\"")
+echo "==sending the report==" )
+if [[ $(echo ${send_mail_result}) == "SUCCESS" ]]; then
+  echo "== Cheer, the report mail has been sent out! =="
+else
+  echo "== Sorry, failed to send mail. =="
+fi
+sudo rm -rf ${tmp_dir}
