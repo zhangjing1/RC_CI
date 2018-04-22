@@ -1,0 +1,63 @@
+#!/bin/bash
+# the script will do the following steps:
+# 1. get the build report
+# 2. parser the report then trigger the sending report CI
+# 3. mail is sent out by sending report CI
+install_scripts_env() {
+  sudo pip install --upgrade pip
+  sudo pip install confluence-py
+  sudo pip install python-jenkins
+  if [[ $(wget --version | head -1) =~ "GNU Wget" ]]; then
+    echo "=====wget has been installed======";
+  else
+    echo "=====wget has not been installed, Would intall git======"
+    sudo yum install wget -y
+  fi
+}
+
+initial_et_build_version(){
+	if [[ ${et_build_name_or_id} =~ "-" ]]; then
+		echo "=== ET build name has been provided: ${et_build_name} =="
+		et_build_version=$( echo ${et_build_name_or_id} | cut -d '-' -f 2| cut -d '.' -f 2 )
+	else
+		echo "=== ET build id is provided =="
+		et_build_version=${et_build_name_or_id}
+	fi
+}
+
+et_build_version=""
+initial_et_build_version
+install_scripts_env
+tmp_dir="/tmp/$(date +'%s')"
+mkdir -p ${tmp_dir}
+cd ${tmp_dir}
+# Wget the files
+echo "===============Download the CI files under $(pwd)=========="
+wget http://github.com/testcara/RC_CI/archive/master.zip
+unzip master.zip
+cd ${tmp_dir}/RC_CI-master/auto_testing_CI
+# Run the script
+echo "==============Start the testing==============="
+echo "==============Firstly, Get the confluence content first=="
+result=$(confluence-cli --wikiurl="https://docs.engineering.redhat.com" -u ${username} -p ${password}  getpagesummary -n "ET Testing Report for build ${et_build_name_or_id}"  -s ${space})
+if [[ "${result}" =~ "You're not allowed to view that page, or it does not exist." ]] ; then
+  echo "=========It does  not exist======="
+  exit 1
+else
+  echo "=========The page exist============="
+  confluence-cli --wikiurl="https://docs.engineering.redhat.com" -u ${username} -p ${password}  getpagesummary -n "ET Testing Report for build ${et_build_name_or_id}"  -s ${space} > build_report.txt
+fi
+if [[ -e "${tmp_dir}/build_report.txt" ]]; then
+  	echo "==The report has been got from confluence=="
+  	echo "==Will begin to parser it=="
+fi
+tr -d '\n' <<${tmp_dir}/build_report.txt > ${tmp_dir}/build_report_final.txt
+general_result_and_brief_summary=$( sudo python parser_build_testing_report "${tmp_dir}/build_report_final.txt" )
+echo "==Parsering it===="
+general_result = $( echo ${general_result_and_brief_summary} | cut -d "-" -f 1)
+echo "==Parser Done====="
+echo "==Will send the report out=="
+brief_summary = $( echo ${general_result_and_brief_summary} | cut -d "-" -f 2)
+echo "==sending the report=="
+send_mail_result=$( python talk_to_jenkins_to_send_report.py ${username} ${password} ${send_report_ci_name} ${et_build_name_or_id} ${status} ${brief_summary}
+echo ${send_mail_result}
