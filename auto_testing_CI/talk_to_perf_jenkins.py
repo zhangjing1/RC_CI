@@ -41,6 +41,7 @@ class TalktoPerfCI():
 		self.perf_testing_comparison_url = ""
 		self.perf_testing_console_url = ""
 		self.et_rc_version = et_rc_version
+		self.last_successful_build_number = 0
 
 	def get_latest_build_console_log_content(self):
 		self.console_log_content = self.server.get_build_console_output(self.build_name, self.lastest_build_number)
@@ -59,8 +60,9 @@ class TalktoPerfCI():
 
 	def get_lastest_build_number(self):
 		self.lastest_build_number = self.server.get_job_info(self.build_name)['lastBuild']['number']
-		#print "latest_build_numer:"
-		#print self.lastest_build_number
+
+	def get_last_successful_build_number(self):
+		self.last_successful_build_number = self.server.get_job_info(sekf.build_name)['lastSuccessfulBuild'][number]
 
 	def summary_the_result(self):
 		print "=====================Testing Report: Begin=================="
@@ -71,7 +73,7 @@ class TalktoPerfCI():
 			print "Testing Report URL: " + self.perf_testing_console_url
 			print "=====================Testing Report: End================"
 			quit()
-		if self.perf_testing_result == "PASSED":
+		if self.perf_testing_result == "FINISHED":
 			print "Testing Report URL: " + self.perf_testing_comparison_url
 		print "=====================Testing Report: End================"
 
@@ -85,7 +87,7 @@ class TalktoPerfCI():
 				break
 			else:
 				continue
-		self.perf_testing_result = "PASSED"
+		self.perf_testing_result = "FINISHED"
 		print "=====The perf testing has been done======"
 
 	def check_job_finished_or_not(self):
@@ -106,11 +108,12 @@ class TalktoPerfCI():
 		#print self.last_completed_build_number
 		#print self.lastest_build_number
 		self.perf_testing_comparison_url = Perf_Jenkins + "/view/ET/job/" + self.build_name + "/" + str(self.lastest_build_number) \
-                      + "/performance-report/comparisonReport/" + str(self.last_completed_build_number) +"/monoReport#!/report/_/Perf-build_" \
-                      + str(self.lastest_build_number) + "_vs_" + str(self.last_completed_build_number) +"/perfcharts-simple-perfcmp"
+                      + "/performance-report/comparisonReport/" + str(self.last_successful_build_number) +"/monoReport#!/report/_/Perf-build_" \
+                      + str(self.lastest_build_number) + "_vs_" + str(self.last_successful_build_number) +"/perfcharts-simple-perfcmp"
 		#print self.perf_testing_comparison_url
 
 	def run_one_test(self):
+		self.get_last_successful_build_number()
 		self.get_last_completed_build_number()
 		self.run_build()
 		# before get the build number, sleep some seconds to make sure the build is running
