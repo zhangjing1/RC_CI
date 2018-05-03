@@ -28,21 +28,16 @@ class TalkToRCJenkinsToParserPerfReport():
 
 
 	def parser_current_testing_result(self):
-		print "============1 "
 		if self.expected_rc_version != self.current_rc_version:
 			print "Expect RC Version: " + self.expected_rc_version
 			print "The lastest testing RC Version: " + self.current_rc_version
 			print  "========== The latest job is not for the current rc build testing, will not parser the report====="
 			return 0
-		print "============ 2"
 		if self.testing_type != "Performance Baseline Testing":
 			print "=== Testing type is not perfomance baseline testing === "
 			return 0
-		print "============= 3 "
 		if self.testing_result == "FAILED":
 			self.summary_report()
-
-		print "=========== 4"
 		if self.testing_result == "FINISHED":
 			print "=== Scp performance reports from perf jmeter slave== "
 			self.scp_perf_builds_reports()
@@ -78,10 +73,10 @@ class TalkToRCJenkinsToParserPerfReport():
 		print "Testing Type: " + "Performance Baseline Testing"
 		print "Testing Result: " + self.testing_result
 		print "Testing Report URL: " + self.testing_result_url
-		if len(self.worsen_transactions) > 0:
-			print "Worsen Transactions: " + self.worsen_transactions
 		print "=====================Testing Report: End================"
-
+		if len(self.worsen_transactions) > 0:
+			print "== More details info: "
+			print "Worsen Transactions: " + self.worsen_transactions
 
 
 if __name__== "__main__":
