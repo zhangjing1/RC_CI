@@ -28,7 +28,7 @@ class TalkToRCCI():
 			self.current_rc_version = current_rc_version_list[0]
 			test_type = re.findall(r'Testing Type: [\w+ \.]+', self.console_log_content)[0].replace("Testing Type: ", "")
 			test_result = re.findall(r'Testing Result: [\w+ \.]+', self.console_log_content)[0].replace("Testing Result: ", "")
-			test_result_url = re.findall(r'Testing Report URL: [^\n]+', self.console_log_content)[0].replace("Testing Report URL: ", "")
+			test_result_url = re.findall(r'Testing Report URL: [^\n]+', self.console_log_content)[0].replace("Testing Report URL: ", "").replace("'", "")
 			self.test_report = [test_type, test_result, test_result_url]
 		else:
 			self.test_report = ["", "", ""]
