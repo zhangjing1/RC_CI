@@ -44,11 +44,11 @@ class GenerateRCReportContent():
 		for item in self.test_report:
 			print item
 			if item == "PASSED":
-				test_table_row_content_body += "<td>" + "<strong><span style='color: rgb(0,128,0);'" + item + "</span></strong>" + "</td>"
+				test_table_row_content_body += "<td>" + "<strong><span style='color: rgb(0,128,0);'>" + item + "</span></strong>" + "</td>"
 			if item == "FAILED":
-				test_table_row_content_body += "<td>" + "<strong><span style='color: rgb(255,0,0);'" + item + "</span></strong>" + "</td>"
+				test_table_row_content_body += "<td>" + "<strong><span style='color: rgb(255,0,0);'>" + item + "</span></strong>" + "</td>"
 			if item == "IN PROGRESS":
-				test_table_row_content_body += "<td>" + "<strong><span style='color: rgb(255,204,0);'" + item + "</span></strong>" + "</td>"
+				test_table_row_content_body += "<td>" + "<strong><span style='color: rgb(255,204,0);'>" + item + "</span></strong>" + "</td>"
 			if item.find("http") > -1:
 				test_table_row_content_body += "<td>" + "<a href='" + item + "'>" + item + "</a>" + "</td>"
 			if item.find("Testing") > -1:
