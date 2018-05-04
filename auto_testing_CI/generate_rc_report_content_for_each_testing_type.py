@@ -42,13 +42,14 @@ class GenerateRCReportContent():
 		self.test_type = self.test_report[0]
 		test_table_row_content_body = ""
 		for item in self.test_report:
+			print item
 			if item == "PASSED":
 				test_table_row_content_body += "<td>" + "<font color='blue'>" + item + "</font>" + "</td>"
 			if item == "FAILED":
 				test_table_row_content_body += "<td>" + "<font color='red'>" + item + "</font>" + "</td>"
 			if item == "IN PROGRESS":
 				test_table_row_content_body += "<td>" + "<font color='yellow'>" + item + "</font>" + "</td>"
-			if item.index("http") == 0:
+			if item.find("http") > -1:
 				test_table_row_content_body += "<td>" + "<a href='" + item + "'>" + item + "</a>" + "</td>"
 		test_table_row_content_body += "<td>" + self.env_options[self.test_type] + "</td>"
 		self.test_report_row_html = "<tr>" + test_table_row_content_body + "</tr>"
