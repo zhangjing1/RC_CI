@@ -62,7 +62,7 @@ class TalktoPerfCI():
 		self.lastest_build_number = self.server.get_job_info(self.build_name)['lastBuild']['number']
 
 	def get_last_successful_build_number(self):
-		self.last_successful_build_number = self.server.get_job_info(self.build_name)['lastSuccessfulBuild'][number]
+		self.last_successful_build_number = self.server.get_job_info(self.build_name)['lastSuccessfulBuild']['number']
 
 	def summary_the_result(self):
 		print "=====================Testing Report: Begin=================="
