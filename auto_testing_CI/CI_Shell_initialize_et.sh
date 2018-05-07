@@ -1,3 +1,5 @@
+#!/bin/bash
+set -eo pipefail
 need_deploy=true
 initial_et_build_version(){
 	if [[ ${et_build_name_or_id} =~ "-" ]]; then
@@ -110,9 +112,14 @@ restart_service() {
 	ssh root@${ET_Testing_Server} '/etc/init.d/messaging_service restart'
 }
 
+
+
 et_build_version=""
-initial_et_build_version
-compare_current_et_to_rc_et
+echo "${et_build_name_or_id}"
+if ! [[ -z "${et_build_name_or_id}" ]]; then
+	initial_et_build_version
+	compare_current_et_to_rc_et
+fi
 
 if [[ ${need_deploy} == "true" ]]; then
 	perf_restore_db

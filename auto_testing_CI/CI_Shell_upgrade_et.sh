@@ -1,3 +1,6 @@
+#!/bin/bash
+set -eo pipefail
+
 need_deploy=true
 initial_et_build_version(){
 	if [[ ${et_build_name_or_id} =~ "-" ]]; then
@@ -7,16 +10,44 @@ initial_et_build_version(){
 		echo "=== ET build id is provided =="
 		et_build_version=${et_build_name_or_id}
 	fi
+	echo "=== [INFO] expect ET version: ${et_build_version} ==="
 }
 
 compare_current_et_to_rc_et() {
 	et_testing_server_version=$(curl http://${ET_Testing_Server}/system_version.json | cut -d "-" -f 2- | cut -d '.' -f 2)
+	echo "=== [INFO] current ET version: ${et_build_version}"
 	if [[ "${et_testing_server_version}"  -eq  "${et_build_version}" ]]; then
 		echo "=== [INFO] The current testing version deployed is the specific new version, will do nothing ======"
 		echo "==== Done ===="
 		need_deploy=false
 	fi
 }
+
+compare_current_et_product_et() {
+	et_product_version_on_brew=$(curl http://${ET_Production_Server}/system_version.json  | tr -d '"'| cut -d "-" -f 1)
+	et_product_version=$(echo ${et_product_version_on_brew} | tr -d '"'| cut -d "-" -f 1 | tr -d '.')
+	et_testing_server_version=$(curl http://${ET_Testing_Server}/system_version.json  | tr -d \" | cut -d "-" -f 1 | tr -d '.')
+	if [[ "${#et_product_version}" -gt "${#et_testing_server_version}" ]]
+		then
+		echo "=== The product et version is one sub version #{et_product_version}, but the testing et version is one big version ${et_testing_server_version} ==="
+		et_product_version=$(echo ${et_product_version} | cut -c -4)
+	fi
+	if [[ "${et_product_version}" -gt "${et_testing_server_version}" ]]
+		then
+		echo "=== [INFO] === ET production version is newer than the testing server!"
+		echo "=== Upgrading the testing server ===="
+	elif [[ "${et_product_version}" -eq "${et_testing_server_version}" ]]
+		then
+		echo "=== [INFO] === ET production version is the same as the testing server!"
+		echo "=== Nothing to do ==="
+		exit
+	else
+		echo "=== [INFO] === ET production version is older than the testing server!"
+		echo "=== Downgrading the testing server ==="
+		downgrade_flag=true
+	fi
+}
+
 
 get_ansible_commands(){
 	ansible_command_part_1="ansible-playbook -vv --user root --skip-tags 'et-application-config'"
@@ -64,10 +95,14 @@ restart_service() {
 }
 
 et_build_version=""
-initial_et_build_version
-compare_current_et_to_rc_et
+if ! [[ -z "${et_build_name_or_id}" ]]; then
+	initial_et_build_version
+	compare_current_et_to_rc_et
+fi
 if [[ ${need_deploy} == "true" ]]; then
-	echo "=== [INFO] Upgrading the testing server to the ET new Build ${et_build_name} ==="
+	echo "=== [INFO] Upgrading the testing server to the ET new Build ${et_build_name_or_id} ==="
+	ansible_command=""
+	compare_current_et_product_et
 	set -x
 	env
 	cd playbooks/errata-tool
