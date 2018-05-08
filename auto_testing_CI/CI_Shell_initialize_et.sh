@@ -57,6 +57,7 @@ compare_current_et_product_et() {
 		then
 		echo "=== [INFO] === ET production version is the same as the testing server!"
 		echo "=== Nothing to do ==="
+		need_deploy=false
 		exit
 	else
 		echo "=== [INFO] === ET production version is older than the testing server!"
@@ -117,8 +118,12 @@ restart_service() {
 et_build_version=""
 echo "${et_build_name_or_id}"
 if ! [[ -z "${et_build_name_or_id}" ]]; then
+    echo "the et_build_name_or_id is setted, will check the parameter"
 	initial_et_build_version
 	compare_current_et_to_rc_et
+else
+    echo "the et_build_name_or_id is not setted, will do nothing"
+    need_deploy=false
 fi
 
 if [[ ${need_deploy} == "true" ]]; then
@@ -136,7 +141,6 @@ if [[ ${need_deploy} == "true" ]]; then
 	pwd
 	get_ansible_commands
 	${ansible_command}
+	update_setting
+	restart_service
 fi
-# whenever deploy or not, we need to make sure the enviroment configure is correct. 
-update_setting
-restart_service
