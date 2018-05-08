@@ -69,7 +69,7 @@ class TalkToRCJenkinsToParserPerfReport():
 
 	def summary_report(self):
 		print "=====================Testing Report: Begin=================="
-		print "ET RC Version: " + self.expected_rc_version
+		print self.expected_rc_version
 		print "Testing Type: " + "Performance Baseline Testing"
 		print "Testing Result: " + self.testing_result
 		print "Testing Report URL: " + self.testing_result_url
