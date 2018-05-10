@@ -32,11 +32,6 @@ class GenerateAllReports():
 				self.general_reports_content += remove_table_end
 				print self.general_reports_content
 			self.general_reports_content = "<table><tbody>" + self.head_column + self.general_reports_content + "</tbody></table>"
-			print self.general_reports_content
-			generate_reports = open(str(self.general_reports_name), 'w')
-			generate_reports.write(self.general_reports_content)
-			generate_reports.close()
-
 
 
 if __name__== "__main__":
