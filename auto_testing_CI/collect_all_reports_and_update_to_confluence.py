@@ -22,7 +22,7 @@ class CollectAllReportsAndUpdateToConfluence():
 	def generate_report_for_each_test_type(self):
 		for build_name in self.build_name_list:
 			print "==== Generate report for the build: ", build_name 
-			self.each_rc_report += generate_rc_report_content_for_each_testing_type.GenerateRCReportContent(self.username, self.password, build_name, self.et_rc_version)
+			self.each_rc_report = generate_rc_report_content_for_each_testing_type.GenerateRCReportContent(self.username, self.password, build_name, self.et_rc_version)
 			self.each_rc_report.generate_rc_report_for_current_rc_version()
 
 	def collect_report_for_all_testings(self):
