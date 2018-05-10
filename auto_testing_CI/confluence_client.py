@@ -12,9 +12,11 @@ class ConfluenceClient():
 		self.content = ""
 
 	def create_update_page(self):
-		if self.content.find("it does not exist.") > 0:
+		if self.content.find("it does not exist.") > 0 or self.content.find("table") < 0 :
+			print "==== Will add page ==="
 			self.api.addpage(self.page_name, self.space, self.general_content, parentpage=self.parent_page)
 		else:
+			print "==== Will update page ==="
 			self.api.updatepage(self.page_name, self.space, self.general_content, self.parent_page, label="CI_3_Testing")
 
 	def get_page_content(self):
