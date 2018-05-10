@@ -15,9 +15,12 @@ class ConfluenceClient():
 		self.get_page_content()
 		if self.content.find("it does not exist.") > 0 or self.content.find("table") < 0 :
 			print "==== Will add page ==="
+			print "==== The page title: " self.page_name
 			self.api.addpage(self.page_name, self.space, self.general_content, parentpage=self.parent_page)
+
 		else:
 			print "==== Will update page ==="
+			print "==== The page title: " self.page_name
 			self.api.updatepage(self.page_name, self.space, self.general_content, self.parent_page, label="CI_3_Testing")
 
 	def get_page_content(self):
