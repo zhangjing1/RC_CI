@@ -6,16 +6,16 @@ class ConfluenceClient():
 		wiki_url = "https://docs.engineering.redhat.com"
 		self.api = Api(wiki_url, username, password)
 		self.page_name = title
-		self.general_content = "This is my first page"
+		self.general_content = content
 		self.space = space
 		self.parent_page = parent_page
 		self.content = ""
 
 	def create_update_page(self):
 		if self.content.find("it does not exist.") > 0:
-			self.api.updatepage(self.page_name, self.space, self.general_content, parentpage=self.parent_page)
-		else:
 			self.api.addpage(self.page_name, self.space, self.general_content, parentpage=self.parent_page)
+		else:
+			self.api.updatepage(self.page_name, self.space, self.general_content, self.parent_page, label="CI_3_Testing")
 
 	def get_page_content(self):
 		try:
@@ -39,7 +39,7 @@ if __name__ == "__main__":
 	title = sys.argv[3]
 	space = sys.argv[4]
 	if get_page == "true":
-		confulence_client = ConfluenceClient(username, password, title, space)
+		confulence_client = ConfluenceClient(username, password, title, space, "", "")
 		confulence_client.get_page_content()
 	if create_update_page == "true":
 		content = sys.argv[5]
