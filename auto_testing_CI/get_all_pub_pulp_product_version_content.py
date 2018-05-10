@@ -5,7 +5,7 @@ class GetAllPubPulpVersionContent():
 	def __init__(self, username, password):
 		version_page_name="Version of Applications in E2E"
 		version_page_space="~lzhuang"
-		self.confluence_api_client = confluence_client.ConfluenceClient(username, password, version_page_name, version_page_space)
+		self.confluence_api_client = confluence_client.ConfluenceClient(username, password, version_page_name, version_page_space, "", "")
 		self.versions_content = ""
 		self.e2e_version_content_list = ""
 		self.pub_content = ""
