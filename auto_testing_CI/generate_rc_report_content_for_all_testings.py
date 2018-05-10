@@ -13,11 +13,12 @@ class GenerateAllReports():
 		print "==========Find the following report files:=========="
 		for file in self.report_files_list:
 			print file
-		#report_files_list = glob.glob("*_content.txt")
 		if len(self.report_files_list) == 1:
-			print "==== Here just one report, copy it as the general report ===="
-			copyfile(self.report_files_list[0], str(self.general_reports_name))
-			print self.report_files_list[0]
+			print "==== Here just one report, read it as the general report ===="
+			general_reports_content_file = open(self.report_files_list[0], 'r')
+			general_report_content = general_reports_content_file.readlines()
+			general_reports_content_file.close()
+			self.general_reports_content = general_report_content[0]
 		elif len(self.report_files_list) > 1:
 			print "==== There are some reports, generate the general report for all testing reports"
 			for file in self.report_files_list:
@@ -28,9 +29,7 @@ class GenerateAllReports():
 				remove_table_head = report_content.replace("<table><tbody>","", 1)
 				remove_table_head_column = remove_table_head.replace(self.head_column,'', 1)
 				remove_table_end = remove_table_head_column.replace("</tbody></table>",'', 1)
-				print self.general_reports_content
 				self.general_reports_content += remove_table_end
-				print self.general_reports_content
 			self.general_reports_content = "<table><tbody>" + self.head_column + self.general_reports_content + "</tbody></table>"
 
 
