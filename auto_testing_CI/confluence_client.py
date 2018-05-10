@@ -16,7 +16,6 @@ class ConfluenceClient():
 			self.api.updatepage(self.page_name, self.space, self.general_content, parentpage=self.parent_page)
 		else:
 			self.api.addpage(self.page_name, self.space, self.general_content, parentpage=self.parent_page)
-				self.api.addpage(self.page_name, self.space, self.general_content)
 
 	def get_page_content(self):
 		try:
