@@ -1,8 +1,6 @@
 #!/bin/bash
 set -eo pipefail
 
-clean_env_mess
-
 debug_mode=true
 debug_useage() {
   username=$1
@@ -16,12 +14,9 @@ if [[ "${debug_mode}" == "true" ]]; then
   debug_useage $1 $2 $3
 fi
 
-echo "==== space ==="
-echo "${space}"
-echo "${parent_page}"
-sudo find /tmp  -name "*_content.txt" | xargs sudo rm -rf {}
 source CI_Shell_prepare_env_and_scripts.sh
 source CI_Shell_common_usage.sh
+clean_env_mess
 et_build_version=""
 tmp_dir="/tmp/$(date +'%s')"
 install_scripts_env
