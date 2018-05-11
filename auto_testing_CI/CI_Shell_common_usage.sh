@@ -6,5 +6,5 @@ initial_et_build_version(){
     echo "=== ET build id is provided =="
     et_build_version=${1}
   fi
-  return ${et_build_version}
+  echo ${et_build_version}
 }
