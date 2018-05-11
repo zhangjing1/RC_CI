@@ -1,25 +1,22 @@
 import sys
 class ParserBuildTestingReport():
-	def __init__(self, report_file):
-		file_flow = open(report_file, 'r')
-		file_string_list = file_flow.readlines()
-		file_flow.close()
-		file_string = ''.join(file_string_list)
-		self.file_list = file_string.split("</tr>")
+	def __init__(self, content):
+		self.content_list = content.split("</tr>")
 		self.passed_testing = []
 		self.failed_testing = []
 		self.inprocess_testing = []
-		self.testing_type_numbers = len(self.file_list) - 2
+		self.testing_type_numbers = len(self.content_list) - 2
 		self.final_result = ""
 		self.brief_summary=""
+		self.result_and_brief = ""
 
 	def get_testing_type_and_result(self):
-		for index in range(1, len(self.file_list)-1):
-			testing_type = self.file_list[index].split("</td>")[0].split("<td>")[1]
-			testing_result = self.file_list[index].split("</td>")[1].split("<td>")[1]
-			if testing_result == "FAILED":
+		for index in range(1, len(self.content_list)-1):
+			testing_type = self.content_list[index].split("</td>")[0].split("<td>")[1]
+			testing_result = self.content_list[index].split("</td>")[1].split("<td>")[1]
+			if testing_result.find("FAILED") > -1:
 				self.failed_testing.append(testing_type)
-			elif testing_result == "PASSED":
+			elif testing_result.find("PASSED") > -1:
 				self.passed_testing.append(testing_type)
 			else:
 				self.inprocess_testing.append(testing_type)
@@ -52,8 +49,7 @@ class ParserBuildTestingReport():
 		self.get_testing_type_and_result()
 		self.summerize_testing_status()
 		self.get_report_brief()
-		result_and_brief = self.final_result + "-" + self.brief_summary
-		print result_and_brief
+		self.result_and_brief = self.final_result + "-" + self.brief_summary
 
 
 if __name__== "__main__":

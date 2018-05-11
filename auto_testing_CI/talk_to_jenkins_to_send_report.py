@@ -6,10 +6,11 @@ import os
 
 RC_Jenkins = os.environ.get("RC_Jenkins_URL") or "https://errata-jenkins.rhev-ci-vms.eng.rdu2.redhat.com"
 class TalkToCIToSendReport():
-	def __init__(self, username, password, build_name, et_build_name_or_id, status, brief_summary):
+	def __init__(self, username, password, build_name, et_build_name_or_id, status, brief_summary, space):
 		self.username = username
 		self.password = password
 		self.build_name = build_name
+		self.space = space
 		self.server = jenkins.Jenkins(RC_Jenkins, self.username, self.password)
 		self.et_build_name_or_id = et_build_name_or_id
 		self.status = status
@@ -20,7 +21,7 @@ class TalkToCIToSendReport():
 
 	def run_build(self):
 		print "===Start to send report==="
-		self.server.build_job(self.build_name,  {'et_build_name_or_id': self.et_build_name_or_id, 'status': self.status, 'brief_summary': self.brief_summary})
+		self.server.build_job(self.build_name,  {'et_build_name_or_id': self.et_build_name_or_id, 'status': self.status, 'brief_summary': self.brief_summary, 'space': self.space})
 
 	def get_last_completed_build_number(self):
 		self.last_completed_build_number = self.server.get_job_info(self.build_name)['lastCompletedBuild']['number']
@@ -52,7 +53,8 @@ if __name__== "__main__":
 	et_build_name_or_id = sys.argv[4]
 	status = sys.argv[5]
 	brief_summary = sys.argv[6]
-	talk_to_jenkins = TalkToCIToSendReport(username, password, build_name, et_build_name_or_id, status, brief_summary)
+	space = sys.argv[7]
+	talk_to_jenkins = TalkToCIToSendReport(username, password, build_name, et_build_name_or_id, status, brief_summary, space)
 	talk_to_jenkins.run_send_report()
 
 
