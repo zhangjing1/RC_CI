@@ -10,18 +10,30 @@ debug_useage() {
   parent_page=30869307
 }
 
+prepare_scripts(){
+  mkdir -p ${1}
+  cd ${1}
+  echo "===============Download the CI files under $(pwd)=========="
+  wget http://github.com/testcara/RC_CI/archive/master.zip
+  unzip master.zip
+  cd ${1}/RC_CI-master/auto_testing_CI
+  # first check the page exists or not, if not, generate for all content
+  echo "==============All files had beeen Download==============="
+  echo "=============Firstly, let us check the page existing or not"
+}
+
 if [[ "${debug_mode}" == "true" ]]; then
   debug_useage $1 $2 $3
 fi
 
+tmp_dir="/tmp/$(date +'%s')"
+prepare_scripts ${tmp_dir}
 source CI_Shell_prepare_env_and_scripts.sh
 source CI_Shell_common_usage.sh
 clean_env_mess
 et_build_version=""
-tmp_dir="/tmp/$(date +'%s')"
 install_scripts_env
-initial_et_build_version ${et_build_name_or_id}
-prepare_scripts ${tmp_dir}
+et_build_version=$(initial_et_build_version ${et_build_name_or_id})
 title="ET Testing Reports For Build ${et_build_version}"
 cd ${tmp_dir}/RC_CI-master/auto_testing_CI
 pwd
