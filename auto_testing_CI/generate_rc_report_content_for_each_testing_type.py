@@ -28,7 +28,7 @@ class GenerateRCReportContent():
 		<p>Pub Server: pub-e2e.usersys.redhat.com</p>
 		<p>pulp Rpm Server: pulp-e2e.usersys.redhat.com</p>
 		<p>pulp Docker Server: pulp-docker-e2e.usersys.redhat.com</p>
-		<p>Pub & Pulp Versions:</p>
+		<p>Pub and Pulp Versions:</p>
 		'''
 		self.bug_regression_env = 'ET Server: errata-web-03.host.qe.eng.pek2.redhat.com'
 		self.ts2_uat_env = 'ET server: et-system-test-qe-02.usersys.redhat.com'
@@ -58,7 +58,7 @@ class GenerateRCReportContent():
 		for item in self.test_report:
 			if item == "PASSED":
 				test_table_row_content_body += "<td>" + "<strong><span style='color: rgb(0,128,0);'>" + item + "</span></strong>" + "</td>"
-			if item == "FAILED":
+			if item.find("FAILED") > -1:
 				test_table_row_content_body += "<td>" + "<strong><span style='color: rgb(255,0,0);'>" + item + "</span></strong>" + "</td>"
 			if item == "IN PROGRESS":
 				test_table_row_content_body += "<td>" + "<strong><span style='color: rgb(255,204,0);'>" + item + "</span></strong>" + "</td>"
