@@ -9,18 +9,22 @@ initial_et_build_version(){
 
 get_et_product_version(){
 	et_product_version_on_brew=$(curl http://errata.devel.redhat.com/system_version.json  | tr -d '"'| cut -d "-" -f 1)
-	et_product_version=$(echo ${et_product_version_on_brew} | tr -d '"'| cut -d "-" -f 1 | tr -d '.')
+	et_product_version=$(initial_et_build_version ${et_product_version_on_brew})
 	echo ${et_product_version}
 }
 
+get_deployed_version(){
+	et_testing_server_raw_version=$(curl http://${1}/system_version.json)
+	et_testing_server_version=$(initial_et_build_version ${et_testing_server_raw_version})
+	echo ${et_testing_server_version}
+}
 # if the deployed et version is the same with the expected version, then there is no updated
 compare_deployed_et_to_expect_et() {
 	need_deploy="false"
-	et_testing_server_raw_version=$(curl http://${1}/system_version.json)
-	et_testing_server_version=$(initial_et_build_version ${et_testing_server_raw_version})
-	if [[ "${et_testing_server_version}"  -eq  "${2}" ]]; then
+	et_testing_server_version=$(get_deployed_version ${1})
+	if [[ "${et_testing_server_version}"  ==  "${2}" ]]; then
 		need_deploy="false"
-	elif [[ "${et_testing_server_version}"  -gt  "${2}" ]]; then
+	elif [[ $(echo ${et_testing_server_version})  -gt  "$(echo ${2})" ]]; then
 		need_deploy="downgrade"
 	else
 		need_deploy="upgrade"
@@ -31,12 +35,11 @@ compare_deployed_et_to_expect_et() {
 # if the expect et version is null or the same with the product version, then just initial the env
 compare_expect_et_to_product_et() {
 	same_version_with_product="false"
-	et_product_version_on_brew=$(curl http://errata.devel.redhat.com/system_version.json  | tr -d '"'| cut -d "-" -f 1)
-	et_product_version=$(echo ${et_product_version_on_brew} | tr -d '"'| cut -d "-" -f 1 | tr -d '.')
+	et_product_version=$(get_et_product_version)
 	et_expect_version=$1
 	if [[ -z "${et_expect_version}" ]]; then
 		same_version_with_product="true"
-	elif [[ "${et_expect_version}" -eq "${et_product_version}" ]]; then
+	elif [[ "${et_expect_version}" == "${et_product_version}" ]]; then
 		same_version_with_product="true"
 	fi
 	echo ${same_version_with_product}
@@ -44,12 +47,11 @@ compare_expect_et_to_product_et() {
 
 compare_deployed_et_to_product_et() {
 	initial_with_product="true"
-	et_product_version_on_brew=$(curl http://errata.devel.redhat.com/system_version.json  | tr -d '"'| cut -d "-" -f 1)
-	et_product_version=$(echo ${et_product_version_on_brew} | tr -d '"'| cut -d "-" -f 1 | tr -d '.')
-	et_testing_server_version=$(curl http://${1}/system_version.json | cut -d "-" -f 2- | cut -d '.' -f 2)
-	if [[ "${et_product_version}" -eq "${et_testing_server_version}" ]]; then
+	et_product_version=$(get_et_product_version)
+	et_testing_server_version=$(get_deployed_version ${1})
+	if [[ "${et_product_version}" == "${et_testing_server_version}" ]]; then
 		initial_with_product="false"
-	elif [ "${et_product_version}" -lt "${et_testing_server_version}" ]]; then
+	elif [[ $(echo ${et_product_version}) -lt $(echo ${et_testing_server_version}) ]]; then
 		initial_with_product="downgrade"
 	else
 		initial_with_product="upgrade"
@@ -62,12 +64,12 @@ check_et_for_initial_et_ci() {
 	need_initalize="false"
 	if [[ -z $1 ]]; then
 		same_version_with_product=$(compare_expect_et_to_product_et $1)
-		if [[ "${same_version_with_product}" -eq "true" ]]; then
+		if [[ "${same_version_with_product}" == "true" ]]; then
 			need_initalize="false"
 		fi
 	else
 		same_version_with_expect=$(compare_deployed_et_to_expect_et $1)
-		if [[ "${same_version_with_expect}" == "${true}" ]]; then
+		if [[ "${same_version_with_expect}" == "true" ]]; then
 			need_initalize="false"
 		else
 			need_initalize=$(compare_deployed_et_to_product_et $1)
