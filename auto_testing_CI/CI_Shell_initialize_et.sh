@@ -1,146 +1,66 @@
 #!/bin/bash
 set -eo pipefail
-need_deploy=true
-initial_et_build_version(){
-	if [[ ${et_build_name_or_id} =~ "-" ]]; then
-		echo "=== ET build name has been provided: ${et_build_name} =="
-		et_build_version=$( echo ${et_build_name_or_id} | cut -d '-' -f 2| cut -d '.' -f 2 )
-	else
-		echo "=== ET build id is provided =="
-		et_build_version=${et_build_name_or_id}
-	fi
+
+debug_mode=false
+debug_useage() {
+  username=$1
+  password=$2
+  et_build_name_or_id=$3
 }
 
-compare_current_et_to_rc_et() {
-	et_testing_server_version=$(curl http://${ET_Testing_Server}/system_version.json | cut -d "-" -f 2- | cut -d '.' -f 2)
-	if [[ "${et_testing_server_version}"  -eq  "${et_build_version}" ]]; then
-		echo "=== [INFO] The current testing verson deployed is the new specific version, will do nothing ======"
-		echo "==== Done ===="
-		need_deploy=false
-	fi
+prepare_scripts(){
+  mkdir -p ${1}
+  cd ${1}
+  echo "===============Download the CI files under $(pwd)=========="
+  wget http://github.com/testcara/RC_CI/archive/master.zip
+  unzip master.zip
+  cd ${1}/RC_CI-master/auto_testing_CI
+  # first check the page exists or not, if not, generate for all content
+  echo "==============All files had beeen Download==============="
+  echo "=============Firstly, let us check the page existing or not"
 }
 
-perf_restore_db() {
-	if [[ ${Perf_Env} == true ]]
-		then
-		echo "=== [INFO] === Restoring the perf db"
-		ssh  root@errata-stage-perf-db.host.stage.eng.bos.redhat.com "cd /var/lib;./restore_db.sh"
-	fi
-}
-
-get_ansible_commands(){
-	ansible_command_part_1="ansible-playbook -vv --user root --skip-tags 'et-application-config'"
-	ansible_command_part_2=" --limit ${ET_Testing_Server} -e errata_version=${et_product_version_on_brew} -e errata_fetch_brew_build=true"
-	ansible_command_part_3=""
-	if [[ "${downgrade_flag}" == "true" ]]
-    then
-		ansible_command_part_3="-e errata_downgrade=true"
-	fi
-	ansible_command_part_4=" playbooks/errata-tool/qe/deploy-errata-qe.yml"
-	ansible_command="${ansible_command_part_1} ${ansible_command_part_2} ${ansible_command_part_3} ${ansible_command_part_4}"
-}
-
-compare_current_et_product_et() {
-	et_product_version_on_brew=$(curl http://${ET_Production_Server}/system_version.json  | tr -d '"'| cut -d "-" -f 1)
-	et_product_version=$(echo ${et_product_version_on_brew} | tr -d '"'| cut -d "-" -f 1 | tr -d '.')
-	et_testing_server_version=$(curl http://${ET_Testing_Server}/system_version.json  | tr -d \" | cut -d "-" -f 1 | tr -d '.')
-	if [[ "${#et_product_version}" -gt "${#et_testing_server_version}" ]]
-		then
-		echo "=== The product et version is one sub version #{et_product_version}, but the testing et version is one big version ${et_testing_server_version} ==="
-		et_product_version=$(echo ${et_product_version} | cut -c -4)
-	fi
-	if [[ "${et_product_version}" -gt "${et_testing_server_version}" ]]
-		then
-		echo "=== [INFO] === ET production version is newer than the testing server!"
-		echo "=== Upgrading the testing server ===="
-	elif [[ "${et_product_version}" -eq "${et_testing_server_version}" ]]
-		then
-		echo "=== [INFO] === ET production version is the same as the testing server!"
-		echo "=== Nothing to do ==="
-		need_deploy=false
-		exit
-	else
-		echo "=== [INFO] === ET production version is older than the testing server!"
-		echo "=== Downgrading the testing server ==="
-		downgrade_flag=true
-	fi
-}
-
-perf_backup_db() {
-	if [[ ${Perf_Env} == true ]]
-		then
-		#backup the db after its migration
-		ssh  root@errata-stage-perf-db.host.stage.eng.bos.redhat.com "cd /var/lib/;./backup_db.sh"
-		#change the perf env settings for brew&bugzilla stub.
-		ssh  root@errata-stage-perf.host.stage.eng.bos.redhat.com "cd ~; ./check_stub.sh"
-	fi
-}
-e2e_env_workaround() {
-    if [[ ${E2E_Env} == true ]]
-    then
-        # e2e env has some problem which would raise 2 errors
-        # the workaround 1 to fix the e2e env kinit ansible problem
-        echo "  ignore_errors: yes" >> ${WORKSPACE}/playbooks/errata-tool/qe/roles/errata-tool/restart-application/tasks/refresh-kerb-ticket.yml
-        # the workaround 2 to make sure the system version can be updated successfully
-        echo "  ignore_errors: yes" >> ${WORKSPACE}/playbooks/errata-tool/qe/roles/errata-tool/verify-deploy/tasks/main.yml
-    fi
-}
-
-update_setting() {
-	if [[ ${Perf_Env} == true ]]
-		then
-		echo "=== [INFO] Custom the brew & bugzilla settings of testing server ==="
-		ssh root@${ET_Testing_Server} 'cd ~;./check_stub.sh'
-	fi
-
-	if [[ ${E2E_Env} == true ]]
-		then
-		echo "=== [INFO] Custom the pub & bugzilla settings of testing server ==="
-		ssh root@${ET_Testing_Server} 'sed -i "s/bz-qgong.usersys.redhat.com/bz-e2e.usersys.redhat.com/" /var/www/errata_rails/config/initializers/credentials/bugzilla.rb'
-		ssh root@${ET_Testing_Server} 'sed -i "s/pub-devopsqe.usersys.redhat.com/pub-e2e.usersys.redhat.com/" /var/www/errata_rails/config/initializers/credentials/pub.rb' 
-		ssh root@${ET_Testing_Server} 'sed -i "s/pdc-et.host.qe.eng.pek2.redhat.com/pdc.engineering.redhat.com/" /var/www/errata_rails/config/initializers/credentials/pub.rb'
-	fi
-	# clean the cache for all testing servers
-	ssh root@${ET_Testing_Server} 'rm -rf /var/www/errata_rails/tmp/cache/*'
-	# enable qe menu for all testing servers
-	ssh root@${ET_Testing_Server} "sed -i \"s/errata.app.qa.eng.nay.redhat.com/${ET_Testing_Server}/g\" /var/www/errata_rails/app/controllers/concerns/user_authentication.rb"
-}
-
-restart_service() {
-	echo "=== [INFO] Restarting the services on the testing server =="
-	ssh root@${ET_Testing_Server} '/etc/init.d/httpd24-httpd restart'
-	ssh root@${ET_Testing_Server} '/etc/init.d/delayed_job restart'
-	ssh root@${ET_Testing_Server} '/etc/init.d/messaging_service restart'
-}
-
-
-
-et_build_version=""
-echo "${et_build_name_or_id}"
-if ! [[ -z "${et_build_name_or_id}" ]]; then
-    echo "the et_build_name_or_id is setted, will check the parameter"
-	initial_et_build_version
-	compare_current_et_to_rc_et
-else
-    echo "the et_build_name_or_id is not setted, will do nothing"
-    need_deploy=false
-fi
-
-if [[ ${need_deploy} == "true" ]]; then
-	perf_restore_db
-	downgrade_flag=false
+run_ansible(){
 	ansible_command=""
-	compare_current_et_product_et
 	set -x
 	env
-	cd playbooks/errata-tool
+	cd ${WORKSPACE}/playbooks/errata-tool
 	make clean-roles
 	make qe-roles
 	e2e_env_workaround
-	cd $WORKSPACE
-	pwd
-	get_ansible_commands
 	${ansible_command}
-	update_setting
-	restart_service
+}
+
+if [[ "${debug_mode}" == "true" ]]; then
+  debug_useage $1 $2 $3
 fi
+
+tmp_dir="/tmp/$(date +'%s')"
+prepare_scripts ${tmp_dir}
+source ${tmp_dir}/RC_CI-master/auto_testing_CI/CI_Shell_prepare_env_and_scripts.sh
+source  ${tmp_dir}/RC_CI-master/auto_testing_CI/CI_Shell_common_usage.sh
+et_build_version=""
+install_scripts_env
+et_build_version=$(initial_et_build_version ${et_build_name_or_id})
+
+downgrade_flag="false"
+ansible_command=""
+need_initalize=$(check_et_for_initial_et_ci ${1})
+if [[ "${need_initalize}" == "false" ]]; then
+	echo "=== There is no need to do the initalize ==="
+	exit
+elif [[ "${need_initalize}" == "downgrade" ]]; then
+	downgrade_flag="true"
+fi
+
+# when the script runs here, it means we need to deploy the enviroments with the product version
+# The deploy process is:
+# for perf env: restore the db, then deploy the env, then update the settings and restart the services
+# for e2e env: ansible workaround, deploy the env, then update the settings and restart the services
+# for others: deploy the env, then update the settings and restart the services
+
+perf_restore_db ${ET_Testing_Server}
+get_ansible_commands ${ET_Testing_Server}  ${et_build_version} ${downgrade_flag}
+run_ansible
+update_setting ${ET_Testing_Server}
+restart_service ${ET_Testing_Server}
