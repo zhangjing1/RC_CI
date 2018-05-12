@@ -82,7 +82,7 @@ check_et_for_upgrade_et_ci() {
 	if [[ -z $1 ]]; then
 		need_deploy="false"
 	else
-		need_deploy=$(compare_deployed_et_to_expect_et $1)
+		need_deploy=$(compare_deployed_et_to_expect_etur ${2} ${1})
 	fi
 	echo ${need_deploy}
 }
