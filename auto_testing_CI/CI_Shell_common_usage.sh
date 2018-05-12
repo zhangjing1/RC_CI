@@ -1,12 +1,10 @@
 initial_et_build_version(){
-  if [[ ${1} =~ "git" ]]; then
-    #echo "=== ET build name has been provided: ${et_build_name} =="
-    et_build_version=$( echo ${1} | cut -d '-' -f 2| cut -d '.' -f 2 )
-  else
-    #echo "=== ET build id is provided =="
-    et_build_version=${1}
-  fi
-  echo ${et_build_version}
+	if [[ ${1} =~ "git" ]]; then
+		et_build_version=$( echo ${1} | cut -d '-' -f 2| cut -d '.' -f 2 )
+	elif [[ ${1} =~ "-" ]]; then
+		et_build_version = ${ echo ${1} | sed 's/\.//g' | sed 's/-//g' }
+	fi
+	echo ${et_build_version}
 }
 
 get_et_product_version(){
@@ -19,12 +17,7 @@ get_et_product_version(){
 compare_deployed_et_to_expect_et() {
 	need_deploy="false"
 	et_testing_server_raw_version=$(curl http://${1}/system_version.json)
-	et_testing_server_version=""
-	if [[ "${et_testing_server_raw_version}" =~ "git" ]]; then
-		et_testing_server_version=$(echo ${et_testing_server_raw_version} | cut -d "-" -f 2- | cut -d '.' -f 2)
-	else
-		et_testing_server_version=${et_testing_server_raw_version}
-	fi
+	et_testing_server_version=$(initial_et_build_version ${et_testing_server_raw_version})
 	if [[ "${et_testing_server_version}"  -eq  "${2}" ]]; then
 		need_deploy="false"
 	elif [[ "${et_testing_server_version}"  -gt  "${2}" ]]; then
