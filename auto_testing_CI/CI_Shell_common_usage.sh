@@ -24,7 +24,7 @@ compare_deployed_et_to_expect_et() {
 	et_testing_server_version=$(get_deployed_version ${1})
 	if [[ "${et_testing_server_version}"  ==  "${2}" ]]; then
 		need_deploy="false"
-	elif [[ $(echo ${et_testing_server_version})  -gt  "$(echo ${2})" ]]; then
+	elif [[ "${et_testing_server_version}"  -gt  "${2}" ]]; then
 		need_deploy="downgrade"
 	else
 		need_deploy="upgrade"
@@ -51,7 +51,7 @@ compare_deployed_et_to_product_et() {
 	et_testing_server_version=$(get_deployed_version ${1})
 	if [[ "${et_product_version}" == "${et_testing_server_version}" ]]; then
 		initial_with_product="false"
-	elif [[ $(echo ${et_product_version}) -lt $(echo ${et_testing_server_version}) ]]; then
+	elif [[ "${et_product_version}" -lt "${et_testing_server_version}" ]]; then
 		initial_with_product="downgrade"
 	else
 		initial_with_product="upgrade"
