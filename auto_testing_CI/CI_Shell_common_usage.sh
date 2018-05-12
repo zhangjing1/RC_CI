@@ -78,17 +78,6 @@ check_et_for_initial_et_ci() {
 	echo ${need_initalize}
 }
 
-check_et_for_upgrade_et_ci() {
-	need_deploy="false"
-	if [[ -z $1 ]]; then
-		need_deploy="false"
-	else
-		need_deploy=$(compare_deployed_et_to_expect_et ${2} ${1})
-	fi
-	echo ${need_deploy}
-}
-
-
 perf_restore_db() {
 	if [[ ${1} =~ "perf"  ]]
 		then
