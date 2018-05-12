@@ -10,7 +10,7 @@ initial_et_build_version(){
 }
 
 get_et_product_version(){
-	et_product_version_on_brew=$(curl http://errata.devel.redhat.com}/system_version.json  | tr -d '"'| cut -d "-" -f 1)
+	et_product_version_on_brew=$(curl http://errata.devel.redhat.com/system_version.json  | tr -d '"'| cut -d "-" -f 1)
 	et_product_version=$(echo ${et_product_version_on_brew} | tr -d '"'| cut -d "-" -f 1 | tr -d '.')
 	echo ${et_product_version}
 }
@@ -32,7 +32,7 @@ compare_deployed_et_to_expect_et() {
 # if the expect et version is null or the same with the product version, then just initial the env
 compare_expect_et_to_product_et() {
 	same_version_with_product="false"
-	et_product_version_on_brew=$(curl http://errata.devel.redhat.com}/system_version.json  | tr -d '"'| cut -d "-" -f 1)
+	et_product_version_on_brew=$(curl http://errata.devel.redhat.com/system_version.json  | tr -d '"'| cut -d "-" -f 1)
 	et_product_version=$(echo ${et_product_version_on_brew} | tr -d '"'| cut -d "-" -f 1 | tr -d '.')
 	et_expect_version=$1
 	if [[ -z "${et_expect_version}" ]]; then
@@ -45,17 +45,17 @@ compare_expect_et_to_product_et() {
 
 compare_deployed_et_to_product_et() {
 	initial_with_product="true"
-	et_product_version_on_brew=$(curl http://errata.devel.redhat.com}/system_version.json  | tr -d '"'| cut -d "-" -f 1)
+	et_product_version_on_brew=$(curl http://errata.devel.redhat.com/system_version.json  | tr -d '"'| cut -d "-" -f 1)
 	et_product_version=$(echo ${et_product_version_on_brew} | tr -d '"'| cut -d "-" -f 1 | tr -d '.')
 	et_testing_server_version=$(curl http://${1}/system_version.json | cut -d "-" -f 2- | cut -d '.' -f 2)
 	if [[ "${et_product_version}" -eq "${et_testing_server_version}" ]]; then
-		inital_with_product="false"
+		initial_with_product="false"
 	elif [ "${et_product_version}" -lt "${et_testing_server_version}" ]]; then
-		inital_with_product="downgrade"
+		initial_with_product="downgrade"
 	else
-		inital_with_product="upgrade"
+		initial_with_product="upgrade"
 	fi
-	echo ${inital_with_product}
+	echo ${initial_with_product}
 }
 
 
@@ -156,5 +156,6 @@ get_ansible_commands(){
 	fi
 	ansible_command_part_4=" playbooks/errata-tool/qe/deploy-errata-qe.yml"
 	ansible_command="${ansible_command_part_1} ${ansible_command_part_2} ${ansible_command_part_3} ${ansible_command_part_4}"
+	echo ${ansible_command}
 }
 
