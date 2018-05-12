@@ -80,15 +80,11 @@ check_et_for_initial_et_ci() {
 check_et_for_upgrade_et_ci() {
 	need_deploy="false"
 	if [[ -z $1 ]]; then
-		exit
+		need_deploy="false"
 	else
 		need_deploy=$(compare_deployed_et_to_expect_et $1)
-		if [[ "${need_deploy}" == "false" ]]; then
-			exit
-		else
-			echo ${need_deploy}
-		fi
 	fi
+	echo ${need_deploy}
 }
 
 
