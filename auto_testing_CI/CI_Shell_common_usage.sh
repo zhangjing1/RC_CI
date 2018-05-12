@@ -2,7 +2,7 @@ initial_et_build_version(){
 	if [[ ${1} =~ "git" ]]; then
 		et_build_version=$( echo ${1} | cut -d '-' -f 2| cut -d '.' -f 2 )
 	elif [[ ${1} =~ "-" ]]; then
-		et_build_version = ${ echo ${1} | sed 's/\.//g' | sed 's/-//g' }
+		et_build_version = $( echo ${1} | sed 's/\.//g' | sed 's/-//g' )
 	fi
 	echo ${et_build_version}
 }
