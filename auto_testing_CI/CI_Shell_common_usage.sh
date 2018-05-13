@@ -63,7 +63,6 @@ run_ansible(){
 	env
 	cd "${2}/playbooks/errata-tool" || exit
 	echo "===Here==="
-	ifconfig
 	pwd
 	ls
 	echo "====done"
