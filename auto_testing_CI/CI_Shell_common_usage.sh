@@ -1,19 +1,20 @@
 initial_et_build_id(){
-	et_build_id=""
 	if [[ "${1}" =~ 'git' ]]; then
 		et_build_id=$( echo "${1}" | cut -d '-' -f 2| cut -d '.' -f 2 )
+	elif [[ "${1}" =~ '-' ]]; then
+		et_build_id=$(echo "${1}" | cut -d '-' -f 1 | sed 's/\.//g')
 	else
-		et_build_id="${1}"
+		et_build_id=${1}
 	fi
 	echo "${et_build_id}"
 }
 
 initial_et_build_version(){
-	echo "${1}" | sed 's/\.//g' | sed 's/-//g'
+	echo "${1}" | cut -d "-" -f 1 | sed 's/\.//g'
 }
 
 get_system_raw_version(){
-	curl http://"${1}"/system_version.json
+	curl http://"${1}"/system_version.json | sed 's/"//g'
 }
 
 get_et_product_version(){
@@ -38,11 +39,11 @@ get_ansible_commands_with_product_et_version(){
 	ansible_command_part_1="ansible-playbook -vv --user root --skip-tags 'et-application-config'"
 	ansible_command_part_2=" --limit ${1} -e errata_version=${2} -e errata_fetch_brew_build=true"
 	ansible_command_part_3=""
-	if [[ "${3}" == "true" ]]
+	if [[ "${3}" == "downgrade" ]]
     then
 		ansible_command_part_3="-e errata_downgrade=true"
 	fi
-	ansible_command_part_4=" qe/deploy-errata-qe.yml"
+	ansible_command_part_4=" playbooks/errata-tool/qe/deploy-errata-qe.yml"
 	ansible_command="${ansible_command_part_1} ${ansible_command_part_2} ${ansible_command_part_3} ${ansible_command_part_4}"
 	echo "${ansible_command}"
 }
@@ -51,80 +52,21 @@ get_ansible_commands_with_product_et_version(){
 get_ansible_commands_with_build_id(){
 	ansible_command_part_1="ansible-playbook -vv --user root --skip-tags 'et-application-config'"
 	ansible_command_part_2=" --limit ${1} -e errata_jenkins_build=${2} "
-	ansible_command_part_3=" qe/deploy-errata-qe.yml"
+	ansible_command_part_3=" playbooks/errata-tool/qe/deploy-errata-qe.yml"
 	ansible_command="${ansible_command_part_1} ${ansible_command_part_2} ${ansible_command_part_3}"
 	echo "${ansible_command}"
 }
 
 
-run_ansible(){
-	ansible_command=""
-	set -x
-	env
-	cd "${2}/playbooks/errata-tool" || exit
-	echo "===Here==="
-	pwd
-	ls
-	echo "====done"
-	make clean-roles
-	make qe-roles
-	e2e_env_workaround "${1}" "${2}"
-	"${3}"
-}
-
-
-keep_the_env_as_product_version(){
-	downgrade="false"
-	need_deploy="true"
-	et_product_raw_version=$(get_system_raw_version "${1}")
-	et_product_version=$(get_et_product_version "${1}")
-	et_depolyed_version=$(get_deployed_et_version "${2}")
-	echo "=== Get the following vesions:"
-	echo "Proudct Version: ${et_product_version}"
-	echo "Installed version: ${et_depolyed_version}"
-	if [[ "${et_product_version}" == "${et_depolyed_version}" ]]; then
-		echo "=== The deployed version is the same as the product version"
-		need_deploy="false"
-	elif [[ "${et_product_version}" -lt "${et_depolyed_version}" ]]; then
-		downgrade="true"
+compare_version_or_id(){
+	if [[ "${1}" == "${2}" ]]; then
+		echo "same"
+	elif [[ "${1}" -lt "${2}" ]]; then
+		echo "upgrade"
 	else
-		downgrade="false"
-	fi
-	if [[ "${need_deploy}" == "false" ]]; then
-		echo "=== There is no need to deploy the product version again"
-	else
-		perf_restore_db "${2}"
-		ansible=$(get_ansible_commands_with_product_et_version "${2}" "${et_product_raw_version}" "${downgrade}" "${3}")
-		echo "=== Ansible commands: ${ansible}"
-		run_ansible "${2}" "${3}" "${ansible}"
-		update_setting "${1}"
-		restart_service "${1}"
+		echo "downgrade"
 	fi
 }
-
-confirm_deployed_version_with_expected_version(){
-	et_deployed_version=$(get_deployed_et_id "${1}")
-	et_expected_version=$(initial_et_build_id "${2}")
-	echo "=== Get the following vesions:"
-	echo "Expected Version: ${et_expected_version}"
-	echo "Installed version: ${et_depolyed_version}"
-	if [[ "${et_deployed_version}" == "${et_expected_version}" ]]; then
-		echo "=== SUCCESS ==="
-	else
-		echo "=== FAILED ==="
-	fi
-}
-
-upgrade_the_env_to_expect_version(){
-	et_expected_version=$(initial_et_build_id "${2}")
-	ansible=$(get_ansible_commands_with_build_id "${1}" "${et_expected_version}"  "${3}")
-	echo "== Upgrade the env"
-	echo "=== Ansible commands: ${ansible}"
-	run_ansible "${1}" "${3}" "${ansible}"
-	update_setting "${1}"
-	restart_service "${1}"
-}
-
 
 perf_restore_db() {
 	if [[ "${1}" =~ "perf"  ]]
@@ -148,7 +90,7 @@ e2e_env_workaround() {
 update_setting() {
 	if [[ "${1}" =~ "perf" ]]; then
 		echo "=== [INFO] Custom the brew & bugzilla settings of testing server ==="
-		ssh root@errata-stage-perf-db.host.stage.eng.bos.redhat.com 'cd ~;./check_stub.sh'
+		ssh root@errata-stage-perf.host.stage.eng.bos.redhat.com 'cd ~;./check_stub.sh'
 	fi
 
 	if [[ "${1}" =~ "e2e" ]]; then
