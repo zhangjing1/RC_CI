@@ -42,7 +42,7 @@ get_ansible_commands_with_product_et_version(){
     then
 		ansible_command_part_3="-e errata_downgrade=true"
 	fi
-	ansible_command_part_4=" playbooks/errata-tool/qe/deploy-errata-qe.yml"
+	ansible_command_part_4=" qe/deploy-errata-qe.yml"
 	ansible_command="${ansible_command_part_1} ${ansible_command_part_2} ${ansible_command_part_3} ${ansible_command_part_4}"
 	echo "${ansible_command}"
 }
@@ -51,7 +51,7 @@ get_ansible_commands_with_product_et_version(){
 get_ansible_commands_with_build_id(){
 	ansible_command_part_1="ansible-playbook -vv --user root --skip-tags 'et-application-config'"
 	ansible_command_part_2=" --limit ${1} -e errata_jenkins_build=${2} "
-	ansible_command_part_3=" playbooks/errata-tool/qe/deploy-errata-qe.yml"
+	ansible_command_part_3=" qe/deploy-errata-qe.yml"
 	ansible_command="${ansible_command_part_1} ${ansible_command_part_2} ${ansible_command_part_3}"
 	echo "${ansible_command}"
 }
