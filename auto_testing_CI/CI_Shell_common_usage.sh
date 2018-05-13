@@ -62,6 +62,11 @@ run_ansible(){
 	set -x
 	env
 	cd "${2}/playbooks/errata-tool" || exit
+	echo "===Here==="
+	ifconfig
+	pwd
+	ls
+	echo "====done"
 	make clean-roles
 	make qe-roles
 	e2e_env_workaround "${1}" "${2}"
