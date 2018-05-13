@@ -36,13 +36,13 @@ get_deployed_et_id(){
 
 get_ansible_commands_with_product_et_version(){
 	ansible_command_part_1="ansible-playbook -vv --user root --skip-tags 'et-application-config'"
-	ansible_command_part_2=" --limit \"${1}\" -e errata_version=\"${2}\" -e errata_fetch_brew_build=true"
+	ansible_command_part_2=" --limit ${1} -e errata_version=${2} -e errata_fetch_brew_build=true"
 	ansible_command_part_3=""
 	if [[ "${3}" == "true" ]]
     then
 		ansible_command_part_3="-e errata_downgrade=true"
 	fi
-	ansible_command_part_4=" \"${4}\"/playbooks/errata-tool/qe/deploy-errata-qe.yml"
+	ansible_command_part_4=" ${4}/playbooks/errata-tool/qe/deploy-errata-qe.yml"
 	ansible_command="${ansible_command_part_1} ${ansible_command_part_2} ${ansible_command_part_3} ${ansible_command_part_4}"
 	echo "${ansible_command}"
 }
@@ -50,8 +50,8 @@ get_ansible_commands_with_product_et_version(){
 
 get_ansible_commands_with_build_id(){
 	ansible_command_part_1="ansible-playbook -vv --user root --skip-tags 'et-application-config'"
-	ansible_command_part_2=" --limit \"${1}\" -e errata_jenkins_build=\"${2}\" "
-	ansible_command_part_3=" \"${3}\"/playbooks/errata-tool/qe/deploy-errata-qe.yml"
+	ansible_command_part_2=" --limit ${1} -e errata_jenkins_build=${2} "
+	ansible_command_part_3=" ${3}/playbooks/errata-tool/qe/deploy-errata-qe.yml"
 	ansible_command="${ansible_command_part_1} ${ansible_command_part_2} ${ansible_command_part_3}"
 	echo "${ansible_command}"
 }
@@ -113,7 +113,8 @@ confirm_deployed_version_with_expected_version(){
 
 upgrade_the_env_to_expect_version(){
 	et_expected_version=$(initial_et_build_id "${2}")
-	ansible=$(get_ansible_commands_with_build_id "${et_expected_version}" "${1}" "${3}")
+	ansible=$(get_ansible_commands_with_build_id "${1}" "${et_expected_version}"  "${3}")
+	echo "== Upgrade the env"
 	echo "=== Ansible commands: ${ansible}"
 	run_ansible "${1}" "${3}" "${ansible}"
 	update_setting "${1}"
