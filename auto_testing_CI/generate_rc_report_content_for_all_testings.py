@@ -15,10 +15,13 @@ class GenerateAllReports():
 			print file
 		if len(self.report_files_list) == 1:
 			print "==== Here just one report, read it as the general report ===="
+			print self.report_files_list[0]
 			general_reports_content_file = open(self.report_files_list[0], 'r')
-			general_report_content = general_reports_content_file.readlines()
+			general_report_content = general_reports_content_file.read()
 			general_reports_content_file.close()
-			self.general_reports_content = general_report_content[0]
+			print general_report_content
+
+			self.general_reports_content = general_report_content
 		elif len(self.report_files_list) > 1:
 			print "==== There are some reports, generate the general report for all testing reports"
 			for file in self.report_files_list:
