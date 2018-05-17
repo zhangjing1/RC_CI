@@ -77,6 +77,8 @@ perf_restore_db() {
 }
 
 e2e_env_workaround() {
+	echo "I am in ---"
+	echo ${1}
     if [[ "${1}" =~ "e2e" ]]; then
     	echo "== Running the e2e env ansible workaround to ignore the kinit ansible problems"
         # e2e env has some problem which would raise 2 errors
