@@ -32,7 +32,7 @@ class ParserBuildTestingReport():
 	def get_report_brief(self):
 		self.brief_summary = str(self.testing_type_numbers) + " testings: "
 		if len(self.inprocess_testing) == 1:
-			self.brief_summary += "1 testing in process(" + self.inprocess_testing + "). "
+			self.brief_summary += "1 testing in process(" + self.inprocess_testing[0] + "). "
 		elif len(self.inprocess_testing) >= 2:
 			self.brief_summary += str(len(self.inprocess_testing)) + " in process testings(" + ", ".join(self.inprocess_testing) +"). "
 		if len(self.failed_testing) == 1:
