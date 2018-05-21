@@ -41,7 +41,7 @@ class TalkToRobotFrameworkCI():
 		print "ET RC Version: " + self.et_rc_version
 		print "Testing Type: " + "RobotFramework UAT Testing"
 		print "Testing Result: " + self.robotframework_testing_result
-		print "Testing Report URL: " + self.robotframework_testing_result_url.replace(' ', '')
+		print "Testing Report URL: " + self.robotframework_testing_result_url.rstrip()
 		print "=====================Testing Report: End================"
 
 	def check_console_log(self):
