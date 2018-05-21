@@ -22,14 +22,14 @@ class PerformanceReportsComparison():
 
 	def get_worsen_transactions(self):
 		for transaction in self.parsered_report_2.keys():
-			new_time = self.parsered_report_2[transaction]
-			old_time = self.parsered_report_1[transaction]
-			print new_time, old_time
+			new_time = self.parsered_report_1[transaction]
+			old_time = self.parsered_report_2[transaction]
 
 			if new_time > old_time and new_time > 2000:
-				increasement = new_time - old_time
+				increasement = float(new_time) - float(old_time)
 				increasement_percentage = increasement / old_time
-				if increasement_percentage > self.tolerance:
+				print new_time, old_time, increasement_percentage
+				if increasement_percentage > float(self.tolerance):
 					self.worsen_transactions[transaction] = increasement_percentage
 
 	def comparison_summary(self):

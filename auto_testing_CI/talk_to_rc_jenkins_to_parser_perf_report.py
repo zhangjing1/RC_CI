@@ -55,6 +55,9 @@ class TalkToRCJenkinsToParserPerfReport():
 		remote_perfomance_old_report_path = self.perf_remote_base_path + str(old_build) + "/report/data/subreports/Performance.json"
 		self.local_destination_old_report_path = self.cwd + "/old_performance.json"
 
+		print "=== Scp performance files:"
+		print remote_perfomance_old_report_path, "as", self.local_destination_old_report_path
+		print remote_perfomance_new_report_path, "as", self.local_destination_new_report_path
 
 		self.cu.python_scp_get_files(self.perf_jmeter_slave_server, remote_perfomance_new_report_path, self.local_destination_new_report_path)
 		self.cu.python_scp_get_files(self.perf_jmeter_slave_server, remote_perfomance_old_report_path, self.local_destination_old_report_path)
@@ -76,7 +79,7 @@ class TalkToRCJenkinsToParserPerfReport():
 		print "=====================Testing Report: End================"
 		if len(self.worsen_transactions) > 0:
 			print "== More details info: "
-			print "Worsen Transactions: " + self.worsen_transactions
+			print "Worsen Transactions: ", self.worsen_transactions
 
 
 if __name__== "__main__":
