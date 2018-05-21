@@ -40,7 +40,7 @@ class ParserBuildTestingReport():
 		elif len(self.failed_testing) >=2:
 			self.brief_summary += str(len(self.failed_testing)) + " failed testings(" + ", ".join(self.failed_testing) + ")."
 		if len(self.passed_testing) == 1:
-			self.brief_summary += "1 passed testing(" + self.passed_testing + "). "
+			self.brief_summary += "1 passed testing(" + self.passed_testing[0] + "). "
 		elif len(self.passed_testing) >= 2:
 			self.brief_summary += str(len(self.passed_testing)) + " passed testings(" + ", ".join(self.passed_testing) +"). "
 
