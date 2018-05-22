@@ -1,15 +1,19 @@
 import sys
 import ci3_error
 from confluence import Api
+import confluence_rest_api_client
 class ConfluenceClient():
 	def __init__(self, username, password, title, space, content, parent_page):
-		wiki_url = "https://docs.engineering.redhat.com"
-		self.api = Api(wiki_url, username, password)
+		self.wiki_url = "https://docs.engineering.redhat.com"
+		self.username = username
+		self.password = password
+		self.api = Api(self.wiki_url, self.username, self.password)
 		self.page_name = title
 		self.general_content = content
 		self.space = space
 		self.parent_page = parent_page
 		self.content = ""
+		self.page_all_info = {}
 
 	def create_update_page(self):
 		self.get_page_content()
@@ -17,17 +21,26 @@ class ConfluenceClient():
 			print "==== Will add page ==="
 			print "==== The page title: ", self.page_name
 			self.api.addpage(self.page_name, self.space, self.general_content, parentpage=self.parent_page)
-
 		else:
+			self.get_page_all()
 			print "==== Will update page ==="
 			print "==== The page title: ", self.page_name
-			self.api.updatepage(self.page_name, self.space, self.general_content, self.parent_page, label="CI_3_Testing")
+			update_confluence_client = confluence_rest_api_client.ConfluenceClientForUpdatePage(self.space, self.page_name, self.wiki_url, self.username, self.password)
+			update_confluence_client.update_page(self.page_all_info, self.general_content)
 
 	def get_page_content(self):
 		try:
 			self.content = self.api.getpagecontent(self.page_name, self.space)
 		except Exception, error:
 			self.content = str(error)
+
+	def get_page_all(self):
+		try:
+			self.page_all_info = self.api.getpage(self.page_name, self.space)
+		except Exception, error:
+			print str(error)
+
+
 
 
 if __name__ == "__main__":
