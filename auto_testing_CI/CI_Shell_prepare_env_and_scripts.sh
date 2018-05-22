@@ -7,6 +7,9 @@ install_scripts_env() {
   sudo pip install requests_kerberos
   sudo pip install httplib2
   sudo pip install google-api-python-client
+  sudo pip install bugzilla
+  sudo pip install python-bugzilla
+
   if [[ $(wget --version | head -1) =~ "GNU Wget" ]]; then
     echo "=====wget has been installed======";
   else
