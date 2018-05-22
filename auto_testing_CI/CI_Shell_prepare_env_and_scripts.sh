@@ -2,6 +2,11 @@ install_scripts_env() {
   sudo pip install --upgrade pip
   sudo pip install confluence-py
   sudo pip install python-jenkins
+  sudo pip install dateutils
+  sudo pip install requests
+  sudo pip install requests_kerberos
+  sudo pip install httplib2
+  sudo pip install google-api-python-client
   if [[ $(wget --version | head -1) =~ "GNU Wget" ]]; then
     echo "=====wget has been installed======";
   else
