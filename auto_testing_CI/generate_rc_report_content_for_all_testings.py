@@ -40,7 +40,7 @@ class GenerateAllReports():
 		report_footer_2 = "<p>[2]'ok to release' here means:</p>"
 		report_footer_3 = "<p>     1. There is no obvious performance fallback of the current build.</p>"
 		report_footer_4 = "<p>     2. There is few obvious (>20%) performance fallback. But QE has confirmed it will not block the release </p>"
-		report_footer_5 = "<p>Anything about the reports or the testings, you can join #qe-bne or send mail to 'errata-qe-team' for help."
+		report_footer_5 = "<p>Anything about the reports or the testings, you can join #qe-bne or send mail to 'errata-qe-team' for help.</p>"
 		report_beginning = report_note_1 + report_note_2
 		report_ending = report_footer_1 + report_footer_2 + report_footer_3 + report_footer_4 + report_footer_5
 		self.general_reports_content = report_beginning + "<p></p>" + self.general_reports_content + "<p></p>" + report_ending
