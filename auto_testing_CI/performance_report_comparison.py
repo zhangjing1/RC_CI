@@ -2,7 +2,7 @@ import single_performance_report_parser
 import common_usage
 
 class PerformanceReportsComparison():
-	def __init__(self, report_1, report_2, tolerance):
+	def __init__(self, report_1, report_2, tolerance, max_accepted_time):
 		report_1_parser = single_performance_report_parser.SinglePerformanceReportParser(report_1)
 		report_2_parser = single_performance_report_parser.SinglePerformanceReportParser(report_2)
 		self.parsered_report_1 = report_1_parser.run_single_report_parser()
@@ -10,6 +10,7 @@ class PerformanceReportsComparison():
 		self.worsen_transactions = {}
 		self.tolerance = tolerance
 		self.comparison_result = ""
+		self.max_accepted_time = max_accepted_time
 
 	def compare_reports(self):
 		if self.parsered_report_2.keys() == self.parsered_report_1.keys():
@@ -21,11 +22,12 @@ class PerformanceReportsComparison():
 			print "=== Will not do the comparison ===="
 
 	def get_worsen_transactions(self):
+		print "== I am filtering out the block transactions if its time exceeds the max_accepted_time and its fallback overs the tolerance"
 		for transaction in self.parsered_report_2.keys():
 			new_time = self.parsered_report_1[transaction]
 			old_time = self.parsered_report_2[transaction]
 
-			if new_time > old_time and new_time > 2000:
+			if new_time > old_time and new_time > float(self.max_accepted_time):
 				increasement = float(new_time) - float(old_time)
 				increasement_percentage = increasement / old_time
 				print new_time, old_time, increasement_percentage

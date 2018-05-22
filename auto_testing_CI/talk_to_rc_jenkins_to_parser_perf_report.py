@@ -6,7 +6,7 @@ import sys
 
 RC_Jenkins = os.environ.get("RC_Jenkins_URL") or "https://errata-jenkins.rhev-ci-vms.eng.rdu2.redhat.com"
 class TalkToRCJenkinsToParserPerfReport():
-	def __init__(self, username, password, expected_rc_version, tolerance, perf_jmeter_slave_server):
+	def __init__(self, username, password, expected_rc_version, tolerance, max_accepted_time, perf_jmeter_slave_server):
 		self.build_name = "Trigger_Perf_Testing_Remotely"
 		self.ci_jenkins = talk_to_rc_jenkins.TalkToRCCI(username, password, self.build_name)
 		self.ci_jenkins.get_test_report_for_build()
@@ -25,6 +25,7 @@ class TalkToRCJenkinsToParserPerfReport():
 		self.local_destination_old_report_path = ""
 		self.worsen_transactions = {}
 		self.tolerance = tolerance
+		self.max_accepted_time = max_accepted_time
 
 
 	def parser_current_testing_result(self):
@@ -64,7 +65,7 @@ class TalkToRCJenkinsToParserPerfReport():
 
 	def parser_and_comparsion_report(self):
 		print "=== Parsering the report ==="
-		comparison_parser = performance_report_comparison.PerformanceReportsComparison(self.local_destination_new_report_path, self.local_destination_old_report_path, self.tolerance)
+		comparison_parser = performance_report_comparison.PerformanceReportsComparison(self.local_destination_new_report_path, self.local_destination_old_report_path, self.tolerance, self.max_accepted_time)
 		comparison_parser.run_one_comparison()
 		self.testing_result = comparison_parser.comparison_result
 		self.worsen_transactions = comparison_parser.worsen_transactions
@@ -78,8 +79,11 @@ class TalkToRCJenkinsToParserPerfReport():
 		print "Testing Report URL: " + self.testing_result_url
 		print "=====================Testing Report: End================"
 		if len(self.worsen_transactions) > 0:
-			print "== More details info: "
+			print "== The following transactions have block performance fallback: "
 			print "Worsen Transactions: ", self.worsen_transactions
+		else:
+			print "== According to the max_accepted_time and tolerance, there is block performance fallback issues"
+			print "== Cheers =="
 
 
 if __name__== "__main__":
@@ -87,6 +91,7 @@ if __name__== "__main__":
 	password = sys.argv[2]
 	expected_rc_version = sys.argv[3]
 	tolerance = sys.argv[4]
-	perf_jmeter_slave_server = sys.argv[5]
-	perf = TalkToRCJenkinsToParserPerfReport(username, password, expected_rc_version, tolerance, perf_jmeter_slave_server)
+	max_accepted_time = sys.argv[5]
+	perf_jmeter_slave_server = sys.argv[6]
+	perf = TalkToRCJenkinsToParserPerfReport(username, password, expected_rc_version, tolerance, max_accepted_time, perf_jmeter_slave_server)
 	perf.parser_current_testing_result()
