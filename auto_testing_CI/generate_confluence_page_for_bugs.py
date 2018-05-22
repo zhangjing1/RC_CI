@@ -42,7 +42,7 @@ def get_bug_and_format_bug(bug_id):
 
 	# deal with bug.summary: when the bug.summary contain '>' or '<', it will bring some troubles. then remove such data from the summary
 	summary = bug.summary.replace("<", '').replace(">", '')
-	if bug_flag == "-":
+	if bug_flag == "-" or bug_flag == "+":
 		bug_result = "PASSED"
 	formatted_bug = [ bug.id, summary, bug.component, bug.status, bug.severity, bug.priority, bug_flag, bug.qa_contact, bug_result ]
 	return formatted_bug
