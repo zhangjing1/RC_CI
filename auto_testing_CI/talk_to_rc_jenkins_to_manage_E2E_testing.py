@@ -56,7 +56,7 @@ class TalkToRCCIForE2E():
 			self.e2e_testing_result = "FAILED"
 
 	def check_console_log(self):
-		if not re.search('Done publishing Robot results', self.console_log_content):
+		if self.console_log_content.find('Report:  /tmp/workspace/run-e2e/tests/Errata/results/report.html') < 0:
 			print "====There is someting wrong. please check the log manually"
 			print "====console log URL: " + self.e2e_testing_console_log_url
 			self.e2e_testing_result = "FAILED (unexpected error)"
