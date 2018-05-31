@@ -86,6 +86,10 @@ e2e_env_workaround() {
         echo "  ignore_errors: yes" >> ${2}/playbooks/errata-tool/qe/roles/errata-tool/restart-application/tasks/refresh-kerb-ticket.yml
         # the workaround 2 to make sure the system version can be updated successfully
         echo "  ignore_errors: yes" >> ${2}/playbooks/errata-tool/qe/roles/errata-tool/verify-deploy/tasks/main.yml
+        # the workaround 3 is to make sure the key tab related error can be ignored
+        sed -i '/name: copy over krb5.conf/a \  ignore_errors: True' ${2}/playbooks/errata-tool/qe/roles/kerberos/tasks/main.yml
+        sed -i '/copy host keytab/a \  ignore_errors: True' ${2}/playbooks/errata-tool/qe/roles/kerberos/tasks/main.yml
+        sed -i '/install kerberos client packages on RedHat based platforms/a \  ignore_errors: True' ${2}/playbooks/errata-tool/qe/roles/kerberos/tasks/main.yml
     fi
 }
 
