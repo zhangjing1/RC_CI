@@ -16,10 +16,15 @@ class NightCI3Moniter():
 		self.build_rpm_ci_console = ""
 		self.build_testing_parameter = {}
 		self.parent_page = parent_page
+		self.ci3_jenkins_url = "https://errata-jenkins.rhev-ci-vms.eng.rdu2.redhat.com/job/ET_Builds_Testing/"
 
 
 	def get_build_id(self):
 		self.build_rpm_ci.get_last_completed_build_number()
+		build_rpm_ci_job_id = self.build_rpm_ci.last_completed_build_number
+		build_id_jenkins_url = self.ci3_jenkins_url + str(build_rpm_ci_job_id)
+		print "=== the latest build comes from:"
+		print "=== " build_id_jenkins_url
 		self.build_rpm_ci.get_latest_build_console_log_content()
 		self.build_rpm_ci_console = self.build_rpm_ci.console_log_content
 		self.build_id = str(re.findall('\d{4}', self.build_rpm_ci_console)[-1])
@@ -36,7 +41,7 @@ class NightCI3Moniter():
 		new_build_number = self.build_testing_ci_jenkins.get_job_info(self.build_testing_ci_name)['lastBuild']['number']
 		if int(new_build_number) > int(old_build_number):
 			print "=== the new build testing is running, done ==="
-			jenkins_url = "https://errata-jenkins.rhev-ci-vms.eng.rdu2.redhat.com/job/ET_Builds_Testing/" + new_build_number
+			jenkins_url = "https://errata-jenkins.rhev-ci-vms.eng.rdu2.redhat.com/job/ET_Builds_Testing/" + str(new_build_number)
 			print "=== For the jobs details, you can refer to:"
 			print jenkins_url
 
