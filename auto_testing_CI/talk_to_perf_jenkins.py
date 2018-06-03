@@ -34,6 +34,7 @@ class TalktoPerfCI():
 		self.build_name = os.environ.get('Perf_Build_Name') or build_name
 		self.expected_run_time = expected_run_time
 		self.check_loop_time = check_loop_time
+		self.default_build_number_to_compare = 178
 		self.lastest_build_number = 0
 		self.last_completed_build_number = 0
 		self.console_log_content = ""
@@ -41,7 +42,6 @@ class TalktoPerfCI():
 		self.perf_testing_comparison_url = ""
 		self.perf_testing_console_url = ""
 		self.et_rc_version = et_rc_version
-		self.last_successful_build_number = 0
 
 	def get_latest_build_console_log_content(self):
 		self.console_log_content = self.server.get_build_console_output(self.build_name, self.lastest_build_number)
@@ -60,9 +60,6 @@ class TalktoPerfCI():
 
 	def get_lastest_build_number(self):
 		self.lastest_build_number = self.server.get_job_info(self.build_name)['lastBuild']['number']
-
-	def get_last_successful_build_number(self):
-		self.last_successful_build_number = self.server.get_job_info(self.build_name)['lastSuccessfulBuild']['number']
 
 	def summary_the_result(self):
 		print "=====================Testing Report: Begin=================="
@@ -106,11 +103,10 @@ class TalktoPerfCI():
 			self.perf_testing_result = "FAILED"
 
 	def get_comparision_report_url(self):
-		#print self.last_completed_build_number
-		#print self.lastest_build_number
+		# get the latest job to do the comparison with the fix build et 3.16.4
 		self.perf_testing_comparison_url = Perf_Jenkins + "/view/ET/job/" + self.build_name + "/" + str(self.lastest_build_number) \
-                      + "/performance-report/comparisonReport/" + str(self.last_successful_build_number) +"/monoReport#!/report/_/Perf-build_" \
-                      + str(self.lastest_build_number) + "_vs_" + str(self.last_successful_build_number) +"/perfcharts-simple-perfcmp"
+                      + "/performance-report/comparisonReport/" + str(self.default_build_number_to_compare) +"/monoReport#!/report/_/Perf-build_" \
+                      + str(self.lastest_build_number) + "_vs_" + str(self.default_build_number_to_compare) +"/perfcharts-simple-perfcmp"
 		#print self.perf_testing_comparison_url
 
 	def run_one_test(self):

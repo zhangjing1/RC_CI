@@ -24,7 +24,9 @@ class SinglePerformanceReportParser():
 	def get_all_transactions_average_time(self):
 		transactions_time_string = ""
 		for items_time in self.perf_summary['rows']:
-			transaction_time = items_time[2]['value']
+			# get the 90% Line data to do the comparison, the comparison result
+			# should be more correct than those shown in the perfci
+			transaction_time = items_time[4]['value']
 			if str(transaction_time):
 				self.transactions_time.append(transaction_time)
 		#print self.transactions_time
