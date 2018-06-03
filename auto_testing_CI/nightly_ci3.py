@@ -11,24 +11,20 @@ class NightCI3Moniter():
 		self.build_rpm_ci_name = build_rpm_ci_name
 		self.build_testing_ci_name = build_testing_ci_name
 		self.build_rpm_ci = CI3_JENKINS.TalkToRCCI(self.username, self.password, self.build_rpm_ci_name)
+		self.build_rpm_ci_jenkins = self.build_rpm_ci.server
 		self.build_testing_ci = CI3_JENKINS.TalkToRCCI(self.username, self.password, self.build_testing_ci_name)
 		self.build_testing_ci_jenkins = self.build_rpm_ci.server
-		self.build_rpm_ci_console = ""
 		self.build_testing_parameter = {}
 		self.parent_page = parent_page
 		self.et_jenkins_url = "https://errata-jenkins.rhev-ci-vms.eng.rdu2.redhat.com"
 
 
 	def get_build_id(self):
-		self.build_rpm_ci.get_last_completed_build_number()
-		build_rpm_ci_job_id = self.build_rpm_ci.last_completed_build_number
+		build_rpm_ci_job_id = self.build_rpm_ci_jenkins.get_job_info(self.build_rpm_ci_name)['lastSuccessfulBuild']['number']
 		build_rpm_ci_jenkins_url = self.et_jenkins_url + '/job/'+ self.build_rpm_ci_name + "/" + str(build_rpm_ci_job_id)
 		print "=== the latest build comes from:"
 		print build_rpm_ci_jenkins_url
-		self.build_rpm_ci.get_latest_build_console_log_content()
-		self.build_rpm_ci_console = self.build_rpm_ci.console_log_content
-		self.build_id = str(re.findall('\d{4}', self.build_rpm_ci_console)[-1])
-		print(self.build_id)
+		self.build_id = build_rpm_ci_job_id
 
 	def run_ci3_build_testing(self):
 		old_build_number = self.build_testing_ci_jenkins.get_job_info(self.build_testing_ci_name)['lastBuild']['number']
