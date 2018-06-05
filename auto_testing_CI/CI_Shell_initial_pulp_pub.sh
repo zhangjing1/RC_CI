@@ -2,6 +2,7 @@
 # first, get the product version of pub & pulp
 # second, get the installed pub & pulp version on e2e env
 # finally, do the upgrade/downgrade to make sure the two kinds of version are the same
+set -eo pipefail
 
 confluence_wikiurl="https://docs.engineering.redhat.com"
 e2e_version_page="Version of Applications in E2E"
@@ -85,10 +86,16 @@ check_and_initialize_pub() {
 	else
 		pub_deploy=true
 	    echo "== we need to update the pub version =="
-	    pub_product_version=$( echo ${pub_product} | sed "s/[^0-9\.]*//g" )
-	    pub_installed_version=$( echo ${pub_installed} | sed "s/[^0-9\.]*//g" | cut -c "1-${#pub_product_version}" )
-		pub_ansible="ansible-playbook -u root -i ${WORKSPACE}/inventory/pub ${WORKSPACE}/playbooks/pub/e2e/deploy-pub-e2e.yml -e pub_version=${pub_product_version}"
-
+	    pub_product_version=$( echo ${pub_product} | cut -d "-" -f 3- | cut -d '.' -f 1-3 )
+	    echo "== will initialize the pub server with pub version ${pub_product_version}"
+	    pub_installed_version=$( echo ${pub_installed} |  cut -d "-" -f 3- | cut -d '.' -f 1-3 )
+	    pub_product_sub_version=$( echo ${pub_product_version} | cut -d '-' -f 2 )
+	    pub_product_ansible_version=$( echo ${pub_product_version} | cut -d '-' -f 1 | cut -d '-' -f 1)
+	    if [[ ${pub_product_sub_version} -gt 1 ]]; then
+	    	pub_ansible="ansible-playbook -u root -i ${WORKSPACE}/inventory/pub ${WORKSPACE}/playbooks/pub/e2e/deploy-pub-e2e.yml -e pub_version=${pub_product_ansible_version} -e pub_release=${pub_product_sub_version}"
+	    else
+	    	pub_ansible="ansible-playbook -u root -i ${WORKSPACE}/inventory/pub ${WORKSPACE}/playbooks/pub/e2e/deploy-pub-e2e.yml -e pub_version=${pub_product_ansible_version}"
+	    fi
         pub_product_version_integer=$(echo ${pub_product_version} | sed "s/[^0-9]*//g")
         pub_installed_version_integer=$(echo ${pub_installed_version} | sed "s/[^0-9]*//g" | cut -c 1-${#pub_product_version_integer})
 
@@ -228,11 +235,12 @@ check_and_initialize_pulp_docker() {
 }
 
 # for each e2e testing run, the dbs and other files have been cleaned on pulp-rpm and pulp-docker servers
-run_clean_pulp_env_remotely(){
-	current_dir=$( pwd )
-	ssh root@${1} 'rm -rf /root/clean_pub_pulp.sh'
-	scp ${current_dir}/clean_pub_pulp.sh root@${1}:/root
-	ssh root@${1} "./clean_pub_pulp.sh"
+run_clean_pulp_env(){
+	echo "=== Cleaning the pulp environment"
+	pwd
+	sudo cp "clean_pub_pulp.sh" /root
+	cd /root
+	sudo ./clean_pub_pulp.sh
 	if [[ $( echo $? ) -eq 0 ]]; then
 		echo "== All things are finished =="
 	else
@@ -248,6 +256,5 @@ current_dir=$( echo `pwd` )
 get_all_product_versions_content
 check_and_initialize_pub
 check_and_initialize_pulp_rpm
-run_clean_pulp_env_remotely ${pulp_rpm_server}
 check_and_initialize_pulp_docker
-run_clean_pulp_env_remotely ${pulp_docker_server}
+run_clean_pulp_env
