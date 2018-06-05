@@ -31,6 +31,7 @@ pip install -r test-requirements.txt
 # change the host of the config
 sudo sed -i "s/pub.host.qe.eng.pek2.redhat.com/pub-e2e.usersys.redhat.com/g" /root/content-delivery-qe/unit_tests/configs/QA_01.conf
 sudo sed -i "s/pub-02.host.qe.eng.pek2.redhat.com/pub-e2e.usersys.redhat.com/g" /root/content-delivery-qe/unit_tests/configs/QA_01.conf
+sudo sed -i "s/pub-test.usersys.redhat.com/pub-e2e.usersys.redhat.com/g" /root/content-delivery-qe/unit_tests/configs/QA_01.conf
 sudo sed -i "s/pulp-02.host.qe.eng.pek2.redhat.com/pulp-e2e.usersys.redhat.com/g" /root/content-delivery-qe/unit_tests/configs/QA_01.conf
 sudo sed -i "s/pulp-03.host.qe.eng.pek2.redhat.com/pulp-docker-e2e.usersys.redhat.com/g" /root/content-delivery-qe/unit_tests/configs/QA_01.conf
 sudo sed -i "s/password=redhat/password=errata/g" /root/content-delivery-qe/unit_tests/configs/QA_01.conf
