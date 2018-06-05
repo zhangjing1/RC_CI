@@ -110,7 +110,6 @@ class TalktoPerfCI():
 		#print self.perf_testing_comparison_url
 
 	def run_one_test(self):
-		self.get_last_successful_build_number()
 		self.get_last_completed_build_number()
 		self.run_build()
 		# before get the build number, sleep some seconds to make sure the build is running
