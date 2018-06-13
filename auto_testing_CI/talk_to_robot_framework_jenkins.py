@@ -55,7 +55,7 @@ class TalkToRobotFrameworkCI():
 		else:
 			print "====Automation has been finished======================="
 			self.tcms_run_id = re.findall(r'New Run ID: [\d+\.]+', self.console_log_content)[0].split(':')[1]
-			self.tcms_run_url = "https://tcms.engineering.redhat.com/run/" + str(self.tcms_run_id)
+			self.tcms_run_url = "https://tcms.engineering.redhat.com/run/" + str(self.tcms_run_id).replace(' ', '')
 			failed_cases_number = re.findall(r'[\d+]+ failed', self.console_log_content)[-1].split()[0]
 			#print failed_cases_number
 			if failed_cases_number != '0':
