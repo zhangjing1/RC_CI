@@ -40,8 +40,10 @@ def get_bug_and_format_bug(bug_id):
 			next
 	bug_flag = qe_bug_flag if qe_flag else ""
 
-	# deal with bug.summary: when the bug.summary contain '>' or '<', it will bring some troubles. then remove such data from the summary
-	summary = bug.summary.replace("<", '').replace(">", '')
+	# deal with bug.summary: remove unchar letters to avoid the unexpected error when add confluence page
+	regex = re.compile('[^a-zA-Z]')
+	sumamry = regex.sub('', bug.summary)
+
 	if bug_flag == "-" or bug_flag == "+":
 		bug_result = "PASSED"
 	formatted_bug = [ bug.id, summary, bug.component, bug.status, bug.severity, bug.priority, bug_flag, bug.qa_contact, bug_result ]
