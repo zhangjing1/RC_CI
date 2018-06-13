@@ -2,6 +2,7 @@
 import pprint
 import bugzilla
 import sys
+import re
 
 '''
     The scripts are used to generate the confluence content for bugs searched from bugzilla.
