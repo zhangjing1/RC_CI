@@ -17,7 +17,7 @@ class ConfluenceClient():
 
 	def create_update_page(self):
 		self.get_page_content()
-		if self.content.find("it does not exist.") > 0 or self.content.find("CI_3") < 0 :
+		if self.content.find("it does not exist.") > 0 or self.content.find("QE") < 0 :
 			print "==== Will add page ==="
 			print "==== The page title: ", self.page_name
 			self.api.addpage(self.page_name, self.space, self.general_content, parentpage=self.parent_page)
