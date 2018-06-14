@@ -1,6 +1,6 @@
 import os
 import os.path
-from paramiko import SSHClient
+import paramiko
 from scp import SCPClient
 
 
@@ -13,8 +13,9 @@ class CommonUsage():
 			return 1
 	
 	def python_scp_get_files(self, remote_host, src, destination):
-		ssh = SSHClient()
+		ssh = paramiko.SSHClient()
 		ssh.load_system_host_keys()
+		ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
 		ssh.connect(remote_host)
 		# SCPCLient takes a paramiko transport as an argument
 		scp = SCPClient(ssh.get_transport())
