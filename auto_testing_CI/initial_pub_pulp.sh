@@ -32,9 +32,6 @@ get_build_installed_on_server() {
 
 }
 
-change_to_ci_files() {
-}
-
 initialize_ansible_related_varables(){
 	pub_product_version=""
 	pub_deploy=false
