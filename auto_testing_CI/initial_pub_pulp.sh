@@ -32,12 +32,7 @@ get_build_installed_on_server() {
 
 }
 
-download_ci_files() {
-	echo "=============== Download the CI files under $(pwd) =========="
-	wget http://github.com/testcara/RC_CI/archive/master.zip
-	unzip master.zip
-	cd RC_CI-master/auto_testing_CI
-    echo "---------------done--------------"
+change_to_ci_files() {
 }
 
 initialize_ansible_related_varables(){
@@ -240,7 +235,7 @@ clean_running_and_free_pub_tasks() {
 
 
 install_scripts_env
-download_ci_files
+cd RC_CI-master/auto_testing_CI
 initialize_ansible_related_varables
 current_dir=$( echo `pwd` )
 clean_running_and_free_pub_tasks
