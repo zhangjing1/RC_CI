@@ -240,6 +240,7 @@ clean_running_and_free_pub_tasks() {
 
 
 install_scripts_env
+download_ci_files
 initialize_ansible_related_varables
 current_dir=$( echo `pwd` )
 clean_running_and_free_pub_tasks
