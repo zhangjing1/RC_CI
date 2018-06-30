@@ -6,6 +6,7 @@ install_scripts_env(){
 	pip install --upgrade pip
 	pip install confluence-py
 	pip install python-jenkins
+    pip install scp
 }
 
 initial_et_build_version(){
