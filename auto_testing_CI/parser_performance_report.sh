@@ -6,7 +6,9 @@ install_scripts_env(){
 	pip install --upgrade pip
 	pip install confluence-py
 	pip install python-jenkins
-    pip install scp
+	pip install scp
+	yum install wget -y
+	yum install git -y
 }
 
 initial_et_build_version(){
@@ -21,7 +23,7 @@ initial_et_build_version(){
 
 
 run_target_scripts(){
-    python /workdir/RC_CI-master/auto_testing_CI/talk_to_rc_jenkins_to_parser_perf_report.py ${username} ${password} ${et_build_version} ${tolerance} ${max_accepted_time} ${perf_jmeter_slave_server}
+	python /workdir/RC_CI-master/auto_testing_CI/talk_to_rc_jenkins_to_parser_perf_report.py ${username} ${password} ${et_build_version} ${tolerance} ${max_accepted_time} ${perf_jmeter_slave_server}
 }
 
 
