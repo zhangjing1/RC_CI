@@ -5,7 +5,7 @@ IFS=$'\n\t'
 install_scripts_env(){
 	pip install --upgrade pip
 	pip install confluence-py
-	pip install python-jenkins
+	pip install python-jenkins==0.4.16
 	pip install scp
 	yum install wget -y
 	yum install git -y
