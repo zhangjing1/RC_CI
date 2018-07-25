@@ -29,7 +29,11 @@ get_all_product_versions_content() {
 get_build_installed_on_server() {
     echo "checking ---- ${1}"
 	echo $(ssh root@${1} "rpm -qa | grep ${2} | sed 's/.noarch//'")
+}
 
+upgrade_pub_pulp_tools_on_server(){
+	echo "Upgrading the 'rhsm-tools' and 'cdn-utils' on the pub and pulp servers"
+	ssh root@${1} "yum upgrade -y rhsm-tools && yum upgrade -y cdn-utils"
 }
 
 initialize_ansible_related_varables(){
@@ -58,6 +62,9 @@ initialize_ansible_related_varables(){
 
 # check pub related
 check_and_initialize_pub() {
+	# upgrade the tools first
+	upgrade_pub_pulp_tools_on_server ${pub_server}
+	# check the version and prepare the ansible if needed
 	pub_installed=$( get_build_installed_on_server ${pub_server} pub-hub )
 	echo "=== pub installed =="
 	echo ${pub_installed}
@@ -97,6 +104,9 @@ check_and_initialize_pub() {
 
 # check pulp-rpm related
 check_and_initialize_pulp_rpm() {
+	# upgrade the tools first
+	upgrade_pub_pulp_tools_on_server ${pulp_rpm_server}
+	# check the version and prepare the ansible if needed
 	pulp_for_rpm_installed=$( get_build_installed_on_server ${pulp_rpm_server}  pulp-server )
 	echo "== pulp installed on pulp-rpm server =="
 	echo ${pulp_for_rpm_installed}
@@ -169,6 +179,9 @@ check_and_initialize_pulp_rpm() {
 }
 # check pulp-docker related
 check_and_initialize_pulp_docker() {
+	# upgrade the tools first
+	upgrade_pub_pulp_tools_on_server ${pulp_docker_server}
+	# check the version and prepare the ansible if needed
 	pulp_for_docker_installed=$( get_build_installed_on_server ${pulp_docker_server} ${server_password} pulp-server )
 	echo "== pulp installed on pulp-docker server =="
 	echo ${pulp_for_docker_installed}

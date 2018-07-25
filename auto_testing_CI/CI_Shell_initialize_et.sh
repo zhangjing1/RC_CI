@@ -24,7 +24,7 @@ run_ansible(){
 	ansible_command=""
 	set -x
 	env
-	cd ${WORKSPACE}/playbooks/errata-tool
+	cd ${WORKSPACE}/playbooks/
 	make clean-roles
 	make qe-roles
 	e2e_env_workaround
@@ -64,3 +64,4 @@ get_ansible_commands ${ET_Testing_Server}  ${et_build_version} ${downgrade_flag}
 run_ansible
 update_setting ${ET_Testing_Server}
 restart_service ${ET_Testing_Server}
+initialize_e2e_pub_errata_xmlrpc_settings
