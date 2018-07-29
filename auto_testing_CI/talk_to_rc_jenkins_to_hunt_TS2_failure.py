@@ -63,6 +63,8 @@ class TalkToRCCIForTS2Failure():
             get_failure_owner_command = 'git blame ' + feature_file + ' | grep "' + scenario + '"'
             self.failure_detailed_report += commands.getoutput(get_failure_owner_command) + "\n"
         print "=== The failure hunter has been done, will show the details at the end of the run"
+
+  def collect_pending_scenarios(self):
         print "=== begin to hunter the disabled/pending features/scenarios. As usual, these cases are not run by TS2.0"
         get_pending_scenarios = 'grep -r -i "@disable" -A1 -B1'
         self.pending_scenarios_report = commands.getoutput(get_pending_scenarios)
@@ -99,6 +101,7 @@ class TalkToRCCIForTS2Failure():
     self.get_lastest_build_number()
     self.get_ts2_console_content()
     self.parser_ts2_cucumber_report_for_failures()
+    self.collect_pending_scenarios()
     self.format_hunter_report()
     self.send_report_out()
 
