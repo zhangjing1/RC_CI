@@ -62,7 +62,7 @@ class TalkToRCCIForTS2Failure():
             feature_file = commands.getoutput(get_feature_file_command)
             get_failure_owner_command = 'git blame ' + feature_file + ' | grep "' + scenario + '"'
             self.failure_detailed_report += commands.getoutput(get_failure_owner_command) + "\n"
-        print "=== The failure hunter has been done, will show the details at the end of the run"
+        print "=== The failure hunter has got the failures owners for failures"
 
   def collect_pending_scenarios(self):
         print "=== begin to hunter the disabled/pending features/scenarios. As usual, these cases are not run by TS2.0"
@@ -71,7 +71,8 @@ class TalkToRCCIForTS2Failure():
         print "=== The pending scenarios hunter has got the pending lists"
 
   def format_hunter_report(self):
-    failure_report_header = "\n==================================== TS2.0 Hunter Reports for TS2.0 failed Scenarios ====================================\n"
+    print "=== Begin to format the hunter report"
+    failure_report_header = "==================== TS2.0 Hunter Reports for TS2.0 Failed Scenarios ===================="
     if self.TS2_testing_result == "PASSED":
         failure_report_general = "No failures, no failure hunters, Cheers!\n"
         failure_report_details_general = ""
@@ -81,21 +82,24 @@ class TalkToRCCIForTS2Failure():
         failure_report_details_general = "Please check the report directly, " + str(self.TS2_testing_report_url) + "\n"
         failure_report_details = ""
     if self.TS2_testing_result == "FAILED":
-        failure_report_general = "In general, there are " + str(len(self.failed_scenarios)) + " failed scenarios. If the count is larger than 10, I guess it should be enviromental problems\n"
+        failure_report_general = "Generally, " + str(len(self.failed_scenarios)) + " scenarios Failed. If the count > 10, It should be environmental problems!\n"
         failure_report_details_general = "See the details below, commit, owner, scenario will be listed\n"
         failure_report_details = self.failure_detailed_report
-    pending_report_header = "==================================== TS2.0 Hunter Reports for TS2.0 pending Scenarios ====================================\n"
+    pending_report_header = "==================== TS2.0 Hunter Reports for TS2.0 Pending Scenarios ===================="
     pending_report_general = "Reminder: TS2.0 does not run those cases. Please clean them or run them manually for RC build.\n"
     pending_report_details = self.pending_scenarios_report
-    report_end = "\n============================================ Report Ends ==============================================\n"
-    self.general_report = "<strong>" +  failure_report_header + "</strong><p>" + failure_report_general + "</p><p>" + failure_report_details_general + "</p><p>" + failure_report_details \
-                          + "</p><strong>" + pending_report_header + "</strong><p>" + pending_report_general + "</p><p>" + pending_report_details + "</p><strong>" + report_end + "</strong>"
+    report_end = "====================================== Report Ends =====================================\n"
+    self.general_report = "<strong><font size='3'>" +  failure_report_header + "</font></strong><pre>" + failure_report_general + failure_report_details_general + "\n" + \
+                          failure_report_details + "</pre><strong><font size='3'>" + pending_report_header + "</font></strong><pre>" + \
+                          pending_report_general + "--\n"+ pending_report_details + "</pre><strong><font size='3'>" + report_end + "</font></strong>"
+    print "=== Done to format the hunter report"
 
   def send_report_out(self):
+    print "=== Begin to send the hunter output"
     send_report_ci = talk_to_jenkins_to_send_ts2_hunter_report.TalkToCIToSendReport(self.username, self.password, self.send_report_ci, \
               self.et_build_version, self.TS2_testing_report_url, self.general_report)
     send_report_ci.run_send_report()
-
+    print "=== Done to send the hunter output"
 
   def run_ts2_hunter(self):
     self.get_lastest_build_number()
