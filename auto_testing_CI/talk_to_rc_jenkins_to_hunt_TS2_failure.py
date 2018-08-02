@@ -43,16 +43,16 @@ class TalkToRCCIForTS2Failure():
     self.et_build_version = re.search(r"ET RC Version: (\d+)", self.console_log_content).group(1)
     self.TS2_testing_result = re.search(r"Testing Result: (\w+)", self.console_log_content).group(1)
     self.TS2_testing_report_url = re.search(r"Testing Report URL: (.*$)", self.console_log_content, re.MULTILINE).group(1)
-    th_header = "<theader><h1>TS2.0 Hunter Reports for TS2.0 Failed Scenarios</h1></theader>"
+    th_header = "<h1>TS2.0 Hunter Reports for TS2.0 Failed Scenarios</h1>"
     if self.TS2_testing_result == "PASSED":
       print "==== The TS2.0 testing run has been PASSED, No failure hunter is needed. Cheers!"
-      th_summary = "The TS2.O testing run has been PASSED! No more info is provided! Cheers!"
+      th_summary = "<p>The TS2.O testing run has been PASSED! No more info is provided! Cheers!</p>"
       self.th_html = ""
     else:
       if re.search(r"console", self.TS2_testing_report_url):
         self.TS2_testing_result = "ERROR"
         print "==== Something happens unexpectedly. The cucumber report is not avaiable. "
-        th_summary = "Error! Cucumber report is not avaible. See the console log: {} ".format(self.TS2_testing_report_url)
+        th_summary = "<p>Error! Cucumber report is not avaible. See the console log: {} </p>".format(self.TS2_testing_report_url)
         self.th_html = ""
       else:
         self.TS2_testing_result = "FAILED"
@@ -71,7 +71,7 @@ class TalkToRCCIForTS2Failure():
             for content in failed_scenarios_info:
                 failed_scenarios_info_td += "<td>{}</td>".format(content.strip())
             self.failure_detailed_report += "<tr>{}<tr>".format(failed_scenarios_info_td)
-        th_summary = "<tr>Generally, " + str(len(self.failed_scenarios)) + " scenarios are failed. If the count > 10, It should be environmental problems</tr>"
+        th_summary = "<p>Generally, " + str(len(self.failed_scenarios)) + " scenarios are failed. If the count > 10, It should be environmental problems</p>"
 
     self.failure_report = th_header + th_summary + "<table>{}{}</table>".format(self.th_html, self.failure_detailed_report)
     print "=== The failure hunter has got the failures owners for failures"
@@ -118,12 +118,12 @@ class TalkToRCCIForTS2Failure():
                 pending_scenarios_info_td += "<td>{}</td>".format(content)
             self.pending_scenarios_report += "<tr>{}</tr>".format(pending_scenarios_info_td)
 
-        th_header = "<theader><h1>TS2.0 Hunter Reports for TS2.0 Pending Scenarios</h1></theader>"
+        th_header = "<h1>TS2.0 Hunter Reports for TS2.0 Pending Scenarios</h1>"
         if len(pending_list) > 0:
-            th_summary = "<tr>Generally, {} scenarios are pending. Please help to clean them ASAP, otherwise we need to run them manually for RC build</tr>".format( \
+            th_summary = "<p>Generally, {} scenarios are pending. Please help to clean them ASAP, otherwise we need to run them manually for RC build</p>".format( \
                           len(pending_list), scenario_count_without_feature, feature_count)
         else:
-            th_summary ="There is no pending scenarios! No more info is provided! Cheers!"
+            th_summary ="<p>There is no pending scenarios! No more info is provided! Cheers!</p>"
             self.th_html = ""
 
         self.pending_report = th_header + th_summary + '<table>' + self.th_html + self.pending_scenarios_report + '</table>'
