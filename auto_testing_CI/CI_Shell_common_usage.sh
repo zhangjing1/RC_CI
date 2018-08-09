@@ -117,6 +117,14 @@ update_setting() {
 	ssh root@"${1}" "sed -i \"s/errata.app.qa.eng.nay.redhat.com/${1}/g\" /var/www/errata_rails/app/controllers/concerns/user_authentication.rb"
 }
 
+do_db_migration{} {
+	if [[ "${1}" =~ "perf" ]]; then
+		echo "== Doing the db migration on perf env =="
+		db_migrate_command = "cd /var/www/errata_rails && source scl_source enable rh-ruby22 && SILENCE_DEPRECATIONS=1 RAILS_ENV=staging bundle exec rake db:migrate"
+		ssh root@errata-stage-perf.host.stage.eng.bos.redhat.com "${db_migrate_command}"
+	fi
+}
+
 restart_service() {
 	echo "=== [INFO] Restarting the services on the testing server =="
 	ssh root@"${1}" '/etc/init.d/httpd24-httpd restart'

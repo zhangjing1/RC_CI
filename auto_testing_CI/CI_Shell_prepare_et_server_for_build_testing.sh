@@ -55,6 +55,9 @@ if [[ -z "${et_build_name_or_id}" ]]; then
   echo "compare_result: ${compare_result}"
   if [[ "${compare_result}" == "same" ]]; then
     echo "=== There is no need to deploy"
+    echo "=== If the server is perf server, CI will restore the db and do db migration"
+    perf_restore_db ${ET_Testing_Server}
+    do_db_migration ${ET_Testing_Server}
     exit
   else
     echo "=== I am initializing the testing server with the product version"
