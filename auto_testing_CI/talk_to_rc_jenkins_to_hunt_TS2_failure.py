@@ -46,7 +46,7 @@ class TalkToRCCIForTS2Failure():
     th_header = "<h1>TS2.0 Hunter Reports for TS2.0 Failed Scenarios</h1>"
     if self.TS2_testing_result == "PASSED":
       print "==== The TS2.0 testing run has been PASSED, No failure hunter is needed. Cheers!"
-      th_summary = "<p>The TS2.O testing run has been PASSED! No more info is provided! Cheers!</p>"
+      th_summary = "<p>The TS2.0 testing run has been PASSED! No more info is provided! Cheers!</p>"
       self.th_html = ""
     else:
       if re.search(r"console", self.TS2_testing_report_url):
