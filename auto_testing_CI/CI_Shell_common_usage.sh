@@ -110,6 +110,8 @@ update_setting() {
 		ssh root@et-e2e.usersys.redhat.com 'sed -i "s/bz-qgong.usersys.redhat.com/bz-e2e.usersys.redhat.com/" /var/www/errata_rails/config/initializers/credentials/bugzilla.rb'
 		ssh root@et-e2e.usersys.redhat.com 'sed -i "s/pub-et-qe.usersys.redhat.com/pub-e2e.usersys.redhat.com/" /var/www/errata_rails/config/initializers/credentials/pub.rb'
 		ssh root@et-e2e.usersys.redhat.com 'sed -i "s/pdc-et.host.qe.eng.pek2.redhat.com/pdc.engineering.redhat.com/" /var/www/errata_rails/config/initializers/credentials/pub.rb'
+		ssh root@et-e2e.usersys.redhat.com 'sed -i "s/brewweb.engineering.redhat.com/brew-qa.usersys.redhat.com/" /var/www/errata_rails/config/initializers/settings.rb'
+		ssh root@et-e2e.usersys.redhat.com 'sed -i "s/brewhub.engineering.redhat.com/brew-qa.usersys.redhat.com/" /var/www/errata_rails/config/initializers/settings.rb '
 	fi
 	# clean the cache for all testing servers
 	ssh root@"${1}" 'rm -rf /var/www/errata_rails/tmp/cache/*'
