@@ -106,10 +106,11 @@ update_setting() {
 	fi
 
 	if [[ "${1}" =~ "e2e" ]]; then
-		echo "=== [INFO] Custom the pub & bugzilla settings of testing server ==="
+		echo "=== [INFO] Custom the pub & bugzilla settings of the e2e server ==="
 		ssh root@et-e2e.usersys.redhat.com 'sed -i "s/bz-qgong.usersys.redhat.com/bz-e2e.usersys.redhat.com/" /var/www/errata_rails/config/initializers/credentials/bugzilla.rb'
 		ssh root@et-e2e.usersys.redhat.com 'sed -i "s/pub-et-qe.usersys.redhat.com/pub-e2e.usersys.redhat.com/" /var/www/errata_rails/config/initializers/credentials/pub.rb'
 		ssh root@et-e2e.usersys.redhat.com 'sed -i "s/pdc-et.host.qe.eng.pek2.redhat.com/pdc.engineering.redhat.com/" /var/www/errata_rails/config/initializers/credentials/pub.rb'
+		echo "=== [INFO] Custom the brew settings of the e2e server"
 		ssh root@et-e2e.usersys.redhat.com 'sed -i "s/brewweb.engineering.redhat.com/brew-qa.usersys.redhat.com/" /var/www/errata_rails/config/initializers/settings.rb'
 		ssh root@et-e2e.usersys.redhat.com 'sed -i "s/brewhub.engineering.redhat.com/brew-qa.usersys.redhat.com/" /var/www/errata_rails/config/initializers/settings.rb '
 	fi
