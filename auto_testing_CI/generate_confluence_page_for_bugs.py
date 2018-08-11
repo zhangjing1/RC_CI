@@ -123,7 +123,7 @@ def generate_confluence_page_for_bugs(user, password, bugs):
 	info_for_manual_testing_html = '<p>' + "'' and '?' of 'qe_auto_coverage' of the following table means QE have not finished the automation tasks of the bugs." + "<strong>" + " Manual testing is needed! " + "</strong></p>"
 	info_for_automated_testing_html = "<p>" + "'-' of 'qe_auto_coverage' of the following table means QE have confirmed that "+ "<strong>" + "no more manual testing is needed." + "</strong>" + " For dev's autoated testing has been covered or it is minor UI change or unimportant negative case can be ingored! "+ '<strong>' + "Mark as 'PASSED' directly!" +'</strong></p>'
 	info_for_automated_testing_html += "<p>" + "'+' means QE have completed the automation tasks."  + "<strong>" + "TS2.0 has been covered it. Mark as PASSED directly!" + "</strong></p>"
-        info_for_automated_testing_html += "<p>" + "'NULL' means the bug/task has been closed or verified by ET dev. QE do not need to do extral testing and confirm. Mark as PASSED directly!" + "</strong></p>"
+        info_for_automated_testing_html += "<p>" + "'NULL' means the bug/task has been closed or verified by ET dev." + "<strong>" + "QE do not need to do extral testing and confirm. Mark as PASSED directly!" + "</strong></p>"
 	page_notice = "'qe_auto_coverage' on the page shows QE automation status for bugs."
 	page_notice_html = "<p>" + page_notice + "</p>"
 	html = page_notice_html + info_for_manual_testing_html + formatted_manual_bugs_html + info_for_automated_testing_html + formatted_automated_bugs_html
