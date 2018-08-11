@@ -79,6 +79,9 @@ else
   echo "compare_result: ${compare_result}"
   if [[ "${compare_result}" == "same" ]]; then
     echo "There is no need to deploy"
+    echo "=== If the server is perf server, CI will restore the db and do db migration"
+    perf_restore_db ${ET_Testing_Server}
+    do_db_migration ${ET_Testing_Server}
     exit
   else
     product_raw_et_version=$(get_system_raw_version ${ET_Production_Server} | cut -d "-" -f 1)
@@ -107,4 +110,3 @@ else
     initialize_e2e_pub_errata_xmlrpc_settings
   fi
 fi
-
