@@ -34,7 +34,6 @@ upgrade_pub(){
 	fi
 }
 
-
 upgrade_pulp_rpm(){
 	pulp_rpm_ansible=""
 	pulp_rpm_build_ansible=""
@@ -93,10 +92,28 @@ upgrade_pulp_docker(){
 	fi
 }
 
+# The following 2 functions are used to do some settings for the docker-e2e env.
+disable_firewall_service(){
+	ssh root@${1} 'service firewalld stop'
+}
+
+set_docker_registry(){
+	INSECURE_REGISTRY="--insecure-registry docker-e2e.usersys.redhat.com:5000 --insecure-registry brew-pulp-docker01.web.prod.ext.phx2.redhat.com:8888 --insecure-registry brew-pulp-docker01.web.qa.ext.phx1.redhat.com:8888 --insecure-registry pulp-docker-brew-qa.usersys.redhat.com:8888"
+	ssh_command="echo INSECURE_REGISTRY=\""${INSECURE_REGISTRY}"\" >> /etc/sysconfig/docker"
+	ssh root@${1} "${ssh_command}"
+	# seems ssh will omit the " as default whenever how many " we use to describe the variables
+	ssh root@${1} 'sed -i "s/=-/=\"-/" /etc/sysconfig/docker'
+	ssh root@${1} 'sed -i "s/8888$/8888\"/" /etc/sysconfig/docker'
+}
+
 initialize_env
 upgrade_pub
 upgrade_pulp_rpm
 upgrade_pulp_docker
+# disable the firewall service on e2e docker server
+disable_firewall_service 'docker-e2e.usersys.redhat.com'
+# set the registry of the e2e docker server
+set_docker_registry 'docker-e2e.usersys.redhat.com'
 if [[ ${pub_deploy_failed} == "true" ]] || [[ ${pulp_rpm_deploy_failed} == "true" ]] || [[ ${pulp_docker_deploy_failed} == "true" ]]; then
 	echo "==== Upgrade failed ===="
 	exit 1
