@@ -133,4 +133,10 @@ restart_service() {
 	ssh root@"${1}" '/etc/init.d/httpd24-httpd restart'
 	ssh root@"${1}" '/etc/init.d/delayed_job restart'
 	ssh root@"${1}" '/etc/init.d/messaging_service restart'
+	ssh root@"${1}" '/etc/init.d/qpid_service restart'
+	# For e2e server, let us stop the qpid service as default
+	if [[ "${1}" =~ "e2e" ]]; then
+		echo "=== [INFO] Stop the qpid service for the e2e server ==="
+		ssh root@et-e2e.usersys.redhat.com "/etc/init.d/qpid_service stop"
+	fi
 }
