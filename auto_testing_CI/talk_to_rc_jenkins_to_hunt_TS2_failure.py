@@ -61,7 +61,7 @@ class TalkToRCCIForTS2Failure():
         cucumber_failure_report_html = requests.get(self.TS2_testing_report_url, auth=(self.username, self.password), verify=False).content
         ts2_report_parser = ts2_failure_parser.TS2FailurePaser(cucumber_failure_report_html)
         self.failed_scenarios = ts2_report_parser.get_failed_scenarios()
-        for scenario in self.failed_scenarios:
+        for scenario in self.failed_scenarios[:30]:
             get_feature_file_command = 'grep -r -i "' + scenario + '" features ' + ' | sort -u | cut -d ":" -f 1'
             feature_file = commands.getoutput(get_feature_file_command)
             get_failure_owner_command = 'git blame ' + feature_file + ' | grep "' + scenario + '"'
@@ -71,7 +71,9 @@ class TalkToRCCIForTS2Failure():
             for content in failed_scenarios_info:
                 failed_scenarios_info_td += "<td>{}</td>".format(content.strip())
             self.failure_detailed_report += "<tr>{}<tr>".format(failed_scenarios_info_td)
-        th_summary = "<p>Generally, " + str(len(self.failed_scenarios)) + " scenarios are failed. If the count > 10, It should be environmental problems</p>"
+
+        feature_report_url = self.TS2_testing_report_url.replace("failures", "features")
+        th_summary = "<p>Generally, " + str(len(self.failed_scenarios)) + " scenarios are failed. The report show 30 scenarios as the max count. You can reach" + "<a href='{}'> the original report</a> for details</p>.".format(feature_report_url)
 
     self.failure_report = th_header + th_summary + "<table>{}{}</table>".format(self.th_html, self.failure_detailed_report)
     print "=== The failure hunter has got the failures owners for failures"
