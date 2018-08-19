@@ -73,7 +73,7 @@ class TalkToRCCIForTS2Failure():
             self.failure_detailed_report += "<tr>{}<tr>".format(failed_scenarios_info_td)
 
         feature_report_url = self.TS2_testing_report_url.replace("failures", "features")
-        th_summary = "<p>Generally, " + str(len(self.failed_scenarios)) + " scenarios are failed. The report show 30 scenarios as the max count. You can reach" + "<a href='{}'> the original report</a> for details</p>.".format(feature_report_url)
+        th_summary = "<p>Generally, " + str(len(self.failed_scenarios)) + " scenarios are failed. The report can show 30 scenarios at most. You can reach" + "<a href='{}'> the original report</a> for details.</p>".format(feature_report_url)
 
     self.failure_report = th_header + th_summary + "<table>{}{}</table>".format(self.th_html, self.failure_detailed_report)
     print "=== The failure hunter has got the failures owners for failures"
@@ -122,7 +122,7 @@ class TalkToRCCIForTS2Failure():
 
         th_header = "<h1>TS2.0 Hunter Reports for TS2.0 Pending Scenarios</h1>"
         if len(pending_list) > 0:
-            th_summary = "<p>Generally, {} scenarios are pending. Please help to clean them ASAP, otherwise we need to run them manually for RC build</p>".format( \
+            th_summary = "<p>Generally, {} scenarios are pending. Please help to clean them ASAP, otherwise we need to run them manually for RC build.</p>".format( \
                           len(pending_list), scenario_count_without_feature, feature_count)
         else:
             th_summary ="<p>There is no pending scenarios! No more info is provided! Cheers!</p>"
