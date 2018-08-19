@@ -62,7 +62,11 @@ class TalkToRCCIForTS2():
 		if len(jobs_status_list) < 5:
 			print "========The Env Preparation meets some problem=========="
 			self.TS2_testing_report_url = self.TS2_testing_console_log_url
-			self.TS2_testing_result = "FAILED"
+                        self.TS2_testing_result = "FAILED"
+		elif jobs_status_list[4].find('ABORTED') > 0:
+                        print "========The testing is aborted by TS2.0 sub CI by itself======="
+                        self.TS2_testing_report_url = self.TS2_testing_console_log_url
+                        self.TS2_testing_result = "FAILED"
 		elif jobs_status_list[4].find('FAILURE') > 0:
 			print "========The Env Preparation has been finished==========="
 			print "========The Cucumber TS2.0 UAT Testing FAILED==========="
