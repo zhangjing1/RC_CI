@@ -9,9 +9,7 @@ pip install funcsigs
 # The test-requirements.txt from CD team does not specify the python lib version
 # ET run the script against instance openstack server, it means it will install the latest package without version specified
 # I have to specify the python lib with some specific verison to avoid errors
-pip install pytest==3.0.0
-pip install pathlib2>=2.2.0
-sed -i "s/==3.0.3//" test-requirements.txt
+pip install pytest==3.3.0
 pip install -r test-requirements.txt
 # change the host of the config
 sed -i "s/pub.host.qe.eng.pek2.redhat.com/pub-e2e.usersys.redhat.com/g" /workdir/content-delivery-qe/unit_tests/configs/QA_01.conf
