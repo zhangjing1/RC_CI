@@ -179,8 +179,9 @@ check_and_initialize_pulp_rpm() {
 }
 # check pulp-docker related
 check_and_initialize_pulp_docker() {
+    # Currently, seems we do not need to upgrade tools on pulp docker servers
 	# upgrade the tools first
-	upgrade_pub_pulp_tools_on_server ${pulp_docker_server}
+	# upgrade_pub_pulp_tools_on_server ${pulp_docker_server}
 	# check the version and prepare the ansible if needed
 	pulp_for_docker_installed=$( get_build_installed_on_server ${pulp_docker_server} ${server_password} pulp-server )
 	echo "== pulp installed on pulp-docker server =="
