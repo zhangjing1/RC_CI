@@ -59,11 +59,11 @@ get_ansible_commands_with_build_id(){
 
 
 compare_version_or_id(){
-    echo "Format the deployed versions and product_versions"
-    deployed_version=$(printf '%-6d' ${1} | sed 's/ /0/g')
-    product_version=$(printf '%-6d' ${2} | sed 's/ /0/g')
-    echo "The deployed version is: ${deployed_version}"
-    echo "The product version is: ${product_version}"
+    echo "=== Format the compared versions again ==="
+    first_version=$(printf '%-6d' ${1} | sed 's/ /0/g')
+    second_version=$(printf '%-6d' ${2} | sed 's/ /0/g')
+    echo "The first version is: ${deployed_version}"
+    echo "The second version is: ${product_version}"
     comparison_result=""
     if [[ "${1}" == "${2}" ]]; then
         comparison_result="same"
@@ -72,7 +72,7 @@ compare_version_or_id(){
     else
         comparision_result="downgrade"
     fi
-    echo "The comparison result is: ${comparison_result}"
+    echo "=== The comparison result is: ${comparison_result} =="
 }
 
 perf_restore_db() {
