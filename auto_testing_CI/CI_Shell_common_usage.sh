@@ -57,20 +57,17 @@ get_ansible_commands_with_build_id(){
 	echo "${ansible_command}"
 }
 
-
 compare_version_or_id(){
     echo "=== Format the compared versions again ==="
     first_version=$(printf '%-6d' ${1} | sed 's/ /0/g')
     second_version=$(printf '%-6d' ${2} | sed 's/ /0/g')
     echo "The first version is: ${first_version}"
     echo "The second version is: ${second_version}"
-    comparison_result=""
+    comparison_result="downgrade"
     if [[ "${first_verison}" == "${second_version}" ]]; then
         comparison_result="same"
     elif [[ "${first_version}" -lt "${second_version}" ]]; then
         comparison_result="upgrade"
-    else
-        comparision_result="downgrade"
     fi
     echo "=== The comparison result is: ${comparison_result} =="
 }
