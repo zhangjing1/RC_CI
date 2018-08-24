@@ -57,21 +57,28 @@ class TalkToRCCIForTS2():
 
 
 	def check_console_log(self):
-		# get the status of all multijobs
-		jobs_status_list = re.findall(r'status : [\w+]*', self.console_log_content)
-		if len(jobs_status_list) < 5:
+		# Here let get the steps and the status map
+		all_steps_and_results = re.findall(r'of Job : ([^\n]+)', self.console_log_content)
+		testing_steps = [i.split(':')[0].replace(" with status ", '') for i in all_steps_and_results]
+		testing_results = [i.split(':')[1].strip() for i in all_steps_and_results]
+		steps_results_map = dict(zip(testing_steps, testing_results))
+		# Let check whether TS20 is run. If not, the testing will be mared as failed for environmental
+		# problem.
+		if not steps_results_map.has_key('et-remote-system-test_et-qe-dev-build'):
 			print "========The Env Preparation meets some problem=========="
 			self.TS2_testing_report_url = self.TS2_testing_console_log_url
-                        self.TS2_testing_result = "FAILED"
-		elif jobs_status_list[4].find('ABORTED') > 0:
-                        print "========The testing is aborted by TS2.0 sub CI by itself======="
-                        self.TS2_testing_report_url = self.TS2_testing_console_log_url
-                        self.TS2_testing_result = "FAILED"
-		elif jobs_status_list[4].find('FAILURE') > 0:
-			print "========The Env Preparation has been finished==========="
-			print "========The Cucumber TS2.0 UAT Testing FAILED==========="
 			self.TS2_testing_result = "FAILED"
-		elif jobs_status_list[4].find('SUCCESS') > 0:
+		elif steps_results_map['et-remote-system-test_et-qe-dev-build'] == 'ABORTED':
+			print "========The testing is aborted by TS2.0 sub CI by itself======="
+			self.TS2_testing_report_url = self.TS2_testing_console_log_url
+			self.TS2_testing_result = "FAILED"
+
+		elif steps_results_map['et-remote-system-test_et-qe-dev-build'] == 'FAILURE':
+			print "========The testing is aborted by TS2.0 sub CI by itself======="
+			self.TS2_testing_report_url = self.TS2_testing_console_log_url
+			self.TS2_testing_result = "FAILED"
+
+		elif steps_results_map['et-remote-system-test_et-qe-dev-build'] == 'SUCCESS':
 			print "========The Env Preparation has been finished==========="
 			print "========The Cucumber TS2.0 UAT Testing PASSED========"
 			self.TS2_testing_result = "PASSED"
