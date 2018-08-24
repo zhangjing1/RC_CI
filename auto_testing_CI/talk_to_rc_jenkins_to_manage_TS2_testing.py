@@ -75,7 +75,6 @@ class TalkToRCCIForTS2():
 
 		elif steps_results_map['et-remote-system-test_et-qe-dev-build'] == 'FAILURE':
 			print "========The testing is aborted by TS2.0 sub CI by itself======="
-			self.TS2_testing_report_url = self.TS2_testing_console_log_url
 			self.TS2_testing_result = "FAILED"
 
 		elif steps_results_map['et-remote-system-test_et-qe-dev-build'] == 'SUCCESS':
