@@ -25,7 +25,7 @@ upgrade_pub(){
 		if [[ $(echo $?) == "0" ]]; then
 			echo "== Pub is ready =="
             echo "get_build_installed_on_server ${pub_server} 'pub-hub'"
-			pub_installed=$( get_build_installed_on_server '10.8.250.130' 'pub-hub')
+			pub_installed=$( get_build_installed_on_server 'pub-e2e.usersys.redhat.com' 'pub-hub')
 			echo "== The pub installed is:"
 			echo "== ${pub_installed}"
 		else
