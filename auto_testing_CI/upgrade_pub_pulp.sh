@@ -94,16 +94,20 @@ upgrade_pulp_docker(){
 
 # The following 2 functions are used to do some settings for the docker-e2e env.
 disable_firewall_service(){
+	echo "== Disable docker-e2e firewalld"
 	ssh root@${1} 'service firewalld stop'
+	echo "== Done: The firewald service of docker-e2e has been disabled"
 }
 
 set_docker_registry(){
+	echo "== Set docker-registry to docker-e2e against the docker-e2e server"
 	INSECURE_REGISTRY="--insecure-registry docker-e2e.usersys.redhat.com:5000 --insecure-registry brew-pulp-docker01.web.prod.ext.phx2.redhat.com:8888 --insecure-registry brew-pulp-docker01.web.qa.ext.phx1.redhat.com:8888 --insecure-registry pulp-docker-brew-qa.usersys.redhat.com:8888"
 	ssh_command="echo INSECURE_REGISTRY=\""${INSECURE_REGISTRY}"\" >> /etc/sysconfig/docker"
 	ssh root@${1} "${ssh_command}"
 	# seems ssh will omit the " as default whenever how many " we use to describe the variables
 	ssh root@${1} 'sed -i "s/=-/=\"-/" /etc/sysconfig/docker'
 	ssh root@${1} 'sed -i "s/8888$/8888\"/" /etc/sysconfig/docker'
+	echo "== Done: The docker registry has been updated against docker-e2e server"
 }
 
 initialize_env
