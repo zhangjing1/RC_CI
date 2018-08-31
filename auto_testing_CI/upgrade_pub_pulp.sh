@@ -106,7 +106,7 @@ set_docker_registry(){
 	ssh -o "StrictHostKeyChecking no" root@${1} "${ssh_command}"
 	# seems ssh will omit the " as default whenever how many " we use to describe the variables
 	ssh -o "StrictHostKeyChecking no" root@${1} 'sed -i "s/=-/=\"-/" /etc/sysconfig/docker'
-	et_build_version root@${1} 'sed -i "s/8888$/8888\"/" /etc/sysconfig/docker'
+	ssh -o "StrictHostKeyChecking no" root@${1} 'sed -i "s/8888$/8888\"/" /etc/sysconfig/docker'
 	echo "== Done: The docker registry has been updated against docker-e2e server"
 }
 
