@@ -27,7 +27,6 @@ get_all_product_versions_content() {
 
 # check the pub version
 get_build_installed_on_server() {
-    echo "checking ---- ${1}"
 	echo $(ssh root@${1} "rpm -qa | grep ${2} | sed 's/.noarch//'")
 }
 
