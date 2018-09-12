@@ -27,7 +27,6 @@ get_all_product_versions_content() {
 
 # check the pub version
 get_build_installed_on_server() {
-    echo "checking ---- ${1}"
 	echo $(ssh root@${1} "rpm -qa | grep ${2} | sed 's/.noarch//'")
 }
 
@@ -88,9 +87,10 @@ check_and_initialize_pub() {
 	    fi
         pub_product_version_integer=$(echo ${pub_product_version} | sed "s/[^0-9]*//g")
         pub_installed_version_integer=$(echo ${pub_installed_version} | sed "s/[^0-9]*//g" | cut -c 1-${#pub_product_version_integer})
-
+        echo "== Compare the current installed pub version with the production version =="
+        echo "== installed vs production: ${pub_installed_version_integer} vs ${pub_product_version_integer} =="
 	    if [[ ${pub_installed_version_integer} -gt ${pub_product_version_integer} ]]; then
-	    	echo "== The installed pub is newer to production pub, we need to downgrade it =="
+	    	echo "== Downgrade Reminder: The installed pub is newer than production, we need to downgrade it =="
 	    	pub_ansible="${pub_ansible} -e pub_downgrade=true"
 	    fi
 	fi
@@ -122,8 +122,11 @@ check_and_initialize_pulp_rpm() {
 		pulp_for_rpm_ansible=" -e pulp_build=${pulp_for_rpm_production_name}"
 		pulp_for_rpm_production_integer=$(echo ${pulp_for_rpm_production} | sed "s/[^0-9]*//g")
 		pulp_for_rpm_installed_integer=$(echo ${pulp_for_rpm_installed} | sed "s/[^0-9]*//g" | cut -c "1-${#pulp_for_rpm_production_integer}")
+		echo "== Compare the current installed pulp_for_rpm version with the production version =="
+		echo "== installed vs production: ${pulp_for_rpm_installed_integer} vs ${pulp_for_rpm_production_integer} =="
 		if [[ ${pulp_for_rpm_installed_integer} -gt ${pulp_for_rpm_production_integer} ]];then
-			pulp_for_rpm_ansible=${pulp_for_rpm_ansible}+" -e pulp_downgrade=true"
+			echo "== Downgrade Reminder: The installed pulp_for_rpm is newer than production, we need to downgrade it =="
+			pulp_for_rpm_ansible="${pulp_for_rpm_ansible} -e pulp_downgrade=true"
 		fi
 	fi
 
@@ -142,7 +145,10 @@ check_and_initialize_pulp_rpm() {
 		pulp_rpm_ansible=" -e pulp_rpm_build=${pulp_rpm_production_name}"
 		pulp_rpm_production_integer=$(echo ${pulp_rpm_production} | sed "s/[^0-9]*//g")
 		pulp_rpm_installed_integer=$(echo ${pulp_rpm_installed}   | sed "s/[^0-9]*//g" | cut -c "1-${#pulp_rpm_production_integer}")
+		echo "== Compare the current installed pulp_rpm version with the production version =="
+		echo "== installed vs production: ${pulp_rpm_installed_integer} vs ${pulp_rpm_production_integer} =="
 		if [[ ${pulp_rpm_installed_integer} -gt ${pulp_rpm_production_integer} ]];then
+			echo "== Downgrade Reminder: The installed pulp_rpm is newer than production, we need to downgrade it =="
 			pulp_rpm_ansible="${pulp_rpm_ansible} -e pulp_downgrade=true"
 		fi
 	fi
@@ -161,8 +167,10 @@ check_and_initialize_pulp_rpm() {
 		pulp_cdn_deploy_ansible=" -e pulp_cdn_distributor_build=${pulp_cdn_distributor_build_name}"
 		pulp_cdn_distributor_production_integer=$(echo ${pulp_cdn_distributor_production} | sed "s/[^0-9]*//g")
 		pulp_cdn_distributor_installed_integer=$(echo ${pulp_cdn_distributor_installed} | sed "s/[^0-9]*//g" | cut -c "1-${#pulp_cdn_distributor_production_integer}")
-
+		echo "== Compare the current installed pulp_cdn version with the production pulp version =="
+		echo "== installed vs production: ${pulp_cdn_distributor_installed_integer} vs ${pulp_cdn_distributor_production_integer} =="
 		if [[ ${pulp_cdn_distributor_installed_integer} -gt ${pulp_cdn_distributor_production_integer} ]];then
+			echo "== Downgrade Reminder: The installed pulp_cdn is newer than production, we need to downgrade it =="
 			pulp_cdn_deploy_ansible="${pulp_cdn_deploy_ansible} -e pulp_downgrade=true"
 		fi
 	fi
@@ -196,8 +204,11 @@ check_and_initialize_pulp_docker() {
 		pulp_for_docker_ansible=" -e pulp_build=${pulp_for_docker_production}"
 		pulp_for_docker_production_integer=$(echo ${pulp_for_docker_production} | sed "s/[^0-9]*//g")
 		pulp_for_docker_installed_integer=$(echo ${pulp_for_docker_installed} | sed "s/[^0-9]*//g" | cut -c "1-${#pulp_for_docker_production_integer}")
+		echo "== Compare the current installed pulp_for_docker version with the production pulp version =="
+		echo "== installed vs production: ${pulp_for_docker_installed_integer} vs ${pulp_for_docker_production_integer} =="
 		if [[ ${pulp_for_docker_installed_integer} -gt ${pulp_for_docker_production_integer} ]];then
-			pulp_for_docker_ansible=${pulp_for_docker_ansible}+" -e pulp_downgrade=true"
+			echo "== Downgrade Reminder: The installed pulp_for_docker is newer than production, we need to downgrade it =="
+			pulp_for_docker_ansible="${pulp_for_docker_ansible} -e pulp_downgrade=true"
 		fi
 	fi
 
@@ -215,8 +226,10 @@ check_and_initialize_pulp_docker() {
 		pulp_docker_ansible=" -e pulp_docker_build=${pulp_docker_production}"
 		pulp_docker_production_integer=$(echo ${pulp_docker_production} | sed "s/[^0-9]*//g")
 		pulp_docker_installed_integer=$(echo ${pulp_docker_installed}   | sed "s/[^0-9]*//g" | cut -c "1-${#pulp_docker_production_integer}")
+		echo "== Compare the current installed pulp_docker version with the production pulp version =="
+		echo "== installed vs production: ${pulp_docker_installed_integer} vs ${pulp_docker_production_integer} =="
 		if [[ ${pulp_docker_installed_integer} -gt ${pulp_docker_production_integer} ]];then
-			pulp_docker_ansible=${pulp_docker_ansible}+" -e pulp_downgrade=true"
+			pulp_docker_ansible="${pulp_docker_ansible} -e pulp_downgrade=true"
 		fi
 	fi
 
