@@ -53,10 +53,15 @@ class TalkToRCCIForE2E():
 		if not self.e2e_testing_result:
 			print "The testing is running too long, we would stop the job manually"
 			self.server.stop_build(self.build_name, self.lastest_build_number)
-			self.e2e_testing_result = "FAILED"
+			self.e2e_testing_result = "FAILED(Timeout)"
 
 	def check_console_log(self):
-		if self.console_log_content.find('Report:  /tmp/workspace/run-e2e/tests/Errata/results/report.html') < 0:
+		# When the job is 'SUCCESS', we consider the testing result is shown as 'PASSED'
+		# When the job is 'FAILED', we show the failure details
+		if self.e2e_testing_result == "SUCCESS":
+			print "=====E2E testing has been PASSED====="
+			self.e2e_testing_result = "PASSED"
+		elif self.e2e_testing_result == "FAILED" and self.console_log_content.find('[CucumberReport] Preparing Cucumber Reports') < 0:
 			print "====There is someting wrong. please check the log manually"
 			print "====console log URL: " + self.e2e_testing_console_log_url
 			self.e2e_testing_result = "FAILED (unexpected error)"
@@ -68,9 +73,6 @@ class TalkToRCCIForE2E():
 			if int(failed_cases_number) != 0:
 				print "=====E2E testing has been FAILED====="
 				self.e2e_testing_result = "FAILED(" + failed_cases_number + " cases failed)"
-			else:
-				print "=====E2E testing has been PASSED====="
-				self.e2e_testing_result = "PASSED"
 
 	def summary_report(self):
 		print "=====================Testing Report: Begin=================="
