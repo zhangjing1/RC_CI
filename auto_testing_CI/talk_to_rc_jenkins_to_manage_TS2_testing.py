@@ -114,7 +114,7 @@ class TalkToRCCIForTS2():
 		print "=====================Testing Report: End================"
 		print "=================Coverage Report: Begin================"
 		print "Is_Coverage_Testing: " + str(self.coverage_testing)
-		print "Coverage Result: " + self.coverage_testing_result
+		print "Coverage Result: " + str(self.coverage_testing_result)
 		print "General Coverage Report: " + self.coverage_testing_report
 		print "=================Coverage Report: End==================="
 
