@@ -98,7 +98,7 @@ class TalkToRCCIForTS2():
 			if self.coverage_testing_result == "SUCCESS":
 				# Let us get the coverage result from 'Post_code_coverage' console log
 				coverage_ci = talk_to_rc_jenkins_to_get_coverage_result.TalkToRCCIForTS2Coverage(self.username,self.password,'Post_code_coverage')
-				coverage_ci.run_to_get_coverage
+				coverage_ci.run_to_get_coverage()
 				self.coverage_testing_result = coverage_ci.coverage
 			# If the 'Post_code_coverage' job is triggered and it's failed, the general TS2.0 job will be failed.
 			# Let us leave the code coverage result as the default value 'NULL'
