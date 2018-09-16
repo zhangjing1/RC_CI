@@ -4,10 +4,11 @@ import time
 import re
 import os
 import sys
+import talk_to_rc_jenkins_to_get_coverage_result
 
 RC_Jenkins = os.environ.get("RC_Jenkins_URL") or "https://errata-jenkins.rhev-ci-vms.eng.rdu2.redhat.com"
 class TalkToRCCIForTS2():
-	def __init__(self, username, password, build_name, et_rc_version, expect_run_time):
+	def __init__(self, username, password, build_name, et_rc_version, expect_run_time, IS_COVERAGE_NEEDED=False):
 		self.username = username
 		self.password = password
 		self.build_name = build_name
@@ -19,6 +20,9 @@ class TalkToRCCIForTS2():
 		self.TS2_testing_console_log_url = ""
 		self.console_log_content = ""
 		self.expect_run_time = expect_run_time
+		self.coverage_testing = IS_COVERAGE_NEEDED
+		self.coverage_testing_result = "NULL"
+		self.coverage_testing_report = "https://docs.google.com/spreadsheets/d/1J_gXDzMReG45BEmZiIZGEKOSR5mRmf2jGA9ruxI32P4/edit#gid=0"
 
 	def get_ts2_testing_result(self):
 		self.TS2_testing_result = self.server.get_build_info(self.build_name, self.lastest_build_number)['result']
@@ -34,7 +38,7 @@ class TalkToRCCIForTS2():
 
 	def run_build(self):
 		print "===Start to run the TS2.0 UAT testing==="
-		self.server.build_job(self.build_name,  {'RPM_BUILD_JOB_ID': self.et_rc_version})
+		self.server.build_job(self.build_name,  {'RPM_BUILD_JOB_ID': self.et_rc_versio, 'IS_COVERAGE_NEEDED': self.coverage_testing})
 
 	def get_lastest_build_number(self):
 		self.lastest_build_number = self.server.get_job_info(self.build_name)['lastBuild']['number']
@@ -82,6 +86,23 @@ class TalkToRCCIForTS2():
 			print "========The Cucumber TS2.0 UAT Testing PASSED========"
 			self.TS2_testing_result = "PASSED"
 
+		# When check the console log, when it get the 'Post_code_coverage', it consider it's the 'coverage' test
+		# otherwise, it is not the coverage test
+		# When it is the coverage test, let us show 'coverage data' directly.
+		# otherwise, let us show 'NULL'
+		if steps_results_map.has_key('Post_code_coverage'):
+			print "========Check the coverage=========="
+			self.coverage_testing_result = steps_results_map['Post_code_coverage']
+			self.coverage_testing = True
+			if self.coverage_testing_result == "SUCCESS":
+				# Let us get the coverage result from 'Post_code_coverage' console log
+				coverage_ci = talk_to_rc_jenkins_to_get_coverage_result.TalkToRCCIForTS2Coverage('wlin','arNdkN47_','Post_code_coverage')
+				coverage_ci.run_to_get_coverage
+				self.coverage_testing_result = coverage_ci.coverage
+			# If the 'Post_code_coverage' job is triggered and it's failed, the general TS2.0 job will be failed.
+			# Let us leave the code coverage result as the default value 'NULL'
+			print "========Done: Check the coverage==========="
+
 
 	def summary_report(self):
 		print "=====================Testing Report: Begin=================="
@@ -90,6 +111,11 @@ class TalkToRCCIForTS2():
 		print "Testing Result: " + self.TS2_testing_result
 		print "Testing Report URL: " + self.TS2_testing_report_url
 		print "=====================Testing Report: End================"
+		print "=================Coverage Report: Begin================"
+		print "Is_Coverage_Testing: " + str(self.coverage_testing)
+		print "Coverage Result: " + self.coverage_testing_result
+		print "General Coverage Report: " + self.coverage_testing_report
+		print "=================Coverage Report: End==================="
 
 	def run_one_test(self):
 		self.run_build()
@@ -104,7 +130,6 @@ class TalkToRCCIForTS2():
 		self.summary_report()
 
 
-
 if __name__== "__main__":
 	#print len(sys.argv)
 	#print sys.argv
@@ -113,7 +138,8 @@ if __name__== "__main__":
 	build_name = sys.argv[3]
 	et_rc_version = sys.argv[4]
 	expect_run_time = sys.argv[5]
-	talk_to_rc_jenkins = TalkToRCCIForTS2(username, password, build_name, et_rc_version, expect_run_time)
+	IS_COVERAGE_NEEDED = sys.argv[6]
+	talk_to_rc_jenkins = TalkToRCCIForTS2(username, password, build_name, et_rc_version, expect_run_time, IS_COVERAGE_NEEDED)
 	talk_to_rc_jenkins.run_one_test()
 
 
