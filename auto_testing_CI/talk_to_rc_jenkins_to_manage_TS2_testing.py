@@ -8,7 +8,7 @@ import talk_to_rc_jenkins_to_get_coverage_result
 
 RC_Jenkins = os.environ.get("RC_Jenkins_URL") or "https://errata-jenkins.rhev-ci-vms.eng.rdu2.redhat.com"
 class TalkToRCCIForTS2():
-	def __init__(self, username, password, build_name, et_rc_version, expect_run_time, IS_COVERAGE_NEEDED=False):
+	def __init__(self, username, password, build_name, et_rc_version, expect_run_time, IS_COVERAGE_NEEDED):
 		self.username = username
 		self.password = password
 		self.build_name = build_name
@@ -38,6 +38,7 @@ class TalkToRCCIForTS2():
 
 	def run_build(self):
 		print "===Start to run the TS2.0 UAT testing==="
+		print "===IS_COVERAGE_NEEDED: {}".format(self.coverage_testing)
 		self.server.build_job(self.build_name,  {'RPM_BUILD_JOB_ID': self.et_rc_version, 'IS_COVERAGE_NEEDED': self.coverage_testing})
 
 	def get_lastest_build_number(self):
