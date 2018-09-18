@@ -87,10 +87,11 @@ class TalkToRCCIForTS2():
 			print "========The Cucumber TS2.0 UAT Testing PASSED========"
 			self.TS2_testing_result = "PASSED"
 
-		# When check the console log, when it get the 'Post_code_coverage', it consider it's the 'coverage' test
+		# When check the console log, when it get the 'Post_code_coverage', it considers it's the 'coverage' test
 		# otherwise, it is not the coverage test
-		# When it is the coverage test, let us show 'coverage data' directly.
-		# otherwise, let us show 'NULL'
+		# We perfer to show the current/latest coverage result.
+		# When the current test is coverage test, the coverage result is coverage_data/coverage_data
+		# otherwise, it is  'NULL/coverage-data'
 		if steps_results_map.has_key('Post_code_coverage'):
 			print "========Check the coverage=========="
 			self.coverage_testing_result = steps_results_map['Post_code_coverage']
@@ -99,10 +100,14 @@ class TalkToRCCIForTS2():
 				# Let us get the coverage result from 'Post_code_coverage' console log
 				coverage_ci = talk_to_rc_jenkins_to_get_coverage_result.TalkToRCCIForTS2Coverage(self.username,self.password,'Post_code_coverage')
 				coverage_ci.run_to_get_coverage()
-				self.coverage_testing_result = coverage_ci.coverage
+				self.coverage_testing_result = "{}/{}".format(coverage_ci.coverage, coverage_ci.coverage)
 			# If the 'Post_code_coverage' job is triggered and it's failed, the general TS2.0 job will be failed.
 			# Let us leave the code coverage result as the default value 'NULL'
-			print "========Done: Check the coverage==========="
+		else:
+			coverage_ci = talk_to_rc_jenkins_to_get_coverage_result.TalkToRCCIForTS2Coverage(self.username,self.password,'Post_code_coverage')
+			coverage_ci.run_to_get_coverage()
+			self.coverage_testing_result = "{}/{}".format("NULL", coverage_ci.coverage)
+		print "========Done: Check the coverage==========="
 
 
 	def summary_report(self):
@@ -114,7 +119,7 @@ class TalkToRCCIForTS2():
 		print "=====================Testing Report: End================"
 		print "=================Coverage Report: Begin================"
 		print "Is_Coverage_Testing: " + str(self.coverage_testing)
-		print "Coverage Result: " + str(self.coverage_testing_result)
+		print "Coverage Result: " + self.coverage_testing_result
 		print "General Coverage Report: " + self.coverage_testing_report
 		print "=================Coverage Report: End==================="
 
