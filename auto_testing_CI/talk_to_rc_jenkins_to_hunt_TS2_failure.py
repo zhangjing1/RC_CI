@@ -28,6 +28,10 @@ class TalkToRCCIForTS2Failure():
     self.failure_report = ""
     self.pending_report = ""
     self.pending_scenarios_report=""
+    # add variables for coverage report
+    self.coverage_report = ""
+    self.coverage_result = ""
+    self.is_coverage_testing = False
     self.general_report = ""
     self.send_report_ci = 'ts2.0_failure_hunter_send_reports'
     th_content = ['Owner', 'Commit', 'Commit Time', 'Scenario']
@@ -131,6 +135,19 @@ class TalkToRCCIForTS2Failure():
         self.pending_report = th_header + th_summary + '<table>' + self.th_html + self.pending_scenarios_report + '</table>'
         print "=== The pending scenarios hunter has got the pending lists"
 
+
+  def parser_ts2_cucumber_report_for_coverage(self):
+    self.is_coverage_testing = re.search(r"Is_Coverage_Testing: (\w+)", self.console_log_content).group(1)
+    self.coverage_result = re.search(r"Coverage Result: (\w+)", self.console_log_content).group(1)
+    self.coverage_report_url = re.search(r'General Coverage Report: (\w+:+/+\w+.+)',self.console_log_content).group(1)
+    th_header = "<h1> TS2.0 Hunter Reports for TS2.0 Coverage Testing</h1>"
+    th_summary = "<p>Is_Coverage_Testing: {}</p>".format(self.is_coverage_testing)
+    th_summary = th_summary + "<p>The current/latest coverage result: {}</p>".format(self.coverage_result)
+    th_summary = th_summary + "Reminder: You can get the general coverage thrend by the" + " <a href='{}'>".format(self.coverage_report_url) + \
+                   "coverge google sheet" + "</a>"
+    self.coverage_report = th_header + th_summary
+
+
   def format_one_blame(self, scenario_info):
       scenarios_info = scenario_info.replace('(',')').split(')')
       scenarios_info[:] = [item.strip() for item in scenarios_info]
@@ -164,7 +181,7 @@ class TalkToRCCIForTS2Failure():
     '''
 
     cheers = "<br><p>Reminder: The report is provided by QE 'TS2.0 Hunter CI' automatically. Please do not reply it directly.<p>"
-    self.general_report = html_css_start +  self.failure_report + self.pending_report + html_css_end + cheers
+    self.general_report = html_css_start +  self.failure_report + self.pending_report + self.coverage_report+ html_css_end + cheers
     print self.general_report
     print "=== Done to format the hunter report"
 
@@ -188,6 +205,7 @@ class TalkToRCCIForTS2Failure():
     self.prepare_errata_rails_features_data()
     self.parser_ts2_cucumber_report_for_failures()
     self.collect_pending_scenarios()
+    self.parser_ts2_cucumber_report_for_coverage()
     self.format_hunter_report()
     self.send_report_out()
 
