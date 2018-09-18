@@ -5,7 +5,7 @@ import time
 import talk_to_rc_jenkins as CI3_JENKINS
 
 class NightCI3Moniter():
-	def __init__(self, username, password, parent_page, build_rpm_ci_name, build_testing_ci_name):
+	def __init__(self, username, password, parent_page, build_rpm_ci_name, build_testing_ci_name, IS_COVERAGE_NEEDED):
 		self.username = username
 		self.password = password
 		self.build_rpm_ci_name = build_rpm_ci_name
@@ -16,6 +16,7 @@ class NightCI3Moniter():
 		self.build_testing_ci_jenkins = self.build_rpm_ci.server
 		self.build_testing_parameter = {}
 		self.parent_page = parent_page
+		self.IS_COVERAGE_NEEDED = IS_COVERAGE_NEEDED
 		self.et_jenkins_url = "https://errata-jenkins.rhev-ci-vms.eng.rdu2.redhat.com"
 
 
@@ -32,6 +33,7 @@ class NightCI3Moniter():
 		self.build_testing_parameter['password'] = self.password
 		self.build_testing_parameter['et_build_name_or_id'] = self.build_id
 		self.build_testing_parameter['parent_page'] = self.parent_page
+		self.build_testing_parameter['IS_COVERAGE_NEEDED'] = self.IS_COVERAGE_NEEDED
 		self.build_testing_ci_jenkins.build_job(self.build_testing_ci_name, self.build_testing_parameter)
 		time.sleep(30)
 		new_build_number = self.build_testing_ci_jenkins.get_job_info(self.build_testing_ci_name)['lastBuild']['number']
@@ -47,7 +49,8 @@ if __name__ == "__main__":
 	parent_page = sys.argv[3]
 	build_rpm_ci_name = sys.argv[4]
 	build_testing_ci_name = sys.argv[5]
-	monitor = NightCI3Moniter(username, password, parent_page, build_rpm_ci_name, build_testing_ci_name)
+	IS_COVERAGE_NEEDED = sys.argv[6]
+	monitor = NightCI3Moniter(username, password, parent_page, build_rpm_ci_name, build_testing_ci_name, IS_COVERAGE_NEEDED)
 	monitor.get_build_id()
 	monitor.run_ci3_build_testing()
 
