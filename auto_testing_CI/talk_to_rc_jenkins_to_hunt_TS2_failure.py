@@ -138,12 +138,12 @@ class TalkToRCCIForTS2Failure():
 
   def parser_ts2_cucumber_report_for_coverage(self):
     self.is_coverage_testing = re.search(r"Is_Coverage_Testing: (\w+)", self.console_log_content).group(1)
-    self.coverage_result = re.search(r"Coverage Result: (\w+)", self.console_log_content).group(1)
+    self.coverage_result =  re.search(r"Coverage Result: ([^\n]+)", self.console_log_content).group(1)
     self.coverage_report_url = re.search(r'General Coverage Report: (\w+:+/+\w+.+)',self.console_log_content).group(1)
     th_header = "<h1> TS2.0 Hunter Reports for TS2.0 Coverage Testing</h1>"
     th_summary = "<p>Is_Coverage_Testing: {}</p>".format(self.is_coverage_testing)
     th_summary = th_summary + "<p>The current/latest coverage result: {}</p>".format(self.coverage_result)
-    th_summary = th_summary + "Reminder: You can get the general coverage thrend by the" + " <a href='{}'>".format(self.coverage_report_url) + \
+    th_summary = th_summary + "Reminder: You can get the general coverage trend by the" + " <a href='{}'>".format(self.coverage_report_url) + \
                    "coverge google sheet" + "</a>"
     self.coverage_report = th_header + th_summary
 
