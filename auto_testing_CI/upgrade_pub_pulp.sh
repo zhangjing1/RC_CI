@@ -114,8 +114,15 @@ initialize_env
 upgrade_pub
 upgrade_pulp_rpm
 upgrade_pulp_docker
-# disable the firewall service on e2e docker server
-disable_firewall_service 'docker-e2e.usersys.redhat.com'
+# Disable the firewalld service for all e2e related servers
+# I do not suggest CI_3 to do too many workarounds, but Rony have said it's not easy to let others do
+# Then Let CI_3 help. See the RFE reported by Rony https://projects.engineering.redhat.com/browse/ERRATA-6627
+echo "=== Disable all firewall services on all pub & pulp related environments"
+for server in ${pulp_rpm_server} ${pulp_docker_server} ${pub_server}  'docker-e2e.usersys.redhat.com'
+do
+	disable_firewall_service ${server}
+done
+echo "=== All firewalld services have been disabled"
 # set the registry of the e2e docker server
 set_docker_registry 'docker-e2e.usersys.redhat.com'
 if [[ ${pub_deploy_failed} == "true" ]] || [[ ${pulp_rpm_deploy_failed} == "true" ]] || [[ ${pulp_docker_deploy_failed} == "true" ]]; then
