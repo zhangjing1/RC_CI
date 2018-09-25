@@ -94,9 +94,9 @@ upgrade_pulp_docker(){
 
 # The following 2 functions are used to do some settings for the docker-e2e env.
 disable_firewall_service(){
-	echo "== Disable docker-e2e firewalld"
+	echo "== Disable the firewalld service on ${1}"
 	ssh -o "StrictHostKeyChecking no" root@${1} 'service firewalld stop'
-	echo "== Done: The firewald service of docker-e2e has been disabled"
+	echo "== Done: The firewald service of ${1} has been disabled"
 }
 
 set_docker_registry(){
