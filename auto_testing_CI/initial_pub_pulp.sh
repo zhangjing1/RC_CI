@@ -72,6 +72,9 @@ check_and_initialize_pub() {
 	echo ${pub_product}
 	if [[ ${pub_installed} =~ ${pub_product} ]]; then
 		echo "== The pub installed is the same as the production, no need to update it =="
+		echo "== Let always start the pub services on the pub servers"
+		ssh -o "StrictHostKeyChecking no" root@${pub_server} "pub enable-worker ${pub_server} --username root --password redhat"
+		echo "== Done for ${pub_server}"
 	else
 		pub_deploy=true
 	    echo "== we need to update the pub version =="
@@ -199,6 +202,9 @@ check_and_initialize_pulp_docker() {
 	echo ${pulp_for_docker_production}
 	if [[ ${pulp_for_docker_installed} =~ ${pulp_for_docker_production} ]]; then
 		echo "== The pulp server installed is the same as the pulp production, no need to update it =="
+		echo "== Let always start the pulp docker services on the pulp docker servers"
+		ssh -o "StrictHostKeyChecking no" root@${pulp_docker_server} 'sh /root/restart.sh start'
+		echo "== Done for ${pulp_docker_server}"
 	else
 		pulp_for_docker_deploy=true
 		pulp_for_docker_ansible=" -e pulp_build=${pulp_for_docker_production}"
@@ -267,3 +273,5 @@ get_all_product_versions_content
 check_and_initialize_pub
 check_and_initialize_pulp_rpm
 check_and_initialize_pulp_docker
+# check all service are running
+
