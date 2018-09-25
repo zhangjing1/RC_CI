@@ -26,7 +26,7 @@ class TalkToRCCIForE2E():
 		self.e2e_testing_console_log_url = RC_Jenkins + "/job/" + self.build_name + "/" + str(self.lastest_build_number) + "/console"
 
 	def get_e2e_report_url(self):
-		self.e2e_testing_report_url = RC_Jenkins + "/job/" + self.build_name + "/" + str(self.lastest_build_number) + "/robot"
+		self.e2e_testing_report_url = RC_Jenkins + "/job/" + self.build_name + "/" + str(self.lastest_build_number) + "/cucumber-html-reports/overview-features.html"
 
 	def get_e2e_console_content(self):
 		self.console_log_content = self.server.get_build_console_output(self.build_name, self.lastest_build_number)
@@ -69,7 +69,6 @@ class TalkToRCCIForE2E():
 		else:
 			print "====E2E has been finished======================="
 			failed_cases_number = re.findall(r'[\d+]+ failed', self.console_log_content)[-1].split()[0]
-			self.E2E_testing_report_url = self.e2e_testing_report_url
 			if int(failed_cases_number) != 0:
 				print "=====E2E testing has been FAILED====="
 				self.e2e_testing_result = "FAILED(" + failed_cases_number + " cases failed)"
