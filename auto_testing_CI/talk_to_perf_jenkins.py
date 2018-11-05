@@ -34,7 +34,7 @@ class TalktoPerfCI():
 		self.build_name = os.environ.get('Perf_Build_Name') or build_name
 		self.expected_run_time = expected_run_time
 		self.check_loop_time = check_loop_time
-		self.default_build_number_to_compare = 301
+		self.default_build_number_to_compare = 342
 		self.lastest_build_number = 0
 		self.last_completed_build_number = 0
 		self.console_log_content = ""
