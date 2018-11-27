@@ -43,6 +43,7 @@ source ${tmp_dir}/RC_CI-master/auto_testing_CI/CI_Shell_prepare_env_and_scripts.
 source  ${tmp_dir}/RC_CI-master/auto_testing_CI/CI_Shell_common_usage.sh
 #install_scripts_env
 
+# If you set the et build as empty, It would initail the ET version as the product version
 if [[ -z "${et_build_name_or_id}" ]]; then
   echo "=== Et version is not specified. I would keep the deployed version is the product et version"
   product_raw_et_version=$(get_system_raw_version ${ET_Production_Server} | cut -d "-" -f 1)
@@ -58,6 +59,9 @@ if [[ -z "${et_build_name_or_id}" ]]; then
     echo "=== If the server is perf server, CI will restore the db and do db migration"
     perf_restore_db ${ET_Testing_Server}
     do_db_migration ${ET_Testing_Server}
+    echo "=== Checking some specific setting again and restart service"
+    update_setting ${ET_Testing_Server}
+    restart_service ${ET_Testing_Server}
     exit
   else
     echo "=== I am initializing the testing server with the product version"
@@ -69,9 +73,14 @@ if [[ -z "${et_build_name_or_id}" ]]; then
     initialize_e2e_pub_errata_xmlrpc_settings
   fi
 else
+  # If you set the version, CI would compare the deployed version with the specfic version, then do actions accordingly.
   echo "=== ET version is specified, I would keep the deplyed version is the expected et version"
   deployed_et_id=$(get_deployed_et_id ${ET_Testing_Server})
-  expected_et_id=$(initial_et_build_id ${et_build_name_or_id})
+  if [[ "${ errata_fetch_brew_build }" == "true" ]]; then
+    expected_et_id=${et_build_name_or_id}
+  else
+    expected_et_id=$(initial_et_build_id ${et_build_name_or_id})
+  fi
   echo "=== Get following versions:"
   echo "expected version: ${expected_et_id}"
   echo "deployed et version: ${deployed_et_id}"
@@ -82,6 +91,9 @@ else
     echo "=== If the server is perf server, CI will restore the db and do db migration"
     perf_restore_db ${ET_Testing_Server}
     do_db_migration ${ET_Testing_Server}
+    echo "=== Checking some specific setting again and restart service"
+    update_setting ${ET_Testing_Server}
+    restart_service ${ET_Testing_Server}
     exit
   else
     product_raw_et_version=$(get_system_raw_version ${ET_Production_Server} | cut -d "-" -f 1)
@@ -102,7 +114,11 @@ else
       run_ansible "${ansible}"
     fi
     echo "=== Upgrade to the current expected et version"
-    ansible=$(get_ansible_commands_with_build_id ${ET_Testing_Server} ${expected_et_id})
+    if [[ "${ errata_fetch_brew_build }" == "false" ]]; then
+      ansible=$(get_ansible_commands_with_build_id ${ET_Testing_Server} ${expected_et_id})
+    else
+      ansible=$(get_ansible_commands_with_brew_build_id ${ET_Testing_Server} ${expected_et_id})
+    fi
     echo "${ansible}"
     run_ansible "${ansible}"
     update_setting ${ET_Testing_Server}

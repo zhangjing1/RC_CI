@@ -57,6 +57,14 @@ get_ansible_commands_with_build_id(){
 	echo "${ansible_command}"
 }
 
+get_ansible_commands_with_brew_build_id(){
+    ansible_command_part_1="ansible-playbook -vv --user root --skip-tags 'et-application-config'"
+    ansible_command_part_2=" --limit ${1} -e errata_version=${2} -e errata_fetch_brew_build=true "
+    ansible_command_part_3=" playbooks/qe/deploy-errata-qe.yml"
+    ansible_command="${ansible_command_part_1} ${ansible_command_part_2} ${ansible_command_part_3}"
+    echo "${ansible_command}"
+}
+
 compare_version_or_id(){
     #echo "=== Format the compared versions again ==="
     first_version=$(printf '%-6d' ${1} | sed 's/ /0/g')
