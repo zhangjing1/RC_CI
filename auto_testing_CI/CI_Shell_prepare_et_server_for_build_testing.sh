@@ -76,7 +76,7 @@ else
   # If you set the version, CI would compare the deployed version with the specfic version, then do actions accordingly.
   echo "=== ET version is specified, I would keep the deplyed version is the expected et version"
   deployed_et_id=$(get_deployed_et_id ${ET_Testing_Server})
-  if [[ "${ errata_fetch_brew_build }" == "true" ]]; then
+  if [[ "${errata_fetch_brew_build}" == "true" ]]; then
     expected_et_id=${et_build_name_or_id}
   else
     expected_et_id=$(initial_et_build_id ${et_build_name_or_id})
@@ -114,7 +114,7 @@ else
       run_ansible "${ansible}"
     fi
     echo "=== Upgrade to the current expected et version"
-    if [[ "${ errata_fetch_brew_build }" == "false" ]]; then
+    if [[ "${errata_fetch_brew_build}" == "false" ]]; then
       ansible=$(get_ansible_commands_with_build_id ${ET_Testing_Server} ${expected_et_id})
     else
       ansible=$(get_ansible_commands_with_brew_build_id ${ET_Testing_Server} ${expected_et_id})
