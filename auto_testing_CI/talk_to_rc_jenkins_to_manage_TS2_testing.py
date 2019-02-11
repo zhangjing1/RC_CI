@@ -69,42 +69,42 @@ class TalkToRCCIForTS2():
 		steps_results_map = dict(zip(testing_steps, testing_results))
 		# Let check whether TS20 is run. If not, the testing will be mared as failed for environmental
 		# problem.
-		if not steps_results_map.has_key('et-remote-system-test_et-qe-dev-build'):
+		if not steps_results_map.has_key('errata-dev-build-full-remote-test_et-qe-dev-build'):
 			print "========The Env Preparation meets some problem=========="
 			self.TS2_testing_report_url = self.TS2_testing_console_log_url
 			self.TS2_testing_result = "FAILED"
-		elif steps_results_map['et-remote-system-test_et-qe-dev-build'] == 'ABORTED':
+		elif steps_results_map['errata-dev-build-full-remote-test_et-qe-dev-build'] == 'ABORTED':
 			print "========The testing is aborted by TS2.0 sub CI by itself======="
 			self.TS2_testing_report_url = self.TS2_testing_console_log_url
 			self.TS2_testing_result = "FAILED"
 
-		elif steps_results_map['et-remote-system-test_et-qe-dev-build'] == 'FAILURE':
+		elif steps_results_map['errata-dev-build-full-remote-test_et-qe-dev-build'] == 'FAILURE':
 			print "========The testing is aborted by TS2.0 sub CI by itself======="
 			self.TS2_testing_result = "FAILED"
 
-		elif steps_results_map['et-remote-system-test_et-qe-dev-build'] == 'SUCCESS':
+		elif steps_results_map['errata-dev-build-full-remote-test_et-qe-dev-build'] == 'SUCCESS':
 			print "========The Env Preparation has been finished==========="
 			print "========The Cucumber TS2.0 UAT Testing PASSED========"
 			self.TS2_testing_result = "PASSED"
 
-		# When check the console log, when it get the 'Post_code_coverage', it considers it's the 'coverage' test
+		# When check the console log, when it get the 'post_code_coverage_et-qe-dev-build', it considers it's the 'coverage' test
 		# otherwise, it is not the coverage test
 		# We perfer to show the current/latest coverage result.
 		# When the current test is coverage test, the coverage result is coverage_data/coverage_data
 		# otherwise, it is  'NULL/coverage-data'
-		if steps_results_map.has_key('Post_code_coverage'):
+		if steps_results_map.has_key('post_code_coverage_et-qe-dev-build'):
 			print "========Check the coverage=========="
-			self.coverage_testing_result = steps_results_map['Post_code_coverage']
+			self.coverage_testing_result = steps_results_map['post_code_coverage_et-qe-dev-build']
 			self.coverage_testing = True
 			if self.coverage_testing_result == "SUCCESS":
-				# Let us get the coverage result from 'Post_code_coverage' console log
-				coverage_ci = talk_to_rc_jenkins_to_get_coverage_result.TalkToRCCIForTS2Coverage(self.username,self.password,'Post_code_coverage')
+				# Let us get the coverage result from 'post_code_coverage_et-qe-dev-build' console log
+				coverage_ci = talk_to_rc_jenkins_to_get_coverage_result.TalkToRCCIForTS2Coverage(self.username,self.password,'post_code_coverage_et-qe-dev-build')
 				coverage_ci.run_to_get_coverage()
 				self.coverage_testing_result = "{}/{}".format(coverage_ci.coverage, coverage_ci.coverage)
-			# If the 'Post_code_coverage' job is triggered and it's failed, the general TS2.0 job will be failed.
+			# If the 'post_code_coverage_et-qe-dev-build' job is triggered and it's failed, the general TS2.0 job will be failed.
 			# Let us leave the code coverage result as the default value 'NULL'
 		else:
-			coverage_ci = talk_to_rc_jenkins_to_get_coverage_result.TalkToRCCIForTS2Coverage(self.username,self.password,'Post_code_coverage')
+			coverage_ci = talk_to_rc_jenkins_to_get_coverage_result.TalkToRCCIForTS2Coverage(self.username,self.password,'post_code_coverage_et-qe-dev-build')
 			coverage_ci.run_to_get_coverage()
 			self.coverage_testing_result = "{}/{}".format("NULL", coverage_ci.coverage)
 		print "========Done: Check the coverage==========="
