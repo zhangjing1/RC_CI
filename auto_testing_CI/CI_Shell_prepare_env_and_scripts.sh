@@ -9,6 +9,7 @@ install_scripts_env() {
   sudo pip install google-api-python-client
   sudo pip install bugzilla
   sudo pip install python-bugzilla
+  sudo pip install jira
 
   if [[ $(wget --version | head -1) =~ "GNU Wget" ]]; then
     echo "=====wget has been installed======";
