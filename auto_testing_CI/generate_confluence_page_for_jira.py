@@ -5,7 +5,7 @@ import re
 from jira import JIRA
 
 '''
-    The scripts are used to generate the confluence content for jiras searched from jirazilla.
+    The scripts are used to generate the confluence content for jiras searched from jira.
     The top funcion is 'generate_confluence_page_for_jiras' and the parameter is the fix_version in jira issue
     And it would do the followging steps:
     1. call function to get jiras and format jiras
