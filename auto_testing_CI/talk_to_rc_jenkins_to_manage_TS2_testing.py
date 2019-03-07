@@ -69,20 +69,21 @@ class TalkToRCCIForTS2():
 		steps_results_map = dict(zip(testing_steps, testing_results))
 		# Let check whether TS20 is run. If not, the testing will be mared as failed for environmental
 		# problem.
-		if not steps_results_map.has_key('errata-dev-build-full-remote-test_et-qe-dev-build'):
+		if not steps_results_map.has_key('et-remote-system-test_et-qe-dev-build'):
 			print "========The Env Preparation meets some problem=========="
 			self.TS2_testing_report_url = self.TS2_testing_console_log_url
 			self.TS2_testing_result = "FAILED"
-		elif steps_results_map['errata-dev-build-full-remote-test_et-qe-dev-build'] == 'ABORTED':
+		elif steps_results_map['et-remote-system-test_et-qe-dev-build'] == 'ABORTED':
 			print "========The testing is aborted by TS2.0 sub CI by itself======="
 			self.TS2_testing_report_url = self.TS2_testing_console_log_url
 			self.TS2_testing_result = "FAILED"
 
-		elif steps_results_map['errata-dev-build-full-remote-test_et-qe-dev-build'] == 'FAILURE':
-			print "========The testing is aborted by TS2.0 sub CI by itself======="
+		elif steps_results_map['et-remote-system-test_et-qe-dev-build'] == 'FAILURE':
+			print "========The testing is failed by TS2.0 itself======="
 			self.TS2_testing_result = "FAILED"
+			self.TS2_testing_report_url = ""
 
-		elif steps_results_map['errata-dev-build-full-remote-test_et-qe-dev-build'] == 'SUCCESS':
+		elif steps_results_map['et-remote-system-test_et-qe-dev-build'] == 'SUCCESS':
 			print "========The Env Preparation has been finished==========="
 			print "========The Cucumber TS2.0 UAT Testing PASSED========"
 			self.TS2_testing_result = "PASSED"
