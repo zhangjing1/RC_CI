@@ -81,7 +81,6 @@ class TalkToRCCIForTS2():
 		elif steps_results_map['et-remote-system-test_et-qe-dev-build'] == 'FAILURE':
 			print "========The testing is failed by TS2.0 itself======="
 			self.TS2_testing_result = "FAILED"
-			self.TS2_testing_report_url = ""
 
 		elif steps_results_map['et-remote-system-test_et-qe-dev-build'] == 'SUCCESS':
 			print "========The Env Preparation has been finished==========="
