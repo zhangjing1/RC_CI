@@ -11,14 +11,14 @@ from jira import JIRA
     1. call function to get jiras and format jiras
     2. Update qe_auto_coverage for the Spike and OtherQA issue to '-' if it has not been set
     3. Call function to generate the confluence content page for the jiras, the parameter for jira query should be fix_version, like '3.18.0-1'
-    The script can be used as 'sudo python generate_confluence_page_for_jira.py '<username>" "<password>" "3.18.1-0"
+    The script can be used as 'sudo python generate_confluence_page_for_jira.py "<username>" "<password>" "3.18.1-0"
 '''
 
 def get_issue_and_format_issue(issue):
     issue_result = ''
     issue_qe_auto_coverage = ''
     # for spike tasks, Let the script add 'qe_auto_coverage' flag '-' automatically if it is not set yet
-    if issue.fields.summary.find('[Spike]') == 0 and issue.fields.customfield_13700 == None::
+    if issue.fields.summary.find('[Spike]') == 0 and issue.fields.customfield_13700 == None:
         print "Add the flag 'qe_auto_coverage' as '-' to the spike jira {}".format(issue.key)
         issue.update(fields={'customfield_13700': {'value': '-'}})
 
@@ -31,7 +31,7 @@ def get_issue_and_format_issue(issue):
     regex = re.compile('[^a-zA-Z0-9 _\?\[\]{}()]')
     summary = regex.sub('', issue.fields.summary)
 
-    finished_testing_issues_status = ['Resolved','Closed','Done']
+    finished_testing_issues_status = ['Resolved','Closed','Done','Verified']
 
     # customfield_13700 is customed qe_auto_coverage
     if issue.fields.customfield_13700:
