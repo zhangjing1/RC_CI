@@ -127,7 +127,7 @@ def generate_confluence_page_for_issues(user, password, fix_version):
     page_notice = "'qe_auto_coverage' on the page shows QE automation status for jira issues."
     page_notice_html = "<p>" + page_notice + "</p>"
     html = page_notice_html + info_for_manual_testing_html + formatted_manual_issues_html + info_for_automated_testing_html + formatted_automated_issues_html
-    print html
+    # print html
     write_page_file(html)
     print "Done!"
 
