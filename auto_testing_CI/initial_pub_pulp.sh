@@ -24,7 +24,6 @@ get_all_product_versions_content() {
 	echo '===== get pub version from ${pub_version_url}'
 	curl ${pub_version_url} | grep Build: >> pub_pulp_version_content.txt
 	echo "===== get pulp versions from ${pulp_version_url}"
-	curl  | grep pulp-server >> pub_pulp_version_content.txt
 	curl ${pulp_version_url} | grep pulp-server >> pub_pulp_version_content.txt
 	curl ${pulp_version_url} | grep pulp-rpm-plugin >> pub_pulp_version_content.txt	
 	echo "===== get pulp docker versions from ${pulp_docker_url}"
