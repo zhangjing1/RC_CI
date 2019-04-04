@@ -4,9 +4,9 @@
 # finally, do the upgrade/downgrade to make sure the two kinds of version are the same
 set -eo pipefail
 
-confluence_wikiurl="https://docs.engineering.redhat.com"
-e2e_version_page="Version of Applications in E2E"
-e2e_version_page_space="~lzhuang"
+pub_version_url=http://pub.devel.redhat.com/pub/help/about/
+pulp_version_url=https://gitolite.corp.redhat.com/cgit/puppet-cfg/modules/pulp.git/plain/data/rpm-versions-el7.yaml
+pulp_docker_url=https://gitolite.corp.redhat.com/cgit/puppet-cfg/modules/pulp.git/plain/data/docker-pulp-rpm-versions.yaml
 
 install_scripts_env() {
 	 pip install --upgrade pip
@@ -21,8 +21,16 @@ install_scripts_env() {
 }
 
 get_all_product_versions_content() {
-	echo "confluence-cli --wikiurl=${confluence_wikiurl} -u ${username} -p ${password}  getpagecontent -n "${e2e_version_page}"  -s ${e2e_version_page_space} > pub_pulp_version_content.txt"
-	confluence-cli --wikiurl=${confluence_wikiurl} -u ${username} -p ${password}  getpagecontent -n "${e2e_version_page}"  -s ${e2e_version_page_space} > pub_pulp_version_content.txt
+	echo '===== get pub version from ${pub_version_url}'
+	curl ${pub_version_url} | grep Build: >> pub_pulp_version_content.txt
+	echo "===== get pulp versions from ${pulp_version_url}"
+	curl  | grep pulp-server >> pub_pulp_version_content.txt
+	curl ${pulp_version_url} | grep pulp-server >> pub_pulp_version_content.txt
+	curl ${pulp_version_url} | grep pulp-rpm-plugin >> pub_pulp_version_content.txt	
+	echo "===== get pulp docker versions from ${pulp_docker_url}"
+	curl ${pulp_docker_url} | grep pulp-server  >> pub_pulp_version_content.txt
+	curl ${pulp_docker_url} | grep pulp-rpm-plugin  >> pub_pulp_version_content.txt
+	curl ${pulp_docker_url} | grep pulp-docker-plugins  >> pub_pulp_version_content.txt
 }
 
 # check the pub version
