@@ -43,8 +43,6 @@ initialize_ansible_related_varables(){
 	pulp_for_rpm_deploy_downgrade=false
 	pulp_rpm_production=""
 	pulp_rpm_deploy=false
-	pulp_cdn_distributor_production=""
-	pulp_cdn_deploy=false
 	pulp_for_docker_deploy=false
 	pulp_for_docker_production=""
 	pulp_docker_production=""
@@ -54,7 +52,6 @@ initialize_ansible_related_varables(){
 	pub_ansible=""
 	pulp_for_rpm_ansible=""
 	pulp_rpm_ansible=""
-	pulp_cdn_deploy_ansible=""
 	pulp_for_docker_ansible=""
 	pulp_docker_ansible=""
 }
@@ -156,36 +153,14 @@ check_and_initialize_pulp_rpm() {
 		fi
 	fi
 
-	pulp_cdn_distributor_installed=$( get_build_installed_on_server ${pulp_rpm_server} pulp-cdn-distributor-plugins)
-	echo "== pulp-cdn-distributor-plugins installed on pulp-rpm server =="
-	echo ${pulp_cdn_distributor_installed}
-	pulp_cdn_distributor_production=$(  python get_pub_pulp_product_version.py ${current_dir}/pub_pulp_version_content.txt pulp-cdn-distributor-plugins )
-	echo "== pulp-cdn-distributor-plugin production =="
-	echo ${pulp_cdn_distributor_installed}
-	if [[ ${pulp_cdn_distributor_installed} =~ ${pulp_cdn_distributor_production} ]]; then
-		echo "== The pulp-cdn-distributor-plugins installed is the same as the pulp production, no need to update it =="
-	else
-		pulp_cdn_deploy=true
-		pulp_cdn_distributor_build_name=$(echo ${pulp_cdn_distributor_production} | sed "s/-plugins//")
-		pulp_cdn_deploy_ansible=" -e pulp_cdn_distributor_build=${pulp_cdn_distributor_build_name}"
-		pulp_cdn_distributor_production_integer=$(echo ${pulp_cdn_distributor_production} | sed "s/[^0-9]*//g")
-		pulp_cdn_distributor_installed_integer=$(echo ${pulp_cdn_distributor_installed} | sed "s/[^0-9]*//g" | cut -c "1-${#pulp_cdn_distributor_production_integer}")
-		echo "== Compare the current installed pulp_cdn version with the production pulp version =="
-		echo "== installed vs production: ${pulp_cdn_distributor_installed_integer} vs ${pulp_cdn_distributor_production_integer} =="
-		if [[ ${pulp_cdn_distributor_installed_integer} -gt ${pulp_cdn_distributor_production_integer} ]];then
-			echo "== Downgrade Reminder: The installed pulp_cdn is newer than production, we need to downgrade it =="
-			pulp_cdn_deploy_ansible="${pulp_cdn_deploy_ansible} -e pulp_downgrade=true"
-		fi
-	fi
 	pulp_rpm_server_ansible="ansible-playbook -u root -i ${WORKSPACE}/inventory/pulp ${WORKSPACE}/playbooks/pulp/deploy-pulp-rpm-e2e.yml \
                          ${pulp_for_rpm_ansible} ${pulp_rpm_ansible}"
-    if [[ ${pulp_for_rpm_deploy} == "true" ]] || [[ ${pulp_rpm_deploy} == "true" ]] || [[ ${pulp_cdn_deploy} == "true" ]];then
+    if [[ ${pulp_for_rpm_deploy} == "true" ]] || [[ ${pulp_rpm_deploy} == "true" ]] ; then
     	echo "== Ansible: ${pulp_rpm_server_ansible} =="
     	${pulp_rpm_server_ansible}
     	echo "== Now the pulp-rpm related builds installed are:"
     	echo $( get_build_installed_on_server ${pulp_rpm_server}  pulp-server )
     	echo $( get_build_installed_on_server ${pulp_rpm_server} pulp-rpm-plugins)
-    	echo $( get_build_installed_on_server ${pulp_rpm_server} pulp-cdn-distributor-plugins)
     fi
 }
 # check pulp-docker related
