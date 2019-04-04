@@ -19,7 +19,7 @@ class GetPubAndPulpVersion():
 	def get_pub_build_name(self):
 		self.pub_build = self.e2e_version_content_list[0].split(':')[1]
 		self.pub_build = '-'.join(self.pub_build.split('-')[1:]).strip()
-		self.build_name_list['pub'] = 'pub-hub' + self.pub_build
+		self.build_name_list['pub'] = 'pub-hub-' + self.pub_build
 
 	def get_pulp_build_name_for_pulprpm(self):
 		self.pulp_build_for_rpm = self.e2e_version_content_list[1].split(':')[1].strip()
