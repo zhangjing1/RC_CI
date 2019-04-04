@@ -178,7 +178,7 @@ check_and_initialize_pulp_rpm() {
 		fi
 	fi
 	pulp_rpm_server_ansible="ansible-playbook -u root -i ${WORKSPACE}/inventory/pulp ${WORKSPACE}/playbooks/pulp/deploy-pulp-rpm-e2e.yml \
-                         ${pulp_for_rpm_ansible} ${pulp_rpm_ansible} ${pulp_cdn_deploy_ansible}"
+                         ${pulp_for_rpm_ansible} ${pulp_rpm_ansible}"
     if [[ ${pulp_for_rpm_deploy} == "true" ]] || [[ ${pulp_rpm_deploy} == "true" ]] || [[ ${pulp_cdn_deploy} == "true" ]];then
     	echo "== Ansible: ${pulp_rpm_server_ansible} =="
     	${pulp_rpm_server_ansible}
