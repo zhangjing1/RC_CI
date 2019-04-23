@@ -105,8 +105,8 @@ class TalktoPerfCI():
 	def get_comparision_report_url(self):
 		# get the latest job to do the comparison with the fix build et 3.16.4
 		self.perf_testing_comparison_url = Perf_Jenkins + "/view/ET/job/" + self.build_name + "/" + str(self.lastest_build_number) \
-                      + "/performance-report/comparisonReport/" + str(self.default_build_number_to_compare) +"/monoReport#!/report/_/Perf-build_" \
-                      + str(self.lastest_build_number) + "_vs_" + str(self.default_build_number_to_compare) +"/perfcharts-simple-perfcmp"
+                      + "/performance-report/comparisonReport/" + self.default_build_number_to_compare +"/monoReport#!/report/_/Perf-build_" \
+                      + str(self.lastest_build_number) + "_vs_" + self.default_build_number_to_compare +"/perfcharts-simple-perfcmp"
 		#print self.perf_testing_comparison_url
 
 	def run_one_test(self):
