@@ -27,14 +27,14 @@ Perf_Jenkins = os.environ.get('ET_Perf_URL') or "https://perfci.eng.pek2.redhat.
 
 class TalktoPerfCI():
 	global ET_Perf_Server, ET_Stub_Server, ET_DB_Server, Perf_Jenkins
-	def __init__(self, username, password, build_name, expected_run_time, check_loop_time, et_rc_version):
+	def __init__(self, username, password, build_name, expected_run_time, check_loop_time, baseline_job_id, et_rc_version):
 		self.username = username
 		self.password = password
 		self.server = jenkins.Jenkins(Perf_Jenkins, username=self.username, password=self.password)
 		self.build_name = os.environ.get('Perf_Build_Name') or build_name
 		self.expected_run_time = expected_run_time
 		self.check_loop_time = check_loop_time
-		self.default_build_number_to_compare = 342
+		self.default_build_number_to_compare = baseline_job_id
 		self.lastest_build_number = 0
 		self.last_completed_build_number = 0
 		self.console_log_content = ""
@@ -105,8 +105,8 @@ class TalktoPerfCI():
 	def get_comparision_report_url(self):
 		# get the latest job to do the comparison with the fix build et 3.16.4
 		self.perf_testing_comparison_url = Perf_Jenkins + "/view/ET/job/" + self.build_name + "/" + str(self.lastest_build_number) \
-                      + "/performance-report/comparisonReport/" + str(self.default_build_number_to_compare) +"/monoReport#!/report/_/Perf-build_" \
-                      + str(self.lastest_build_number) + "_vs_" + str(self.default_build_number_to_compare) +"/perfcharts-simple-perfcmp"
+                      + "/performance-report/comparisonReport/" + self.default_build_number_to_compare +"/monoReport#!/report/_/Perf-build_" \
+                      + str(self.lastest_build_number) + "_vs_" + self.default_build_number_to_compare +"/perfcharts-simple-perfcmp"
 		#print self.perf_testing_comparison_url
 
 	def run_one_test(self):
@@ -129,16 +129,17 @@ if __name__== "__main__":
 	perf_expect_run_time = sys.argv[2]
 	username = os.environ.get('ET_Perf_User') or sys.argv[3]
 	password = os.environ.get('ET_Perf_User_Password') or sys.argv[4]
+	baseline_job_id = sys.argv[5]
 	et_rc_version = sys.argv[-1]
 	#print et_rc_version
 	if testing_type == "smoke":
-		talk_to_jenkinks_smoke = TalktoPerfCI(username, password, "ET_Baseline_PDI_MIN", 5, 2, et_rc_version)
+		talk_to_jenkinks_smoke = TalktoPerfCI(username, password, "ET_Baseline_PDI_MIN", 5, 2, baseline_job_id, et_rc_version)
 		talk_to_jenkinks_smoke.run_one_test()
 	if testing_type == "full_perf":
-		talk_to_jenkinks_smoke = TalktoPerfCI(username, password, "ET_Baseline_PDI", perf_expect_run_time, 2, et_rc_version)
+		talk_to_jenkinks_smoke = TalktoPerfCI(username, password, "ET_Baseline_PDI", perf_expect_run_time, 2, baseline_job_id, et_rc_version)
 		talk_to_jenkinks_smoke.run_one_test()
 	if testing_type == "all":
-		talk_to_jenkinks_smoke = TalktoPerfCI(username, password, "ET_Baseline_PDI_MIN", 5, 2, et_rc_version)
+		talk_to_jenkinks_smoke = TalktoPerfCI(username, password, "ET_Baseline_PDI_MIN", 5, 2, baseline_job_id, et_rc_version)
 		talk_to_jenkinks_smoke.run_one_test()
-		talk_to_jenkinks_smoke = TalktoPerfCI(username, password, "ET_Baseline_PDI", 80, 2, et_rc_version)
+		talk_to_jenkinks_smoke = TalktoPerfCI(username, password, "ET_Baseline_PDI", 80, 2, baseline_job_id, et_rc_version)
 		talk_to_jenkinks_smoke.run_one_test()
