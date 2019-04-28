@@ -33,7 +33,7 @@ class TalkToRCCI():
             test_result_url = re.findall(r'Testing Report URL: [^\n]+', self.console_log_content)[0].replace("Testing Report URL: ", "").replace("'", "")
             if test_result == "FAILED" and len(re.findall(r'upstream project "[\w+ \.]+', self.console_log_content)) == 2:
                 self.get_upstream_flowGraphTable_link()
-                test_result_url += "\nFor more error info, you may check: " + self.upstream_flowGraphTable_link
+                test_result_url += " \nFor more error info, you may check: " + self.upstream_flowGraphTable_link
             self.test_report = [test_type, test_result, test_result_url]
         else:
             self.test_report = ["", "", ""]
@@ -55,13 +55,10 @@ class TalkToRCCI():
 if __name__== "__main__":
     #print len(sys.argv)
     #print sys.argv
-    #username = os.environ.get('ET_RC_User')
-    #password = os.environ.get('ET_RC_User_Password')
-    username = sys.argv[1]
-    password = sys.argv[2]
-    build_name = sys.argv[3]
-    if len(sys.argv) == 4:
-        build_name = sys.argv[3]
+    username = os.environ.get('ET_RC_User')
+    password = os.environ.get('ET_RC_User_Password')
+    if len(sys.argv) == 2:
+        build_name = sys.argv[1]
         talk_to_rc_jenkins = TalkToRCCI(username, password, build_name)
         talk_to_rc_jenkins.get_test_report_for_build()
         print talk_to_rc_jenkins.test_report
