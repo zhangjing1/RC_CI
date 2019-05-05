@@ -34,7 +34,7 @@ class TalkToRCCI():
             test_result_url = "<a href='" + test_result_url + "'>" + test_result_url + "</a>"
             if test_result == "FAILED" and len(re.findall(r'upstream project "[\w+ \.]+', self.console_log_content)) == 2:
                 self.get_upstream_flowGraphTable_link()
-                test_result_url += " <p>You may find more info from the upstream job: " + "<a href='" + self.upstream_flowGraphTable_link + "'>" + self.upstream_flowGraphTable_link + "</a>" + "</p>"
+                test_result_url += " <p>If you can't find enough failed info from the above link, please check the upstream job: " + "<a href='" + self.upstream_flowGraphTable_link + "'>" + self.upstream_flowGraphTable_link + "</a>" + "</p>"
             self.test_report = [test_type, test_result, test_result_url]
         else:
             self.test_report = ["", "", ""]
