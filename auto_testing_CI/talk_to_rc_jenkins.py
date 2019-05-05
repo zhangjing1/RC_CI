@@ -33,7 +33,7 @@ class TalkToRCCI():
             test_result_url = re.findall(r'Testing Report URL: [^\n]+', self.console_log_content)[0].replace("Testing Report URL: ", "").replace("'", "")
             if test_result == "FAILED" and len(re.findall(r'upstream project "[\w+ \.]+', self.console_log_content)) == 2:
                 self.get_upstream_flowGraphTable_link()
-                test_result_url += " \nFor more error info, you may check: " + self.upstream_flowGraphTable_link
+                test_result_url += " <p>For more error info, you may check: " + self.upstream_flowGraphTable_link + "</p>"
             self.test_report = [test_type, test_result, test_result_url]
         else:
             self.test_report = ["", "", ""]
