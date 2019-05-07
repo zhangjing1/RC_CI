@@ -39,7 +39,7 @@ class TalkToRCCI():
             test_result_url = "<a href='" + test_result_url + "'>" + test_result_url + "</a>"
             self.test_report = [test_type, test_result, test_result_url]
         else:
-            test_type = self.test_type_option[build_name]
+            test_type = self.test_type_option[self.build_name]
             test_result = "FAILED"
             test_result_url = "The report is not generated, please check the below url to see if the testing is finished!" + "<p>" + "<a href='" + self.last_completed_ci3_pipeline_build_url + "'>" + self.last_completed_ci3_pipeline_build_url + "</a>" + "</p>"
             self.test_report = [test_type, test_result, test_result_url]
