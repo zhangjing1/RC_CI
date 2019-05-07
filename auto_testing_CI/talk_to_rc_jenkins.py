@@ -17,7 +17,7 @@ class TalkToRCCI():
         self.ci3_pipeline_build_name = "ET_Builds_Testing_Pipeline"
         self.last_completed_ci3_pipeline_build_url = ""
         self.test_type_option = {'Parser_Performance_Result':'Performance Baseline Testing', 'Trigger_TS2_UAT_Testing':'TS2.0 UAT Testing',
-                                 'Trigger_E2E_Testing':'E2E Testing', 'Bug Regression Testing':'Bug Regression Testing'}
+                                 'Trigger_E2E_Testing':'E2E Testing'}
 
 
     def get_last_completed_build_number(self):
@@ -39,10 +39,11 @@ class TalkToRCCI():
             test_result_url = "<a href='" + test_result_url + "'>" + test_result_url + "</a>"
             self.test_report = [test_type, test_result, test_result_url]
         else:
-            test_type = self.test_type_option[self.build_name]
-            test_result = "FAILED"
-            test_result_url = "The report is not generated, please check the below url to see if the testing is finished!" + "<p>" + "<a href='" + self.last_completed_ci3_pipeline_build_url + "'>" + self.last_completed_ci3_pipeline_build_url + "</a>" + "</p>"
-            self.test_report = [test_type, test_result, test_result_url]
+            if self.build_name in ['Parser_Performance_Result', 'Trigger_E2E_Testing', 'Trigger_TS2_UAT_Testing']
+                test_type = self.test_type_option[self.build_name]
+                test_result = "FAILED"
+                test_result_url = "The report is not generated, please check the below url to see if the testing is finished!" + "<p>" + "<a href='" + self.last_completed_ci3_pipeline_build_url + "'>" + self.last_completed_ci3_pipeline_build_url + "</a>" + "</p>"
+                self.test_report = [test_type, test_result, test_result_url]
 
     def get_test_report_for_build(self):
         self.get_last_completed_build_number()
