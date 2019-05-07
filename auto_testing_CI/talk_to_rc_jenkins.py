@@ -14,15 +14,20 @@ class TalkToRCCI():
         self.last_completed_build_number = 0
         self.console_log_content = ""
         self.current_rc_version = ""
-        self.upstream_build_number = 0
-        self.upstream_build_name = ""
-        self.upstream_flowGraphTable_link= ""
+        self.ci3_pipeline_build_name = "ET_Builds_Testing_Pipeline"
+        self.last_completed_ci3_pipeline_build_url = ""
+        self.test_type_option = {'Parser_Performance_Result':'Performance Baseline Testing', 'Trigger_TS2_UAT_Testing':'TS2.0 UAT Testing',
+                                 'Trigger_E2E_Testing':'E2E Testing', 'Bug Regression Testing':'Bug Regression Testing'}
+
 
     def get_last_completed_build_number(self):
         self.last_completed_build_number = self.server.get_job_info(self.build_name)['lastCompletedBuild']['number']
 
     def get_latest_build_console_log_content(self):
         self.console_log_content = self.server.get_build_console_output(self.build_name, self.last_completed_build_number)
+
+    def get_last_completed_ci3_pipeline_build_url(self):
+        self.last_completed_ci3_pipeline_build_url = self.server.get_job_info(self.ci3_pipeline_build_name)['lastCompletedBuild']['url']
 
     def get_test_report_from_console_log(self):
         current_rc_version_list = re.findall(r'ET RC Version: [\w+ \.]+', self.console_log_content)
@@ -32,17 +37,12 @@ class TalkToRCCI():
             test_result = re.findall(r'Testing Result: [\w+ \.]+', self.console_log_content)[0].replace("Testing Result: ", "")
             test_result_url = re.findall(r'Testing Report URL: [^\n]+', self.console_log_content)[0].replace("Testing Report URL: ", "").replace("'", "")
             test_result_url = "<a href='" + test_result_url + "'>" + test_result_url + "</a>"
-            if test_result == "FAILED" and len(re.findall(r'upstream project "[\w+ \.]+', self.console_log_content)) == 2:
-                self.get_upstream_flowGraphTable_link()
-                test_result_url += " <p>If you can't find enough failed info from the above link, please check the upstream job: " + "<a href='" + self.upstream_flowGraphTable_link + "'>" + self.upstream_flowGraphTable_link + "</a>" + "</p>"
             self.test_report = [test_type, test_result, test_result_url]
         else:
-            self.test_report = ["", "", ""]
-
-    def get_upstream_flowGraphTable_link(self):
-        self.upstream_build_name = re.findall(r'upstream project "[\w+ \.]+', self.console_log_content)[0].split('"')[1]
-        self.upstream_build_number = re.findall(r'build number \d+', self.console_log_content)[0].split()[-1]
-        self.upstream_flowGraphTable_link = RC_Jenkins + "/job/" + self.upstream_build_name + "/" + str(self.upstream_build_number) + "/" + "flowGraphTable"
+            test_type = self.test_type_option[build_name]
+            test_result = "FAILED"
+            test_result_url = "The report is not generated, please check the below url to see if the testing is finished!" + <p> + "<a href='" + self.last_completed_ci3_pipeline_build_url + "'>" + self.last_completed_ci3_pipeline_build_url + "</a>" + "</p>"
+            self.test_report = [test_type, test_result, test_result_url]
 
     def get_test_report_for_build(self):
         self.get_last_completed_build_number()

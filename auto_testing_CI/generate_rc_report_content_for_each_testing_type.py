@@ -63,7 +63,6 @@ class GenerateRCReportContent():
 			if item == "IN PROGRESS":
 				test_table_row_content_body += "<td>" + "<strong><span style='color: rgb(255,204,0);'>" + item + "</span></strong>" + "</td>"
 			if item.find("http") > -1:
-				#It might have multiple urls
 				test_table_row_content_body += "<td>" + item + "</td>"
 			if item.find("Testing") > -1 and item.find("http") <0:
 				test_table_row_content_body += "<td>" + item + "</td>"
