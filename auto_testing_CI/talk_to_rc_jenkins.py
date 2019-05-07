@@ -41,7 +41,7 @@ class TalkToRCCI():
         else:
             test_type = self.test_type_option[build_name]
             test_result = "FAILED"
-            test_result_url = "The report is not generated, please check the below url to see if the testing is finished!" + <p> + "<a href='" + self.last_completed_ci3_pipeline_build_url + "'>" + self.last_completed_ci3_pipeline_build_url + "</a>" + "</p>"
+            test_result_url = "The report is not generated, please check the below url to see if the testing is finished!" + "<p>" + "<a href='" + self.last_completed_ci3_pipeline_build_url + "'>" + self.last_completed_ci3_pipeline_build_url + "</a>" + "</p>"
             self.test_report = [test_type, test_result, test_result_url]
 
     def get_test_report_for_build(self):
