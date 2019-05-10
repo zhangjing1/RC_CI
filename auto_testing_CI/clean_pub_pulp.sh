@@ -12,15 +12,13 @@ pip install funcsigs
 pip install pytest==3.3.0
 pip install -r test-requirements.txt
 # change the host of the config
-cp /workdir/content-script-config/QA_01.conf /workdir/content-delivery-qe/unit_tests/configs/QA_01.conf
-#sed -i "s/pub.host.qe.eng.pek2.redhat.com/pub-e2e.usersys.redhat.com/g" /workdir/content-delivery-qe/unit_tests/configs/QA_01.conf
-#sed -i "s/pub-02.host.qe.eng.pek2.redhat.com/pub-e2e.usersys.redhat.com/g" /workdir/content-delivery-qe/unit_tests/configs/QA_01.conf
-#sed -i "s/pub-test.usersys.redhat.com/pub-e2e.usersys.redhat.com/g" /workdir/content-delivery-qe/unit_tests/configs/QA_01.conf
-#sed -i "s/pulp-02.host.qe.eng.pek2.redhat.com/pulp-e2e.usersys.redhat.com/g" /workdir/content-delivery-qe/unit_tests/configs/QA_01.conf
-#sed -i "s/pulp-03.host.qe.eng.pek2.redhat.com/pulp-docker-e2e.usersys.redhat.com/g" /workdir/content-delivery-qe/unit_tests/configs/QA_01.conf
-#sed -i "s/password=redhat/password=errata/g" /workdir/content-delivery-qe/unit_tests/configs/QA_01.conf
-#change the user of ssh to pulp
-sed -i 's/at_user/root/g'  /workdir/content-delivery-qe/unit_tests/helpers/constants.py
+sed -i "s/pub.host.qe.eng.pek2.redhat.com/pub-e2e.usersys.redhat.com/g" /workdir/content-delivery-qe/unit_tests/configs/QA_01.conf
+sed -i "s/pub-02.host.qe.eng.pek2.redhat.com/pub-e2e.usersys.redhat.com/g" /workdir/content-delivery-qe/unit_tests/configs/QA_01.conf
+sed -i "s/pub-test.usersys.redhat.com/pub-e2e.usersys.redhat.com/g" /workdir/content-delivery-qe/unit_tests/configs/QA_01.conf
+sed -i "s/pulp-02.host.qe.eng.pek2.redhat.com/pulp-e2e.usersys.redhat.com/g" /workdir/content-delivery-qe/unit_tests/configs/QA_01.conf
+sed -i "s/pulp-03.host.qe.eng.pek2.redhat.com/pulp-docker-e2e.usersys.redhat.com/g" /workdir/content-delivery-qe/unit_tests/configs/QA_01.conf
+sed -i "s/password=redhat/password=errata/g" /workdir/content-delivery-qe/unit_tests/configs/QA_01.conf
+# disable some lines which bring some errors
 sed -i 's/"errata"/#"errata"/g'  /workdir/content-delivery-qe/unit_tests/helpers/constants.py
 sed -i 's/"pulp"/#"pulp"/g'  /workdir/content-delivery-qe/unit_tests/helpers/constants.py
 # disable one useless testing types
