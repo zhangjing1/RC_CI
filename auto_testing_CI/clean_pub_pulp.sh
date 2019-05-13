@@ -15,6 +15,7 @@ pip install -r test-requirements.txt
 cp /workdir/content-script-config/QA_01.conf /workdir/content-delivery-qe/unit_tests/configs/QA_01.conf
 #change the user of ssh to pulp
 sed -i 's/at_user/root/g'  /workdir/content-delivery-qe/unit_tests/helpers/constants.py
+# disable some lines which bring some errors
 sed -i 's/"errata"/#"errata"/g'  /workdir/content-delivery-qe/unit_tests/helpers/constants.py
 sed -i 's/"pulp"/#"pulp"/g'  /workdir/content-delivery-qe/unit_tests/helpers/constants.py
 # disable one useless testing types
