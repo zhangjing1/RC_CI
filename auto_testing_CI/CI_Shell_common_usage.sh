@@ -125,7 +125,8 @@ update_setting() {
 		ssh root@et-e2e.usersys.redhat.com 'sed -i "s/pdc-et.host.qe.eng.pek2.redhat.com/pdc.engineering.redhat.com/" /var/www/errata_rails/config/initializers/credentials/pub.rb'
 		echo "=== [INFO] Custom the brew settings of the e2e server"
 		ssh root@et-e2e.usersys.redhat.com 'sed -i "s/brewweb.engineering.redhat.com/brew-qa.usersys.redhat.com/" /var/www/errata_rails/config/initializers/settings.rb'
-		ssh root@et-e2e.usersys.redhat.com 'sed -i "s/brewhub.engineering.redhat.com/brew-qa.usersys.redhat.com/" /var/www/errata_rails/config/initializers/settings.rb '
+		ssh root@et-e2e.usersys.redhat.com 'sed -i "s/brewhub.engineering.redhat.com/brew-qa.usersys.redhat.com/" /var/www/errata_rails/config/initializers/settings.rb'
+		ssh root@et-e2e.usersys.redhat.com 'sed -i "s/download.devel.redhat.com/brew-qa.usersys.redhat.com/" /var/www/errata_rails/config/initializers/settings.rb'
 	fi
 	# clean the cache for all testing servers
 	ssh root@"${1}" 'rm -rf /var/www/errata_rails/tmp/cache/*'
