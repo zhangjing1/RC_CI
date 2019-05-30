@@ -4,14 +4,16 @@ import confluence_client
 import sys
 
 class TalkToJennkinsToParserResultAndSentReports():
-	def __init__(self, username, password, et_build_version, title, space, send_report_jenkins_name):
+	def __init__(self, username, password, confluence_username, confluence_password, et_build_version, title, space, send_report_jenkins_name):
 		self.username = username
 		self.password = password
+		self.confluence_username = confluence_username
+		self.confluence_password = confluence_password
 		self.et_build_version = et_build_version
 		self.title = title
 		self.space = space
 		self.send_report_jenkins_name = send_report_jenkins_name
-		self.confluence_auto_client = confluence_client.ConfluenceClient(self.username, self.password, self.title, self.space, "", "")
+		self.confluence_auto_client = confluence_client.ConfluenceClient(self.confluence_username, self.confluence_password, self.title, self.space, "", "")
 		self.testing_report_content = ""
 		self.testing_final_result = ""
 		self.testing_final_summary = ""

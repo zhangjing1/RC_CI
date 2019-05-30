@@ -5,9 +5,11 @@ import generate_rc_report_content_for_all_testings
 import confluence_client
 import ci3_error
 class CollectAllReportsAndUpdateToConfluence():
-	def __init__(self, username, password, et_rc_version, title, space, parent_page):
+	def __init__(self, username, password, confluence_username, confluence_password, et_rc_version, title, space, parent_page):
 		self.username = username
 		self.password = password
+		self.confluence_username = confluence_username
+		self.confluence_password = confluence_password
 		self.et_rc_version = et_rc_version
 		self.each_rc_report = ""
 		self.file = file
@@ -33,7 +35,7 @@ class CollectAllReportsAndUpdateToConfluence():
 		self.final_report = self.all_rc_report.general_reports_content
 
 	def add_page_to_confluence(self):
-		confulence_api_client = confluence_client.ConfluenceClient(self.username, self.password, self.title, self.space, self.final_report, self.parent_page)
+		confulence_api_client = confluence_client.ConfluenceClient(self.confluence_username, self.confluence_password, self.title, self.space, self.final_report, self.parent_page)
 		confulence_api_client.create_update_page()
 
 	def collect_reports_and_update_to_confluence(self):
@@ -52,7 +54,7 @@ if __name__== "__main__":
 		title = sys.argv[4]
 		space = sys.argv[5]
 		parent_page = sys.argv[6]
-	regenerate_reports= CollectAllReportsAndUpdateToConfluence(username, password, et_rc_version, title, space, parent_page)
+	regenerate_reports= CollectAllReportsAndUpdateToConfluence(username, password, confluence_username, confluence_password, et_rc_version, title, space, parent_page)
 	regenerate_reports.collect_reports_and_update_to_confluence()
 
 
