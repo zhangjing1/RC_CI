@@ -50,10 +50,12 @@ if __name__== "__main__":
 	else:
 		username = sys.argv[1]
 		password = sys.argv[2]
-		et_rc_version = sys.argv[3]
-		title = sys.argv[4]
-		space = sys.argv[5]
-		parent_page = sys.argv[6]
+		confluence_username = sys.argv[3]
+		confluence_password = sys.argv[4]
+		et_rc_version = sys.argv[5]
+		title = sys.argv[6]
+		space = sys.argv[7]
+		parent_page = sys.argv[8]
 	regenerate_reports= CollectAllReportsAndUpdateToConfluence(username, password, confluence_username, confluence_password, et_rc_version, title, space, parent_page)
 	regenerate_reports.collect_reports_and_update_to_confluence()
 

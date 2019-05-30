@@ -44,9 +44,11 @@ class TalkToJennkinsToParserResultAndSentReports():
 if __name__ == "__main__":
 	username = sys.argv[1]
 	password = sys.argv[2]
-	et_build_version = sys.argv[3]
-	title = sys.argv[4]
-	space = sys.argv[5]
-	send_report_jenkins_name = sys.argv[6]
-	parser_and_sender = TalkToJennkinsToParserResultAndSentReports(username, password, et_build_version, title, space, send_report_jenkins_name)
+	confluence_username = sys.argv[3]
+	confluence_password = sys.argv[4]
+	et_build_version = sys.argv[5]
+	title = sys.argv[6]
+	space = sys.argv[7]
+	send_report_jenkins_name = sys.argv[8]
+	parser_and_sender = TalkToJennkinsToParserResultAndSentReports(username, password, confluence_username, confluence_password, et_build_version, title, space, send_report_jenkins_name)
 	parser_and_sender.run_parser_and_send_report()
