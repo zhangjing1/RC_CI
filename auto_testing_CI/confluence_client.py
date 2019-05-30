@@ -7,7 +7,7 @@ class ConfluenceClient():
 		self.wiki_url = "https://docs.engineering.redhat.com"
 		self.confluence_username = confluence_username
 		self.confluence_password = confluence_password
-		self.api = Api(self.wiki_url, self.username, self.password)
+		self.api = Api(self.wiki_url, self.confluence_username, self.confluence_password)
 		self.page_name = title
 		self.general_content = content
 		self.space = space

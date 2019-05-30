@@ -45,7 +45,7 @@ echo "=== generating the bug content "
 sudo python generate_confluence_page_for_bugs.py ${bugzilla_username} ${password} ${bugs}
 echo "=== Adding/updating pages to confluence page"
 content=$(cat content.txt)
-sudo python confluence_client.py "${confluence_username}" "${password}" "${title}" "${space}" "${content}" "${parent_page}"
+sudo python confluence_client.py "${confluence_username}" "${confluence_password}" "${title}" "${space}" "${content}" "${parent_page}"
 
 echo "========Removing the useless files==========="
 rm -rf ${tmp_dir}

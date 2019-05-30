@@ -2,10 +2,10 @@ import sys
 import confluence_client
 import ci3_error
 class GetAllPubPulpVersionContent():
-	def __init__(self, username, password):
+	def __init__(self, confluence_username, confluence_password):
 		version_page_name="Version of Applications in E2E"
 		version_page_space="~lzhuang"
-		self.confluence_api_client = confluence_client.ConfluenceClient(username, password, version_page_name, version_page_space, "", "")
+		self.confluence_api_client = confluence_client.ConfluenceClient(confluence_username, confluence_password, version_page_name, version_page_space, "", "")
 		self.versions_content = ""
 		self.e2e_version_content_list = ""
 		self.pub_content = ""
@@ -45,7 +45,7 @@ if __name__ == "__main__":
 	if len(sys.argv) != 3:
 		raise ci3_error.GetAllPubPulpVersionContentInputError()
 	else:
-		username = sys.argv[1]
-		password = sys.argv[2]
-	content = GetAllPubPulpVersionContent(username, password)
+		confluence_username = sys.argv[1]
+		confluence_password = sys.argv[2]
+	content = GetAllPubPulpVersionContent(confluence_username, confluence_password)
 	content.get_all_pub_pulp_content()
