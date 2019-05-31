@@ -3,11 +3,11 @@ import ci3_error
 from confluence import Api
 import confluence_rest_api_client
 class ConfluenceClient():
-	def __init__(self, username, password, title, space, content, parent_page):
+	def __init__(self, confluence_username, confluence_password, title, space, content, parent_page):
 		self.wiki_url = "https://docs.engineering.redhat.com"
-		self.username = username
-		self.password = password
-		self.api = Api(self.wiki_url, self.username, self.password)
+		self.confluence_username = confluence_username
+		self.confluence_password = confluence_password
+		self.api = Api(self.wiki_url, self.confluence_username, self.confluence_password)
 		self.page_name = title
 		self.general_content = content
 		self.space = space
@@ -25,7 +25,7 @@ class ConfluenceClient():
 			self.get_page_all()
 			print "==== Will update page ==="
 			print "==== The page title: ", self.page_name
-			update_confluence_client = confluence_rest_api_client.ConfluenceClientForUpdatePage(self.space, self.page_name, self.wiki_url, self.username, self.password)
+			update_confluence_client = confluence_rest_api_client.ConfluenceClientForUpdatePage(self.space, self.page_name, self.wiki_url, self.confluence_username, self.confluence_password)
 			update_confluence_client.update_page(self.page_all_info, self.general_content)
 
 	def get_page_content(self):
@@ -53,15 +53,15 @@ if __name__ == "__main__":
 	else:
 		raise ci3_error.ConfulenceClientInputError()
 
-	username = sys.argv[1]
-	password = sys.argv[2]
+	confluence_username = sys.argv[1]
+	confluence_password = sys.argv[2]
 	title = sys.argv[3]
 	space = sys.argv[4]
 	if get_page == "true":
-		confulence_client = ConfluenceClient(username, password, title, space, "", "")
+		confulence_client = ConfluenceClient(confluence_username,confluence_password, title, space, "", "")
 		confulence_client.get_page_content()
 	if create_update_page == "true":
 		content = sys.argv[5]
 		parentpage = sys.argv[6]
-		confulence_client =  ConfluenceClient(username, password, title, space, content, parentpage)
+		confulence_client =  ConfluenceClient(confluence_username, confluence_password, title, space, content, parentpage)
 		confulence_client.create_update_page()

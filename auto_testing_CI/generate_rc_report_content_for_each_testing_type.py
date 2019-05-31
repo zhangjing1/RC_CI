@@ -6,7 +6,7 @@ import get_all_pub_pulp_product_version_content
 
 class GenerateRCReportContent():
 	#first talk to RC CI and then generate the testing report content
-	def __init__(self, username, password, build_name, expected_rc_version):
+	def __init__(self, username, password, confluence_username, confluence_password, build_name, expected_rc_version):
 		self.build_name = build_name
 		self.ci_jenkins = talk_to_rc_jenkins.TalkToRCCI(username, password, build_name)
 		self.ci_jenkins.get_test_report_for_build()
@@ -33,7 +33,7 @@ class GenerateRCReportContent():
 		self.bug_regression_env = 'ET Server: errata-web-03.host.qe.eng.pek2.redhat.com'
 		self.ts2_uat_env = 'ET server: et-system-test-qe-02.usersys.redhat.com'
 		self.env_options = ""
-		self.get_pub_pulp_content = get_all_pub_pulp_product_version_content.GetAllPubPulpVersionContent(username, password)
+		self.get_pub_pulp_content = get_all_pub_pulp_product_version_content.GetAllPubPulpVersionContent(confluence_username, confluence_password)
 
 
 	def update_e2e_env_with_pub_pulp(self):
@@ -100,11 +100,13 @@ class GenerateRCReportContent():
 if __name__== "__main__":
 	#print len(sys.argv)
 	#print sys.argv
-	if len(sys.argv) ==5 :
+	if len(sys.argv) ==7 :
 		username = sys.argv[1]
 		password = sys.argv[2]
-		build_name = sys.argv[3]
-		et_rc_version = sys.argv[4]
-		file = sys.argv[5]
-		generate_reprot = GenerateRCReportContent(username, password, build_name, et_rc_version)
+		confluence_username = sys.argv[3]
+		confluence_password = sys.argv[4]
+		build_name = sys.argv[5]
+		et_rc_version = sys.argv[6]
+		file = sys.argv[7]
+		generate_reprot = GenerateRCReportContent(username, password, confluence_username, confluence_password, build_name, et_rc_version)
 		generate_reprot.generate_rc_report_for_current_rc_version()
