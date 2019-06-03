@@ -5,7 +5,7 @@ import time
 import talk_to_rc_jenkins as CI3_JENKINS
 
 class NightCI3Moniter():
-	def __init__(self, username, password, parent_page, build_rpm_ci_name, build_testing_ci_name, IS_COVERAGE_NEEDED):
+	def __init__(self, username, password, confluence_username, confluence_password, parent_page, build_rpm_ci_name, build_testing_ci_name, IS_COVERAGE_NEEDED):
 		self.username = username
 		self.password = password
 		self.confluence_username = confluence_username
