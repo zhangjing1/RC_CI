@@ -12,17 +12,17 @@ pip install funcsigs
 pip install pytest==3.3.0
 pip install -r test-requirements.txt
 # change the host of the config
-cp /workdir/content-script-config/QA_01.conf /workdir/content-delivery-qe/unit_tests/configs/QA_01.conf
+cp ${CI3_WORKSPACE}/content-script-config/QA_01.conf ${CI3_WORKSPACE}/content-delivery-qe/unit_tests/configs/QA_01.conf
 #change the user of ssh to pulp
-sed -i 's/at_user/root/g'  /workdir/content-delivery-qe/unit_tests/helpers/constants.py
+sed -i 's/at_user/root/g'  ${CI3_WORKSPACE}/content-delivery-qe/unit_tests/helpers/constants.py
 # disable some lines which bring some errors
-sed -i 's/"errata"/#"errata"/g'  /workdir/content-delivery-qe/unit_tests/helpers/constants.py
-sed -i 's/"pulp"/#"pulp"/g'  /workdir/content-delivery-qe/unit_tests/helpers/constants.py
+sed -i 's/"errata"/#"errata"/g'  ${CI3_WORKSPACE}/content-delivery-qe/unit_tests/helpers/constants.py
+sed -i 's/"pulp"/#"pulp"/g'  ${CI3_WORKSPACE}/content-delivery-qe/unit_tests/helpers/constants.py
 # disable one useless testing types
-sed -i "/clear_akamai_cdn/d" /workdir/content-delivery-qe/unit_tests/helpers/test_run_helper.py
+sed -i "/clear_akamai_cdn/d" ${CI3_WORKSPACE}/content-delivery-qe/unit_tests/helpers/test_run_helper.py
 echo "setuptools=="
 # clean the pulp and pulp-docker data
-cd /workdir/content-delivery-qe
+cd ${CI3_WORKSPACE}/content-delivery-qe
 py.test -v unit_tests/tests/clean_data.py::CleanData::test_clean_rhsm_pulp_data
 py.test -v unit_tests/tests/clean_data.py::CleanData::test_clean_docker_pulp_data
 echo "== The pulp env is clean =="
