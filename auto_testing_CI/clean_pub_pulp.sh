@@ -1,5 +1,5 @@
 echo "== second get the clean scripts =="
-git clone git://git.app.eng.bos.redhat.com/content-delivery-qe
+git clone git://git.app.eng.bos.redhat.com/content-delivery-qe ${CI3_WORKSPACE}
 cd content-delivery-qe
 echo "== run the cases of clean data =="
 virtualenv --system-site-packages ~/testpython
