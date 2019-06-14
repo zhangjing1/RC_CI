@@ -52,7 +52,7 @@ def get_issue_and_format_issue(issue):
     else:
     	issue_qe_contact = ''
 
-    formatted_issue = [ issue.key, issue.fields.summary, issue_component, issue.fields.priority.name, issue.fields.status.name, issue_qe_auto_coverage, issue_qe_contact, issue_result ]
+    formatted_issue = [ issue.key, summary, issue_component, issue.fields.priority.name, issue.fields.status.name, issue_qe_auto_coverage, issue_qe_contact, issue_result ]
     return formatted_issue
 
 def get_issues_and_format_issues(user, password, fix_version):
