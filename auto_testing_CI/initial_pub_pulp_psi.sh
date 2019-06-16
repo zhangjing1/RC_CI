@@ -43,6 +43,10 @@ upgrade_pub_pulp_tools_on_server(){
   ssh -i /root/.ssh/id_rsa -o "StrictHostKeyChecking no" root@${1} "yum upgrade -y rhsm-tools && yum upgrade -y cdn-utils"
 }
 
+prepare_pub_pulp_ansible(){
+  git clone  https://gitlab.infra.prod.eng.rdu2.redhat.com/yuzheng/ansible-pub-qe.git
+}
+
 initialize_ansible_related_varables(){
   pub_product_version=""
   pub_deploy=false
@@ -89,9 +93,9 @@ check_and_initialize_pub() {
       pub_product_sub_version=$( echo ${pub_product_version} | cut -d '-' -f 2 )
       pub_product_ansible_version=$( echo ${pub_product_version} | cut -d '-' -f 1 | cut -d '-' -f 1)
       if [[ ${pub_product_sub_version} -gt 1 ]]; then
-        pub_ansible="ansible-playbook -u root -i ${CI3_WORKSPACE}/content-delivery-qe/inventory/pub ${CI3_WORKSPACE}/content-delivery-qe/playbooks/pub/e2e/deploy-pub-e2e.yml -e pub_version=${pub_product_ansible_version} -e pub_release=${pub_product_sub_version}"
+        pub_ansible="ansible-playbook -u root -i ${CI3_WORKSPACE}/ansible-pub-qe/inventory/pub ${CI3_WORKSPACE}/ansible-pub-qe/playbooks/pub/e2e/deploy-pub-e2e.yml -e pub_version=${pub_product_ansible_version} -e pub_release=${pub_product_sub_version}"
       else
-        pub_ansible="ansible-playbook -u root -i ${CI3_WORKSPACE}/content-delivery-qe/inventory/pub ${CI3_WORKSPACE}/content-delivery-qe/playbooks/pub/e2e/deploy-pub-e2e.yml -e pub_version=${pub_product_ansible_version}"
+        pub_ansible="ansible-playbook -u root -i ${CI3_WORKSPACE}/ansible-pub-qe/inventory/pub ${CI3_WORKSPACE}/ansible-pub-qe/playbooks/pub/e2e/deploy-pub-e2e.yml -e pub_version=${pub_product_ansible_version}"
       fi
         pub_product_version_integer=$(echo ${pub_product_version} | sed "s/[^0-9]*//g")
         pub_installed_version_integer=$(echo ${pub_installed_version} | sed "s/[^0-9]*//g" | cut -c 1-${#pub_product_version_integer})
@@ -161,7 +165,7 @@ check_and_initialize_pulp_rpm() {
     fi
   fi
 
-  pulp_rpm_server_ansible="ansible-playbook -u root -i ${CI3_WORKSPACE}/content-delivery-qe/inventory/pulp ${CI3_WORKSPACE}/content-delivery-qe/playbooks/pulp/deploy-pulp-rpm-e2e.yml \
+  pulp_rpm_server_ansible="ansible-playbook -u root -i ${CI3_WORKSPACE}/ansible-pub-qe/inventory/pulp ${CI3_WORKSPACE}/ansible-pub-qe/playbooks/pulp/deploy-pulp-rpm-e2e.yml \
                          ${pulp_for_rpm_ansible} ${pulp_rpm_ansible}"
     if [[ ${pulp_for_rpm_deploy} == "true" ]] || [[ ${pulp_rpm_deploy} == "true" ]] ; then
       echo "== Ansible: ${pulp_rpm_server_ansible} =="
@@ -222,7 +226,7 @@ check_and_initialize_pulp_docker() {
     fi
   fi
 
-  pulp_docker_server_ansible="ansible-playbook -u root -i ${CI3_WORKSPACE}/content-delivery-qe/inventory/pulp ${CI3_WORKSPACE}/content-delivery-qe/playbooks/pulp/deploy-pulp-docker-e2e.yml \
+  pulp_docker_server_ansible="ansible-playbook -u root -i ${CI3_WORKSPACE}/ansible-pub-qe/inventory/pulp ${CI3_WORKSPACE}/ansible-pub-qe/playbooks/pulp/deploy-pulp-docker-e2e.yml \
     ${pulp_for_docker_ansible} ${pulp_docker_ansible}"
     if [[ ${pulp_docker_deploy} == "true" ]] || [[ ${pulp_for_docker_deploy} == "true" ]];then
       echo "== Ansible: ${pulp_docker_server_ansible} =="
@@ -249,6 +253,7 @@ clean_running_and_free_pub_tasks() {
 add_random_user_as_default_user
 install_scripts_env
 initialize_ansible_related_varables
+prepare_pub_pulp_ansible
 current_dir=$( echo `pwd` )
 clean_running_and_free_pub_tasks
 get_all_product_versions_content
