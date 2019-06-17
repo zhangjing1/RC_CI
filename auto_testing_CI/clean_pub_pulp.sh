@@ -11,8 +11,8 @@ pip install funcsigs
 # I have to specify the python lib with some specific verison to avoid errors
 pip install pytest==3.3.0
 pip install -r test-requirements.txt
-# change the host of the config
-cp ${CI3_WORKSPACE}/content-script-config/QA_01_PSI.conf ${CI3_WORKSPACE}/content-delivery-qe/unit_tests/configs/QA_01.conf
+# change the config
+sed -i 's/QA_01/QA_e2e/g'  /workdir/content-delivery-qe/unit_tests/helpers/test_init.py
 #change the user of ssh to pulp
 sed -i 's/at_user/root/g'  ${CI3_WORKSPACE}/content-delivery-qe/unit_tests/helpers/constants.py
 # disable some lines which bring some errors
