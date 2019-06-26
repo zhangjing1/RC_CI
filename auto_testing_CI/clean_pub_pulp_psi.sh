@@ -36,7 +36,7 @@ add_stop_services_step(){
 
 add_stop_services_step
 echo "== Before CleanData, check the pulp e2e service status =="
-curl https://pulp-e2e.usersys.redhat.com/pulp/api/v2/status/ --insecure
+curl https://pulp-e2e.usersys.redhat.com/pulp/api/v2/status/ --insecure || true
 
 # clean the pulp and pulp-docker data
 cd ${CI3_WORKSPACE}/content-delivery-qe
