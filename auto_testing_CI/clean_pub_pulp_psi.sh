@@ -27,7 +27,7 @@ sed -i 's/"pulp"/#"pulp"/g'  ${CI3_WORKSPACE}/content-delivery-qe/unit_tests/hel
 # disable one useless testing types
 sed -i "/clear_akamai_cdn/d" ${CI3_WORKSPACE}/content-delivery-qe/unit_tests/helpers/test_run_helper.py
 disable_some_clean_steps(){
-  for cmd in drop_db_cmd clear_migration_store_data clear_docker_pulp_migration_store_data deploy_db_cmd
+  for cmd in drop_db_cmd deploy_db_cmd
   do
     sed -i "s/${cmd}/#${cmd}/g" ${CI3_WORKSPACE}/content-delivery-qe/unit_tests/helpers/test_run_helper.py
   done
