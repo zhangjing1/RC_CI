@@ -26,13 +26,16 @@ sed -i 's/"pulp"/#"pulp"/g'  ${CI3_WORKSPACE}/content-delivery-qe/unit_tests/hel
 
 # disable one useless testing types
 sed -i "/clear_akamai_cdn/d" ${CI3_WORKSPACE}/content-delivery-qe/unit_tests/helpers/test_run_helper.py
-disable_some_clean_steps(){
-  for cmd in drop_db_cmd deploy_db_cmd
-  do
-    sed -i "s/${cmd}/#${cmd}/g" ${CI3_WORKSPACE}/content-delivery-qe/unit_tests/helpers/test_run_helper.py
-  done
+add_stop_services_step(){
+  sed -i '/drop_db_cmd,/i\            stop_pulp_services_cmd,' ${CI3_WORKSPACE}/content-delivery-qe/unit_tests/helpers/test_run_helper.py
+ # for cmd in drop_db_cmd deploy_db_cmd
+  #do
+  #  sed -i "s/${cmd}/#${cmd}/g" ${CI3_WORKSPACE}/content-delivery-qe/unit_tests/helpers/test_run_helper.py
+  #done
 }
-echo "setuptools=="
+
+add_stop_services_step
+curl https://pulp-e2e.usersys.redhat.com/pulp/api/v2/status/ --insecure
 
 # clean the pulp and pulp-docker data
 cd ${CI3_WORKSPACE}/content-delivery-qe
