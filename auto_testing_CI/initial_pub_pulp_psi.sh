@@ -235,7 +235,6 @@ check_and_initialize_pulp_docker() {
     if [[ ${pulp_docker_deploy} == "true" ]] || [[ ${pulp_for_docker_deploy} == "true" ]];then
       echo "== Ansible: ${pulp_docker_server_ansible} =="
       cd ${CI3_WORKSPACE}
-	  sleep  3600
       ${pulp_docker_server_ansible}
       cd -
      
