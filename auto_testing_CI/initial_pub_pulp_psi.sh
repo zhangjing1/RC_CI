@@ -230,11 +230,14 @@ check_and_initialize_pulp_docker() {
     ${pulp_for_docker_ansible} ${pulp_docker_ansible}"
     if [[ ${pulp_docker_deploy} == "true" ]] || [[ ${pulp_for_docker_deploy} == "true" ]];then
       echo "== Ansible: ${pulp_docker_server_ansible} =="
-      cd ${CI3_WORKSPACE}  &&  ${pulp_docker_server_ansible}  &&  cd -
+      cd ${CI3_WORKSPACE}
+      pwd
+      ${pulp_docker_server_ansible}
+      cd -
      
       echo "== Now the pulp-docker related builds installed are: =="
       echo $( get_build_installed_on_server ${pulp_docker_server} pulp-server )
-        echo $( get_build_installed_on_server ${pulp_docker_server} pulp-docker-plugins)
+      echo $( get_build_installed_on_server ${pulp_docker_server} pulp-docker-plugins)
     fi
 }
 
