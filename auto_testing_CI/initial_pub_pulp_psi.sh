@@ -172,7 +172,6 @@ check_and_initialize_pulp_rpm() {
     if [[ ${pulp_for_rpm_deploy} == "true" ]] || [[ ${pulp_rpm_deploy} == "true" ]] ; then
       echo "== Ansible: ${pulp_rpm_server_ansible} =="
       cd ${CI3_WORKSPACE}
-	  sleep 3600
 	  ${pulp_rpm_server_ansible}
 	  cd -
       echo "== Now the pulp-rpm related builds installed are:"
@@ -236,7 +235,6 @@ check_and_initialize_pulp_docker() {
     if [[ ${pulp_docker_deploy} == "true" ]] || [[ ${pulp_for_docker_deploy} == "true" ]];then
       echo "== Ansible: ${pulp_docker_server_ansible} =="
       cd ${CI3_WORKSPACE}
-	  sleep 300
       ${pulp_docker_server_ansible}
       cd -
      
@@ -260,7 +258,7 @@ clean_running_and_free_pub_tasks() {
 prepare_and_update_private_key_for_ansible() {
   cp  /root/.ssh/id_rsa ${CI3_WORKSPACE}
   chmod 700 ${CI3_WORKSPACE}/id_rsa
-  sed -i "/defaults\]/a private_key_keyfile=${CI3_WORKSPACE}/id_rsa" ${CI3_WORKSPACE}/ansible.cfg
+  sed -i "/defaults\]/a private_key_file=${CI3_WORKSPACE}/id_rsa" ${CI3_WORKSPACE}/ansible.cfg
 }
 echo "== Step 1: add random user as default user =="
 add_random_user_as_default_user
