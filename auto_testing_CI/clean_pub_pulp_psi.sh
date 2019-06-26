@@ -35,7 +35,7 @@ add_stop_services_step(){
 }
 
 add_stop_services_step
-sleep 3600
+echo "== Before CleanData, check the pulp e2e service status =="
 curl https://pulp-e2e.usersys.redhat.com/pulp/api/v2/status/ --insecure
 
 # clean the pulp and pulp-docker data
@@ -43,3 +43,6 @@ cd ${CI3_WORKSPACE}/content-delivery-qe
 py.test -v unit_tests/tests/clean_data.py::CleanData::test_clean_rhsm_pulp_data
 py.test -v unit_tests/tests/clean_data.py::CleanData::test_clean_docker_pulp_data
 echo "== The pulp env is clean =="
+
+echo "== After CleanData, check the pulp e2e service status =="
+curl https://pulp-e2e.usersys.redhat.com/pulp/api/v2/status/ --insecure
