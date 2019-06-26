@@ -35,6 +35,7 @@ add_stop_services_step(){
 }
 
 add_stop_services_step
+sleep 3600
 curl https://pulp-e2e.usersys.redhat.com/pulp/api/v2/status/ --insecure
 
 # clean the pulp and pulp-docker data
