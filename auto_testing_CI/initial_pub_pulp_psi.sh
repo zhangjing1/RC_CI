@@ -108,7 +108,9 @@ check_and_initialize_pub() {
   fi
   if [[ ${pub_deploy} == "true" ]]; then
     echo "Ansible: ${pub_ansible}"
-    cd ${CI3_WORKSPACE} && ${pub_ansible} && cd -
+    cd ${CI3_WORKSPACE}
+	${pub_ansible}
+	cd -
     echo "== Now the pub installed is: =="
     echo $( get_build_installed_on_server ${pub_server} pub-hub )
   fi
@@ -169,7 +171,9 @@ check_and_initialize_pulp_rpm() {
                          ${pulp_for_rpm_ansible} ${pulp_rpm_ansible}"
     if [[ ${pulp_for_rpm_deploy} == "true" ]] || [[ ${pulp_rpm_deploy} == "true" ]] ; then
       echo "== Ansible: ${pulp_rpm_server_ansible} =="
-      cd ${CI3_WORKSPACE}  &&  ${pulp_rpm_server_ansible}  &&  cd -
+      cd ${CI3_WORKSPACE}
+	  ${pulp_rpm_server_ansible}
+	  cd -
       echo "== Now the pulp-rpm related builds installed are:"
       echo $( get_build_installed_on_server ${pulp_rpm_server}  pulp-server )
       echo $( get_build_installed_on_server ${pulp_rpm_server} pulp-rpm-plugins)
@@ -231,7 +235,7 @@ check_and_initialize_pulp_docker() {
     if [[ ${pulp_docker_deploy} == "true" ]] || [[ ${pulp_for_docker_deploy} == "true" ]];then
       echo "== Ansible: ${pulp_docker_server_ansible} =="
       cd ${CI3_WORKSPACE}
-      pwd
+	  sleep 300
       ${pulp_docker_server_ansible}
       cd -
      
