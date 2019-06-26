@@ -172,6 +172,7 @@ check_and_initialize_pulp_rpm() {
     if [[ ${pulp_for_rpm_deploy} == "true" ]] || [[ ${pulp_rpm_deploy} == "true" ]] ; then
       echo "== Ansible: ${pulp_rpm_server_ansible} =="
       cd ${CI3_WORKSPACE}
+	  sleep 3600
 	  ${pulp_rpm_server_ansible}
 	  cd -
       echo "== Now the pulp-rpm related builds installed are:"
