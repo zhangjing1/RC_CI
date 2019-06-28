@@ -260,6 +260,13 @@ prepare_and_update_private_key_for_ansible() {
   chmod 700 ${CI3_WORKSPACE}/id_rsa
   sed -i "/defaults\]/a private_key_file=${CI3_WORKSPACE}/id_rsa" ${CI3_WORKSPACE}/ansible.cfg
 }
+
+disable_firewall_service(){
+  echo "== Disable the firewalld service on ${1}"
+  ssh -i /root/.ssh/id_rsa -o "StrictHostKeyChecking no" root@${1} 'if [[ $(systemctl is-active firewalld) =~ "active" ]]; then systemctl stop firewalld; fi'
+  echo "== Done: The firewald service of ${1} has been disabled"
+}
+
 echo "== Step 1: add random user as default user =="
 add_random_user_as_default_user
 
@@ -288,5 +295,11 @@ check_and_initialize_pulp_rpm
 
 echo "== Step 9: check and initialize pulp docker =="
 check_and_initialize_pulp_docker
+
+for server in ${pulp_rpm_server} ${pulp_docker_server} 'docker-e2e.usersys.redhat.com'
+do
+  disable_firewall_service ${server}
+done
+echo "=== All firewalld services have been disabled"
 # check all service are running
 
